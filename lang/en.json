@@ -173,7 +173,7 @@
     "unset": "Unset",
     "reset": "Reset",
 
-    "welcomeToAppMessage": "Welcome To Clientverse",
+    "welcomeBackToMessage": "Welcome Back To",
     "invalidFieldMessage": "This field value is invalid, please correct and try again.",
     "recordSavedMessage": "Record saved successfully.",
     "recordDeletedMessage": "Record deleted successfully.",

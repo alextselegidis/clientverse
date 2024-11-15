@@ -1,3 +1,4 @@
+{{--
 /* ----------------------------------------------------------------------------
  * Clientverse - Open Source CRM
  *
@@ -7,8 +8,15 @@
  * @license     https://opensource.org/licenses/GPL-3.0 - GPLv3
  * @link        https://clientverse.org
  * ---------------------------------------------------------------------------- */
+--}}
 
-.public-logo-image {
-    width: 128px;
-    height: 128px;
-}
+@extends('layouts.admin_layout')
+
+@section('page_title')
+    {{__('dashboard')}}
+@endsection
+
+@section('content')
+    dashboard
+@endsection
+
