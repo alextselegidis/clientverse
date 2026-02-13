@@ -1,0 +1,103 @@
+/* ----------------------------------------------------------------------------
+ * Clientverse - Powerful CRM System
+ *
+ * @package     Clientverse
+ * @author      A.Tselegidis <alextselegidis@gmail.com>
+ * @copyright   Copyright (c) Alex Tselegidis
+ * @license     https://opensource.org/licenses/GPL-3.0 - GPLv3
+ * @link        https://clientverse.org
+ * ---------------------------------------------------------------------------- */
+
+:root {
+    --bs-link-color: #563ea9;
+    --bs-link-color-rgb: 86, 62, 169;
+    --bs-link-hover-color: #2d1e60;
+    --bs-link-hover-color-rgb: 45, 30, 96;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+.btn {
+    min-width: 150px;
+}
+
+.btn:not(.btn-link) {
+    border: 2px solid
+}
+
+.bg-hover:hover {
+    background-color: #eee;
+}
+
+.btn,
+.nav-link,
+.dropdown-item {
+    text-transform: uppercase !important;
+
+}
+
+.modal-dialog {
+     box-shadow: none;
+}
+
+.sidebar-width {
+    width: 230px;
+    padding-right: 15px;
+}
+
+.table {
+    width: auto;
+    table-layout: auto;
+}
+
+.table td, .table th {
+    padding: 1rem;
+    white-space: nowrap; /* Prevent wrapping */
+    width: 1%;            /* Shrink to fit content */
+}
+
+
+@media (min-width: 992px) {
+    .rounded-lg-4 {
+        border-radius: var(--bs-border-radius-xl) !important;
+    }
+
+    .min-vh-lg-unset {
+        min-height: unset !important;
+    }
+
+    .w-lg-auto {
+        width: auto !important;
+    }
+
+    .table-responsive {
+        overflow: visible;
+    }
+}
+
+.card-hover-move {
+    transition: transform 0.2s ease-in-out;
+}
+
+.card-hover-move:hover {
+    transform: translateY(-5px);
+}
+
+.card .card-footer {
+    a, form {
+        position: relative;
+        z-index: 1;
+    }
+}
+
+body .choices__inner {
+    border: none;
+    padding: .75rem 1.5rem;
+    height: 48px;
+    background-color: #f0f1f2;
+    font-size: 1rem;
+}
+

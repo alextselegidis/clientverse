@@ -3,11 +3,11 @@ info:
   title: Clientverse API
   version: 1.0.0
   description: These are the OpenAPI specs that describe the REST API of Timecrack.
-  termsOfService: https://clientverse.org/terms
+  termsOfService: github.com/alextselegidis/clientverse
   contact:
-    name: Timecrack
-    url: https://clientverse.org
-    email: info@clientverse.org
+    name: Clientverse
+    url: https://github.com/alextselegidis/clientverse
+    email: info@alextselegidis.com
   license:
     name: GPL-3.0
     url: https://www.gnu.org/licenses/gpl-3.0.en.html
