@@ -34,9 +34,9 @@
 </head>
 <body class="bg-light message-layout">
 
-<div class="d-flex justify-content-center align-items-lg-center min-vh-100">
+<div class="d-flex justify-content-center align-items-center min-vh-100">
 
-    <div class="bg-white w-100 text-center rounded-0 rounded-lg-3 shadow-lg-sm py-lg-4 min-vh-100 min-vh-lg-auto d-flex flex-column justify-content-center d-lg-block" style="max-width: 500px;">
+    <div class="bg-white w-100 text-center rounded-0 rounded-lg-3 shadow-lg-sm py-lg-4" style="max-width: 500px;">
 
          <div class="text-center mt-5 mb-3">
              <img src="images/logo.png" alt="logo" class="public-logo-image mb-3" style="width: 128px"/>

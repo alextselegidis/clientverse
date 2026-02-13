@@ -34,9 +34,9 @@
 </head>
 <body class="bg-light auth-layout">
 
-<div class="d-flex justify-content-center align-items-lg-center min-vh-100">
+<div class="d-flex justify-content-center align-items-center min-vh-100">
 
-    <div class="bg-white w-100 rounded-0 rounded-lg-3 shadow-lg-sm py-lg-4 min-vh-100 min-vh-lg-auto d-flex flex-column justify-content-center d-lg-block" style="max-width: 500px;">
+    <div class="bg-white w-100 rounded-0 rounded-lg-3 shadow-lg-sm py-lg-4" style="max-width: 500px;">
 
         <div class="text-center mt-3 mt-lg-5 mb-3">
             <img src="images/logo.png" alt="logo" class="public-logo-image" style="width: 128px"/>
