@@ -52,11 +52,46 @@
                 <table class="table table-striped table-hover align-middle mb-0">
                     <thead class="table-dark">
                     <tr>
-                        <th class="border-0 ps-3">{{ __('name') }}</th>
-                        <th class="border-0">{{ __('email') }}</th>
-                        <th class="border-0">{{ __('phone') }}</th>
-                        <th class="border-0">{{ __('role') }}</th>
-                        <th class="border-0">{{ __('primary') }}</th>
+                        <th class="border-0 ps-3">
+                            <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none text-white">
+                                {{ __('name') }}
+                                @if(request('sort') === 'name')
+                                    <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="border-0">
+                            <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'email', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none text-white">
+                                {{ __('email') }}
+                                @if(request('sort') === 'email')
+                                    <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="border-0">
+                            <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'phone', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none text-white">
+                                {{ __('phone') }}
+                                @if(request('sort') === 'phone')
+                                    <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="border-0">
+                            <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'role', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none text-white">
+                                {{ __('role') }}
+                                @if(request('sort') === 'role')
+                                    <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="border-0">
+                            <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'is_primary', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none text-white">
+                                {{ __('primary') }}
+                                @if(request('sort') === 'is_primary')
+                                    <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
+                                @endif
+                            </a>
+                        </th>
                         <th class="border-0 pe-3 text-end" style="width: 100px;"></th>
                     </tr>
                     </thead>

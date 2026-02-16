@@ -23,8 +23,17 @@
 @endsection
 
 @section('content')
-    <div class="row">
-        <div class="col-lg-8">
+    <div class="d-flex flex-column flex-lg-row gap-4">
+        @if($sale->exists)
+            <!-- Edit Sidebar -->
+            <div class="flex-shrink-0" style="min-width: 180px;">
+                @include('shared.edit-sidebar', ['items' => [
+                    ['label' => __('details'), 'route' => 'sales.edit', 'params' => ['sale' => $sale->id], 'icon' => 'file-text']
+                ]])
+            </div>
+        @endif
+        <!-- Main Content -->
+        <div class="flex-grow-1">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
                     <form action="{{ $sale->exists ? route('sales.update', $sale->id) : route('sales.store') }}" method="POST">

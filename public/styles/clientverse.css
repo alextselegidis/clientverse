@@ -1,0 +1,226 @@
+/* ----------------------------------------------------------------------------
+ * Bookmarx - Simple Bookmark Manager
+ *
+ * @package     Bookmarx
+ * @author      A.Tselegidis <alextselegidis@gmail.com>
+ * @copyright   Copyright (c) Alex Tselegidis
+ * @license     https://opensource.org/licenses/GPL-3.0 - GPLv3
+ * @link        https://github.com/alextselegidis/bookmarx
+ * ---------------------------------------------------------------------------- */
+/* Global transition for smooth effects */
+*,
+*::before,
+*::after {
+    transition: background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out,
+    color 0.15s ease-in-out,
+    opacity 0.15s ease-in-out;
+}
+
+/* Override Bootstrap primary color */
+:root {
+    --bs-primary: #3e5375;
+    --bs-primary-rgb: 62, 83, 117;
+    --bs-link-color: #3e5375;
+    --bs-link-color-rgb: 62, 83, 117;
+    --bs-link-hover-color: #2d3d56;
+    --bs-link-hover-color-rgb: 45, 61, 86;
+    --bs-secondary-color: #6c757d;
+    --bs-body-color: #495057;
+}
+
+/* Link colors - darker than labels */
+a {
+    color: var(--bs-link-color);
+}
+
+a:hover {
+    color: var(--bs-link-hover-color);
+}
+
+/* Labels use a different color */
+.form-label {
+    color: #495057 !important;
+}
+
+.text-dark {
+    color: #343a40 !important;
+}
+
+.btn-primary {
+    --bs-btn-bg: #3e5375;
+    --bs-btn-border-color: #3e5375;
+    --bs-btn-hover-bg: #2d3d56;
+    --bs-btn-hover-border-color: #263447;
+    --bs-btn-active-bg: #263447;
+    --bs-btn-active-border-color: #1f2b3a;
+    --bs-btn-disabled-bg: #3e5375;
+    --bs-btn-disabled-border-color: #3e5375;
+}
+
+.btn-outline-primary {
+    --bs-btn-color: #3e5375;
+    --bs-btn-border-color: #3e5375;
+    --bs-btn-hover-bg: #3e5375;
+    --bs-btn-hover-border-color: #3e5375;
+    --bs-btn-active-bg: #3e5375;
+    --bs-btn-active-border-color: #3e5375;
+}
+
+.bg-primary {
+    background-color: #3e5375 !important;
+}
+
+/* Dashboard card image gradient background */
+.card .card-img-top {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+}
+
+/* Improved card footer styling - subtle warm gray */
+.card .card-footer {
+    background-color: #f5f5f5 !important;
+    border-top-color: #e8e8e8 !important;
+}
+
+/* Improved background colors - warmer and softer */
+.bg-light {
+    background-color: #fafafa !important;
+}
+
+.bg-body-secondary {
+    background-color: #f5f5f5 !important;
+}
+
+.bg-body-tertiary {
+    background-color: #f8f8f8 !important;
+}
+
+/* Main layout background - softer */
+.main-layout {
+    background-color: #f5f6f8 !important;
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
+
+.text-body-secondary {
+    color: #6c757d !important;
+}
+
+/* Responsive width utilities for lg breakpoint */
+@media (min-width: 992px) {
+    .w-lg-auto {
+        width: auto !important;
+    }
+
+    .flex-lg-grow-0 {
+        flex-grow: 0 !important;
+    }
+
+    .rounded-lg-3 {
+        border-radius: var(--bs-border-radius-lg) !important;
+    }
+
+    .shadow-lg-sm {
+        box-shadow: var(--bs-box-shadow-sm) !important;
+    }
+
+    .min-vh-lg-auto {
+        min-height: auto !important;
+    }
+
+    .table-responsive {
+        overflow: visible;
+    }
+}
+
+/* Card hover effect */
+.card-hover-move {
+    transition: transform 0.2s ease-in-out,
+    background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+}
+
+.card-hover-move:hover {
+    transform: translateY(-2px);
+}
+
+/* Link image styling - stretch for og_image, contain for favicon */
+.card .card-img-top.img-cover {
+    object-fit: cover;
+}
+
+.card .card-img-top.img-contain {
+    object-fit: contain;
+}
+
+/* Equal width buttons */
+.btn-equal-width {
+    min-width: 120px;
+}
+
+/* Better button styling */
+.btn {
+    font-weight: 500;
+    padding: 0.5rem 1.25rem;
+    border-radius: 0.375rem;
+}
+
+@media (min-width: 992px) {
+    .navbar-nav .nav-item .nav-link.nav-menu-item {
+        min-width: 120px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+        transition: background-color 0.2s ease;
+    }
+
+    .navbar-nav .nav-item .nav-link.nav-menu-item:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .navbar {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .navbar-brand {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+    }
+}
+
+/* Table header sorting hover effect */
+.table-dark th a {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0;
+}
+
+.table-dark th {
+    vertical-align: middle;
+}
+
+.table-dark th a:hover {
+    opacity: 0.8;
+}
+
+.table-dark th a::after {
+    content: '\F282';
+    font-family: 'bootstrap-icons';
+    margin-left: 0.5rem;
+    opacity: 0;
+    font-size: 0.75rem;
+    transition: opacity 0.15s ease-in-out;
+}
+
+.table-dark th a:hover::after {
+    opacity: 0.6;
+}

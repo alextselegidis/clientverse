@@ -38,7 +38,8 @@
         </div>
         <!-- Main Content -->
         <div class="flex-grow-1">
-            <h5 class="fw-bold mb-3">{{ __('users') }}</h5>
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-body">
             <!-- Search -->
             <form action="{{ route('setup.users') }}" method="GET" class="mb-4">
                 <div class="input-group">
@@ -50,8 +51,7 @@
                            placeholder="{{ __('search') }}..." style="max-width: 300px;">
                 </div>
             </form>
-            <div class="card border-0 shadow-sm rounded-3">
-                <div class="card-body p-0">
+
                     <!-- Table -->
                     <div class="table-responsive" style="overflow: visible;">
                         <table class="table table-striped table-hover align-middle mb-0">

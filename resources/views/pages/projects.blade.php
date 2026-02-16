@@ -58,10 +58,38 @@
                 <table class="table table-striped table-hover align-middle mb-0">
                     <thead class="table-dark">
                     <tr>
-                        <th class="border-0 ps-3">{{ __('name') }}</th>
-                        <th class="border-0">{{ __('customer') }}</th>
-                        <th class="border-0">{{ __('status') }}</th>
-                        <th class="border-0">{{ __('due_date') }}</th>
+                        <th class="border-0 ps-3">
+                            <a href="{{ route('projects', ['sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'status' => $status]) }}" class="text-decoration-none text-white">
+                                {{ __('name') }}
+                                @if(request('sort') === 'name')
+                                    <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="border-0">
+                            <a href="{{ route('projects', ['sort' => 'customer', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'status' => $status]) }}" class="text-decoration-none text-white">
+                                {{ __('customer') }}
+                                @if(request('sort') === 'customer')
+                                    <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="border-0">
+                            <a href="{{ route('projects', ['sort' => 'status', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'status' => $status]) }}" class="text-decoration-none text-white">
+                                {{ __('status') }}
+                                @if(request('sort') === 'status')
+                                    <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="border-0">
+                            <a href="{{ route('projects', ['sort' => 'due_date', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'status' => $status]) }}" class="text-decoration-none text-white">
+                                {{ __('due_date') }}
+                                @if(request('sort') === 'due_date')
+                                    <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
+                                @endif
+                            </a>
+                        </th>
                         <th class="border-0 pe-3 text-end" style="width: 100px;"></th>
                     </tr>
                     </thead>

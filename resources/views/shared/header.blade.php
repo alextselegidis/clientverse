@@ -14,7 +14,7 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <nav class="navbar navbar-expand-lg">
+                <nav class="navbar navbar-expand-lg py-0">
                     <a class="navbar-brand d-flex align-items-center p-0 m-0" href="{{ route('dashboard') }}">
                         <img src="images/logo.png" alt="Logo" class="me-2" style="height: 32px">
                         <strong class="fs-4 text-white">CLIENTVERSE</strong>
@@ -27,35 +27,35 @@
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <!-- Dashboard -->
                             <li class="nav-item">
-                                <a class="nav-link nav-menu-item text-white py-lg-4 {{ request()->routeIs('dashboard') ? 'fw-bold' : '' }}" href="{{ route('dashboard') }}">
+                                <a class="nav-link nav-menu-item text-white py-lg-4 px-lg-4 {{ request()->routeIs('dashboard') ? 'fw-bold' : '' }}" href="{{ route('dashboard') }}">
                                     <i class="bi bi-house me-2"></i>
                                     {{ __('dashboard') }}
                                 </a>
                             </li>
                             <!-- Customers -->
                             <li class="nav-item">
-                                <a class="nav-link nav-menu-item text-white py-lg-4 {{ request()->routeIs('customers*') ? 'fw-bold' : '' }}" href="{{ route('customers') }}">
+                                <a class="nav-link nav-menu-item text-white py-lg-4 px-lg-4 {{ request()->routeIs('customers*') ? 'fw-bold' : '' }}" href="{{ route('customers') }}">
                                     <i class="bi bi-people me-2"></i>
                                     {{ __('customers') }}
                                 </a>
                             </li>
                             <!-- Projects -->
                             <li class="nav-item">
-                                <a class="nav-link nav-menu-item text-white py-lg-4 {{ request()->routeIs('projects*') ? 'fw-bold' : '' }}" href="{{ route('projects') }}">
+                                <a class="nav-link nav-menu-item text-white py-lg-4 px-lg-4 {{ request()->routeIs('projects*') ? 'fw-bold' : '' }}" href="{{ route('projects') }}">
                                     <i class="bi bi-kanban me-2"></i>
                                     {{ __('projects') }}
                                 </a>
                             </li>
                             <!-- Sales -->
                             <li class="nav-item">
-                                <a class="nav-link nav-menu-item text-white py-lg-4 {{ request()->routeIs('sales*') ? 'fw-bold' : '' }}" href="{{ route('sales') }}">
+                                <a class="nav-link nav-menu-item text-white py-lg-4 px-lg-4 {{ request()->routeIs('sales*') ? 'fw-bold' : '' }}" href="{{ route('sales') }}">
                                     <i class="bi bi-graph-up me-2"></i>
                                     {{ __('sales') }}
                                 </a>
                             </li>
                             <!-- Contracts -->
                             <li class="nav-item">
-                                <a class="nav-link nav-menu-item text-white py-lg-4 {{ request()->routeIs('contracts*') ? 'fw-bold' : '' }}" href="{{ route('contracts') }}">
+                                <a class="nav-link nav-menu-item text-white py-lg-4 px-lg-4 {{ request()->routeIs('contracts*') ? 'fw-bold' : '' }}" href="{{ route('contracts') }}">
                                     <i class="bi bi-file-earmark-text me-2"></i>
                                     {{ __('contracts') }}
                                 </a>

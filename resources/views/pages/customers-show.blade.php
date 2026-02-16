@@ -130,6 +130,15 @@
                     @endif
                 </div>
             </div>
+
+            @include('shared.files-section', [
+                'model' => $customer,
+                'uploadRoute' => route('customers.files.upload', $customer->id),
+                'downloadRoute' => 'customers.files.download',
+                'deleteRoute' => 'customers.files.delete',
+                'routeParams' => ['customer' => $customer->id],
+                'uploadLimits' => $uploadLimits,
+            ])
         </div>
 
         <!-- Sidebar -->

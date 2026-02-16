@@ -132,6 +132,15 @@
                     @endif
                 </div>
             </div>
+
+            @include('shared.files-section', [
+                'model' => $project,
+                'uploadRoute' => route('projects.files.upload', $project->id),
+                'downloadRoute' => 'projects.files.download',
+                'deleteRoute' => 'projects.files.delete',
+                'routeParams' => ['project' => $project->id],
+                'uploadLimits' => $uploadLimits,
+            ])
         </div>
 
         <div class="col-lg-4">

@@ -28,16 +28,18 @@
 @endsection
 
 @section('content')
-
-    <div class="d-flex">
-
-        <div class="flex-grow-0 sidebar-width">
-            @include('shared.settings-sidebar')
+    <div class="d-flex flex-column flex-lg-row gap-4">
+        <!-- Edit Sidebar -->
+        <div class="flex-shrink-0" style="min-width: 180px;">
+            @include('shared.edit-sidebar', ['items' => [
+                ['label' => __('details'), 'route' => 'subscriptions.edit', 'params' => ['subscription' => $subscription->id], 'icon' => 'file-text']
+            ]])
         </div>
-
+        <!-- Main Content -->
         <div class="flex-grow-1">
-
-            <form action="{{route('subscriptions.update', ['subscription' => $subscription->id])}}" method="POST" style="max-width: 800px;" class="m-auto">
+            <div class="card border-0 shadow-sm rounded-3">
+                <div class="card-body p-4">
+            <form action="{{route('subscriptions.update', ['subscription' => $subscription->id])}}" method="POST" id="edit-form">
                 @csrf
                 @method('PUT')
 
@@ -110,18 +112,17 @@
                     <span class="form-text text-danger">{{ $message }}</span>
                     @enderror
                 </div>
-
-
-                <div class="d-flex gap-2 justify-content-end">
-                    <button type="button" class="btn btn-outline-primary" onclick="history.back()">
-                        {{__('cancel')}}
-                    </button>
-                    <button type="submit" class="btn btn-primary">
-                        {{__('save')}}
-                    </button>
-                </div>
             </form>
-
+        </div>
+        <div class="card-footer bg-body-secondary border-top text-end py-3 px-4">
+            <button type="button" class="btn btn-outline-secondary me-2" onclick="history.back()">
+                {{__('cancel')}}
+            </button>
+            <button type="submit" form="edit-form" class="btn btn-dark">
+                {{__('save')}}
+            </button>
+        </div>
+    </div>
         </div>
     </div>
 

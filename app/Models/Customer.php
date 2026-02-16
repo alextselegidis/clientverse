@@ -64,6 +64,11 @@ class Customer extends Model
         return $this->belongsToMany(Tag::class, 'customer_tag');
     }
 
+    public function files()
+    {
+        return $this->morphMany(File::class, 'fileable');
+    }
+
     public function primaryContact()
     {
         return $this->hasOne(Contact::class)->where('is_primary', true);

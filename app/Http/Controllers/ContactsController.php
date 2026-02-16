@@ -95,7 +95,7 @@ class ContactsController extends Controller
         $contact->fill($request->all());
         $contact->save();
 
-        return redirect(route('customers.contacts.show', [$customer->id, $contact->id]))->with('success', __('record_saved_message'));
+        return redirect(route('customers.contacts.edit', [$customer->id, $contact->id]))->with('success', __('record_saved_message'));
     }
 
     public function destroy(Request $request, Customer $customer, Contact $contact)

@@ -318,5 +318,19 @@
     "due": "Due",
     "none": "None",
     "dates": "Dates",
-    "all": "All"
+    "all": "All",
+    "upload": "Upload",
+    "download": "Download",
+    "upload_files": "Upload Files",
+    "upload_limits": "Upload Limits",
+    "max_file_size": "Max file size",
+    "max_files": "Max files",
+    "allowed_types": "Allowed types",
+    "uploaded": "Uploaded",
+    "size": "Size",
+    "no_files_found": "No files found",
+    "files_uploaded_message": "Files uploaded successfully.",
+    "file_deleted_message": "File deleted successfully.",
+    "file_not_found": "File not found.",
+    "delete_file_prompt": "Are you sure you want to delete this file?"
 }

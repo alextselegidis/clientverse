@@ -66,12 +66,54 @@
                 <table class="table table-striped table-hover align-middle mb-0">
                     <thead class="table-dark">
                     <tr>
-                        <th class="border-0 ps-3">{{ __('title') }}</th>
-                        <th class="border-0">{{ __('customer') }}</th>
-                        <th class="border-0">{{ __('type') }}</th>
-                        <th class="border-0">{{ __('status') }}</th>
-                        <th class="border-0">{{ __('value') }}</th>
-                        <th class="border-0">{{ __('dates') }}</th>
+                        <th class="border-0 ps-3">
+                            <a href="{{ route('contracts', ['sort' => 'title', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none text-white">
+                                {{ __('title') }}
+                                @if(request('sort') === 'title')
+                                    <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="border-0">
+                            <a href="{{ route('contracts', ['sort' => 'customer', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none text-white">
+                                {{ __('customer') }}
+                                @if(request('sort') === 'customer')
+                                    <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="border-0">
+                            <a href="{{ route('contracts', ['sort' => 'type', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none text-white">
+                                {{ __('type') }}
+                                @if(request('sort') === 'type')
+                                    <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="border-0">
+                            <a href="{{ route('contracts', ['sort' => 'status', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none text-white">
+                                {{ __('status') }}
+                                @if(request('sort') === 'status')
+                                    <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="border-0">
+                            <a href="{{ route('contracts', ['sort' => 'value', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none text-white">
+                                {{ __('value') }}
+                                @if(request('sort') === 'value')
+                                    <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
+                                @endif
+                            </a>
+                        </th>
+                        <th class="border-0">
+                            <a href="{{ route('contracts', ['sort' => 'start_date', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none text-white">
+                                {{ __('dates') }}
+                                @if(request('sort') === 'start_date')
+                                    <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
+                                @endif
+                            </a>
+                        </th>
                         <th class="border-0 pe-3 text-end" style="width: 100px;"></th>
                     </tr>
                     </thead>

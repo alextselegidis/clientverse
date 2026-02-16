@@ -13,11 +13,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\File;
 use App\Models\Tag;
+use App\Traits\HandlesFileUploads;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CustomersController extends Controller
 {
+    use HandlesFileUploads;
+
     public function index(Request $request)
     {
         $query = Customer::query();
@@ -69,6 +74,7 @@ class CustomersController extends Controller
         return view('pages.customers-edit', [
             'customer' => new Customer(),
             'tags' => Tag::toOptions(),
+            'uploadLimits' => File::getUploadLimits(),
         ]);
     }
 
@@ -84,21 +90,25 @@ class CustomersController extends Controller
             $customer->tags()->sync($request->input('tags', []));
         }
 
+        $this->handleFileUploads($request, $customer);
+
         return redirect(route('customers.show', ['customer' => $customer->id]))->with('success', __('record_saved_message'));
     }
 
     public function show(Request $request, Customer $customer)
     {
         return view('pages.customers-show', [
-            'customer' => $customer->load(['contacts', 'projects', 'contracts', 'sales', 'tags']),
+            'customer' => $customer->load(['contacts', 'projects', 'contracts', 'sales', 'tags', 'files']),
+            'uploadLimits' => File::getUploadLimits(),
         ]);
     }
 
     public function edit(Request $request, Customer $customer)
     {
         return view('pages.customers-edit', [
-            'customer' => $customer->load('tags'),
+            'customer' => $customer->load(['tags', 'files']),
             'tags' => Tag::toOptions(),
+            'uploadLimits' => File::getUploadLimits(),
         ]);
     }
 
@@ -116,13 +126,56 @@ class CustomersController extends Controller
             $customer->tags()->sync($request->input('tags', []));
         }
 
-        return redirect(route('customers.show', $customer->id))->with('success', __('record_saved_message'));
+        $this->handleFileUploads($request, $customer);
+
+        return redirect(route('customers.edit', $customer->id))->with('success', __('record_saved_message'));
     }
 
     public function destroy(Request $request, Customer $customer)
     {
+        foreach ($customer->files as $file) {
+            $file->deleteFromStorage();
+        }
+
         $customer->delete();
 
         return redirect(route('customers'))->with('success', __('record_deleted_message'));
+    }
+
+    public function uploadFiles(Request $request, Customer $customer)
+    {
+        $request->validate([
+            'files' => 'required|array',
+            'files.*' => 'file|max:' . (File::getUploadLimits()['max_file_size'] / 1024),
+        ]);
+
+        $this->handleFileUploads($request, $customer);
+
+        return redirect(route('customers.show', $customer->id))->with('success', __('files_uploaded_message'));
+    }
+
+    public function downloadFile(Request $request, Customer $customer, File $file)
+    {
+        if ($file->fileable_id !== $customer->id || $file->fileable_type !== Customer::class) {
+            abort(404);
+        }
+
+        if (!$file->existsInStorage()) {
+            return back()->with('error', __('file_not_found'));
+        }
+
+        return Storage::disk('local')->download($file->path, $file->original_name);
+    }
+
+    public function deleteFile(Request $request, Customer $customer, File $file)
+    {
+        if ($file->fileable_id !== $customer->id || $file->fileable_type !== Customer::class) {
+            abort(404);
+        }
+
+        $file->deleteFromStorage();
+        $file->delete();
+
+        return redirect(route('customers.show', $customer->id))->with('success', __('file_deleted_message'));
     }
 }

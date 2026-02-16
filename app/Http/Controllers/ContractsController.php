@@ -14,12 +14,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Contract;
 use App\Models\Customer;
+use App\Models\File;
 use App\Models\Project;
 use App\Models\Sale;
+use App\Traits\HandlesFileUploads;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ContractsController extends Controller
 {
+    use HandlesFileUploads;
+
     public function index(Request $request)
     {
         $query = Contract::with('customer');
@@ -69,6 +74,7 @@ class ContractsController extends Controller
             'customers' => Customer::toOptions(),
             'projects' => Project::toOptions(),
             'sales' => Sale::toOptions(),
+            'uploadLimits' => File::getUploadLimits(),
         ]);
     }
 
@@ -80,23 +86,27 @@ class ContractsController extends Controller
 
         $contract = Contract::create($request->all());
 
+        $this->handleFileUploads($request, $contract);
+
         return redirect(route('contracts.show', $contract->id))->with('success', __('record_saved_message'));
     }
 
     public function show(Request $request, Contract $contract)
     {
         return view('pages.contracts-show', [
-            'contract' => $contract->load(['customer', 'project', 'sale']),
+            'contract' => $contract->load(['customer', 'project', 'sale', 'files']),
+            'uploadLimits' => File::getUploadLimits(),
         ]);
     }
 
     public function edit(Request $request, Contract $contract)
     {
         return view('pages.contracts-edit', [
-            'contract' => $contract,
+            'contract' => $contract->load('files'),
             'customers' => Customer::toOptions(),
             'projects' => Project::toOptions(),
             'sales' => Sale::toOptions(),
+            'uploadLimits' => File::getUploadLimits(),
         ]);
     }
 
@@ -110,13 +120,56 @@ class ContractsController extends Controller
         $contract->fill($request->all());
         $contract->save();
 
-        return redirect(route('contracts.show', $contract->id))->with('success', __('record_saved_message'));
+        $this->handleFileUploads($request, $contract);
+
+        return redirect(route('contracts.edit', $contract->id))->with('success', __('record_saved_message'));
     }
 
     public function destroy(Request $request, Contract $contract)
     {
+        foreach ($contract->files as $file) {
+            $file->deleteFromStorage();
+        }
+
         $contract->delete();
 
         return redirect(route('contracts'))->with('success', __('record_deleted_message'));
+    }
+
+    public function uploadFiles(Request $request, Contract $contract)
+    {
+        $request->validate([
+            'files' => 'required|array',
+            'files.*' => 'file|max:' . (File::getUploadLimits()['max_file_size'] / 1024),
+        ]);
+
+        $this->handleFileUploads($request, $contract);
+
+        return redirect(route('contracts.show', $contract->id))->with('success', __('files_uploaded_message'));
+    }
+
+    public function downloadFile(Request $request, Contract $contract, File $file)
+    {
+        if ($file->fileable_id !== $contract->id || $file->fileable_type !== Contract::class) {
+            abort(404);
+        }
+
+        if (!$file->existsInStorage()) {
+            return back()->with('error', __('file_not_found'));
+        }
+
+        return Storage::disk('local')->download($file->path, $file->original_name);
+    }
+
+    public function deleteFile(Request $request, Contract $contract, File $file)
+    {
+        if ($file->fileable_id !== $contract->id || $file->fileable_type !== Contract::class) {
+            abort(404);
+        }
+
+        $file->deleteFromStorage();
+        $file->delete();
+
+        return redirect(route('contracts.show', $contract->id))->with('success', __('file_deleted_message'));
     }
 }

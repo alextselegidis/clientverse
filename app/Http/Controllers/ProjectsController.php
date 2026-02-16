@@ -14,12 +14,17 @@ namespace App\Http\Controllers;
 
 use App\Enums\ProjectStatusEnum;
 use App\Models\Customer;
+use App\Models\File;
 use App\Models\Project;
 use App\Models\User;
+use App\Traits\HandlesFileUploads;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectsController extends Controller
 {
+    use HandlesFileUploads;
+
     public function index(Request $request)
     {
         $query = Project::with('customer');
@@ -62,6 +67,7 @@ class ProjectsController extends Controller
             'project' => new Project(),
             'customers' => Customer::toOptions(),
             'users' => User::all(),
+            'uploadLimits' => File::getUploadLimits(),
         ]);
     }
 
@@ -77,22 +83,26 @@ class ProjectsController extends Controller
             $project->members()->sync($request->input('members', []));
         }
 
+        $this->handleFileUploads($request, $project);
+
         return redirect(route('projects.show', $project->id))->with('success', __('record_saved_message'));
     }
 
     public function show(Request $request, Project $project)
     {
         return view('pages.projects-show', [
-            'project' => $project->load(['customer', 'milestones', 'members', 'contracts']),
+            'project' => $project->load(['customer', 'milestones', 'members', 'contracts', 'files']),
+            'uploadLimits' => File::getUploadLimits(),
         ]);
     }
 
     public function edit(Request $request, Project $project)
     {
         return view('pages.projects-edit', [
-            'project' => $project->load('members'),
+            'project' => $project->load(['members', 'files']),
             'customers' => Customer::toOptions(),
             'users' => User::all(),
+            'uploadLimits' => File::getUploadLimits(),
         ]);
     }
 
@@ -110,13 +120,56 @@ class ProjectsController extends Controller
             $project->members()->sync($request->input('members', []));
         }
 
-        return redirect(route('projects.show', $project->id))->with('success', __('record_saved_message'));
+        $this->handleFileUploads($request, $project);
+
+        return redirect(route('projects.edit', $project->id))->with('success', __('record_saved_message'));
     }
 
     public function destroy(Request $request, Project $project)
     {
+        foreach ($project->files as $file) {
+            $file->deleteFromStorage();
+        }
+
         $project->delete();
 
         return redirect(route('projects'))->with('success', __('record_deleted_message'));
+    }
+
+    public function uploadFiles(Request $request, Project $project)
+    {
+        $request->validate([
+            'files' => 'required|array',
+            'files.*' => 'file|max:' . (File::getUploadLimits()['max_file_size'] / 1024),
+        ]);
+
+        $this->handleFileUploads($request, $project);
+
+        return redirect(route('projects.show', $project->id))->with('success', __('files_uploaded_message'));
+    }
+
+    public function downloadFile(Request $request, Project $project, File $file)
+    {
+        if ($file->fileable_id !== $project->id || $file->fileable_type !== Project::class) {
+            abort(404);
+        }
+
+        if (!$file->existsInStorage()) {
+            return back()->with('error', __('file_not_found'));
+        }
+
+        return Storage::disk('local')->download($file->path, $file->original_name);
+    }
+
+    public function deleteFile(Request $request, Project $project, File $file)
+    {
+        if ($file->fileable_id !== $project->id || $file->fileable_type !== Project::class) {
+            abort(404);
+        }
+
+        $file->deleteFromStorage();
+        $file->delete();
+
+        return redirect(route('projects.show', $project->id))->with('success', __('file_deleted_message'));
     }
 }

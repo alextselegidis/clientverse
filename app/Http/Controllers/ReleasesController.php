@@ -61,7 +61,7 @@ class ReleasesController extends Controller
         $release->fill($request->all());
         $release->save();
 
-        return redirect(route('releases.show', $release->id))->with('success', __('record_saved_message'));
+        return redirect(route('releases.edit', $release->id))->with('success', __('record_saved_message'));
     }
 
     public function destroy(Release $release)

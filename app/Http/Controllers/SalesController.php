@@ -58,6 +58,14 @@ class SalesController extends Controller
         ]);
     }
 
+    public function create(Request $request)
+    {
+        return view('pages.sales-edit', [
+            'sale' => new Sale(),
+            'customers' => Customer::toOptions(),
+        ]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -95,7 +103,7 @@ class SalesController extends Controller
         $sale->fill($request->input());
         $sale->save();
 
-        return redirect(route('sales.show', $sale->id))->with('success', __('record_saved_message'));
+        return redirect(route('sales.edit', $sale->id))->with('success', __('record_saved_message'));
     }
 
     public function destroy(Request $request, Sale $sale)

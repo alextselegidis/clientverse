@@ -58,6 +58,7 @@ class MilestonesController extends Controller
 
         $data = $request->all();
         $data['project_id'] = $project->id;
+        $data['is_completed'] = $request->has('is_completed');
 
         $milestone = Milestone::create($data);
 
@@ -86,10 +87,13 @@ class MilestonesController extends Controller
             'name' => 'required|min:2',
         ]);
 
-        $milestone->fill($request->all());
+        $data = $request->all();
+        $data['is_completed'] = $request->has('is_completed');
+
+        $milestone->fill($data);
         $milestone->save();
 
-        return redirect(route('projects.milestones.show', [$project->id, $milestone->id]))->with('success', __('record_saved_message'));
+        return redirect(route('projects.milestones.edit', [$project->id, $milestone->id]))->with('success', __('record_saved_message'));
     }
 
     public function destroy(Request $request, Project $project, Milestone $milestone)

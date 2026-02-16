@@ -72,6 +72,11 @@ Route::middleware('auth')->group(function () {
         'destroy' => 'customers.contacts.destroy',
     ]);
 
+    // Customer file routes
+    Route::post('/customers/{customer}/files', [CustomersController::class, 'uploadFiles'])->name('customers.files.upload');
+    Route::get('/customers/{customer}/files/{file}/download', [CustomersController::class, 'downloadFile'])->name('customers.files.download');
+    Route::delete('/customers/{customer}/files/{file}', [CustomersController::class, 'deleteFile'])->name('customers.files.delete');
+
     // ProjectsController
     Route::resource('projects', ProjectsController::class)->names([
         'index' => 'projects',
@@ -88,6 +93,11 @@ Route::middleware('auth')->group(function () {
         'destroy' => 'projects.milestones.destroy',
     ]);
 
+    // Project file routes
+    Route::post('/projects/{project}/files', [ProjectsController::class, 'uploadFiles'])->name('projects.files.upload');
+    Route::get('/projects/{project}/files/{file}/download', [ProjectsController::class, 'downloadFile'])->name('projects.files.download');
+    Route::delete('/projects/{project}/files/{file}', [ProjectsController::class, 'deleteFile'])->name('projects.files.delete');
+
     // SalesController
     Route::resource('sales', SalesController::class)->names([
         'index' => 'sales',
@@ -99,6 +109,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('contracts', ContractsController::class)->names([
         'index' => 'contracts',
     ]);
+
+    // Contract file routes
+    Route::post('/contracts/{contract}/files', [ContractsController::class, 'uploadFiles'])->name('contracts.files.upload');
+    Route::get('/contracts/{contract}/files/{file}/download', [ContractsController::class, 'downloadFile'])->name('contracts.files.download');
+    Route::delete('/contracts/{contract}/files/{file}', [ContractsController::class, 'deleteFile'])->name('contracts.files.delete');
 
     // Setup routes (Admin only)
     Route::middleware(AdminMiddleware::class)->prefix('setup')->group(function () {

@@ -39,7 +39,7 @@
 @section('content')
     <div class="row">
         <div class="col-lg-8">
-            <div class="card border-0 shadow-sm mb-4">
+            <div class="card border-0 shadow-sm">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start mb-4">
                         <div>
@@ -99,6 +99,15 @@
                     @endif
                 </div>
             </div>
+
+            @include('shared.files-section', [
+                'model' => $contract,
+                'uploadRoute' => route('contracts.files.upload', $contract->id),
+                'downloadRoute' => 'contracts.files.download',
+                'deleteRoute' => 'contracts.files.delete',
+                'routeParams' => ['contract' => $contract->id],
+                'uploadLimits' => $uploadLimits,
+            ])
         </div>
 
         <div class="col-lg-4">

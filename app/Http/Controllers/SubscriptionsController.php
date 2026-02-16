@@ -61,7 +61,7 @@ class SubscriptionsController extends Controller
         $subscription->fill($request->all());
         $subscription->save();
 
-        return redirect(route('subscriptions.show', $subscription->id))->with('success', __('record_saved_message'));
+        return redirect(route('subscriptions.edit', $subscription->id))->with('success', __('record_saved_message'));
     }
 
     public function destroy(Subscription $subscription)

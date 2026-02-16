@@ -57,6 +57,11 @@ class Contract extends Model
         return $this->belongsTo(Sale::class);
     }
 
+    public function files()
+    {
+        return $this->morphMany(File::class, 'fileable');
+    }
+
     public static function types(): array
     {
         return [

@@ -56,6 +56,11 @@ class Project extends Model
         return $this->belongsToMany(User::class, 'project_members');
     }
 
+    public function files()
+    {
+        return $this->morphMany(File::class, 'fileable');
+    }
+
     public static function statuses(): array
     {
         return ProjectStatusEnum::labels();

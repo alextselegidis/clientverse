@@ -20,23 +20,31 @@ document.querySelectorAll('.toast').forEach(function (toastEl) {
 
 // Auto-focus create modal input
 
-document
-    .getElementById('create-modal')
-    .addEventListener('shown.bs.modal', (event) => event.target.querySelector('input:not([type="hidden"])').focus());
+document.getElementById('create-modal')?.addEventListener('shown.bs.modal', (event) => {
+    return event.target.querySelector('input:not([type="hidden"])').focus();
+});
 
-// Init all dropdowns
+// Close other table row dropdowns when one opens
 
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('select').forEach(function (el) {
-        new Choices(el, {
-            shouldSort: false,
-            removeItemButton: el.multiple, // Only show remove buttons for multi-selects
+document.addEventListener('show.bs.dropdown', function (event) {
+    // Check if this dropdown is inside a table
+    const table = event.target.closest('table');
+    if (table) {
+        // Find all other open dropdowns in this table and close them
+        const openDropdowns = table.querySelectorAll('.dropdown-menu.show');
+        openDropdowns.forEach(function (dropdown) {
+            // Skip if it's the same dropdown being opened
+            if (dropdown !== event.target.nextElementSibling) {
+                const dropdownInstance = bootstrap.Dropdown.getInstance(dropdown.previousElementSibling);
+                if (dropdownInstance) {
+                    dropdownInstance.hide();
+                }
+            }
         });
-    });
+    }
 });
 
 // Unsaved changes warning for forms
-
 (function () {
     const trackedForms = document.querySelectorAll('form[id]:not([data-no-unsaved-warning])');
 
