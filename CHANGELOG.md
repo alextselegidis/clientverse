@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Added
+
 - Dashboard module with overview widgets, quick actions, recent activity feed, and performance metrics
 - Customers module with company/individual types, status tracking (lead/active/inactive), tags, and metadata
 - Contacts module nested under customers with roles (decision_maker/finance/technical/other), primary contact flag, and portal access
@@ -16,10 +17,12 @@
 - Soft deletes for customers, projects, sales, and contracts
 
 ### Changed
+
 - Transformed application from bookmark manager to CRM
 - Updated routes for CRM module structure
 - Updated language translations for CRM functionality
 
 ### Removed
+
 - Links and Tags bookmark manager functionality
 - Old bookmark-related controllers, models, views, and migrations
