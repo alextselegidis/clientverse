@@ -117,7 +117,8 @@ class SalesController extends Controller
     {
         $contract = Contract::create([
             'customer_id' => $sale->customer_id,
-            'name' => $sale->name,
+            'sale_id' => $sale->id,
+            'title' => $sale->name,
             'value' => $sale->value,
             'currency' => $sale->currency,
             'status' => 'draft',
