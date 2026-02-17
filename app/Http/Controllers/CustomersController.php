@@ -178,4 +178,23 @@ class CustomersController extends Controller
 
         return redirect(route('customers.show', $customer->id))->with('success', __('file_deleted_message'));
     }
+
+    public function bulkDestroy(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:customers,id',
+        ]);
+
+        $customers = Customer::whereIn('id', $request->input('ids'))->get();
+
+        foreach ($customers as $customer) {
+            foreach ($customer->files as $file) {
+                $file->deleteFromStorage();
+            }
+            $customer->delete();
+        }
+
+        return redirect(route('customers'))->with('success', __('records_deleted_message'));
+    }
 }

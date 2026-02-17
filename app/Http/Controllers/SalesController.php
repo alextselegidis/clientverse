@@ -143,4 +143,16 @@ class SalesController extends Controller
 
         return redirect(route('projects.edit', $project->id))->with('success', __('record_saved_message'));
     }
+
+    public function bulkDestroy(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:sales,id',
+        ]);
+
+        Sale::whereIn('id', $request->input('ids'))->delete();
+
+        return redirect(route('sales'))->with('success', __('records_deleted_message'));
+    }
 }

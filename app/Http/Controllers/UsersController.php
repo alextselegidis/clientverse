@@ -129,4 +129,26 @@ class UsersController extends Controller
 
         return redirect(route('setup.users'))->with('success', __('record_deleted_message'));
     }
+
+    public function bulkDestroy(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:users,id',
+        ]);
+
+        $currentUserId = $request->user()->id;
+        $ids = collect($request->input('ids'))->filter(fn($id) => $id != $currentUserId);
+
+        $adminCount = User::where('role', RoleEnum::ADMIN->value)->count();
+        $adminsToDelete = User::whereIn('id', $ids)->where('role', RoleEnum::ADMIN->value)->count();
+
+        if ($adminCount - $adminsToDelete < 1) {
+            return redirect(route('setup.users'))->with('error', __('cannot_deactivate_last_admin'));
+        }
+
+        User::whereIn('id', $ids)->delete();
+
+        return redirect(route('setup.users'))->with('success', __('records_deleted_message'));
+    }
 }

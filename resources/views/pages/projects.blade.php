@@ -33,34 +33,40 @@
         <div class="card-body">
             <!-- Search and Filters -->
             <div class="table-filters">
-                <form action="{{ route('projects') }}" method="GET" class="row g-3">
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text border-end-0">
-                                <i class="bi bi-search text-muted"></i>
-                            </span>
-                            <input type="text" id="q" name="q" class="form-control border-start-0"
-                                   value="{{ $q }}"
-                                   placeholder="{{ __('search') }}...">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <form action="{{ route('projects') }}" method="GET" class="row g-3 flex-grow-1">
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text border-end-0">
+                                    <i class="bi bi-search text-muted"></i>
+                                </span>
+                                <input type="text" id="q" name="q" class="form-control border-start-0"
+                                       value="{{ $q }}"
+                                       placeholder="{{ __('search') }}...">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-3">
-                        <select name="status" class="form-select" onchange="this.form.submit()">
-                            <option value="">{{ __('status') }}: {{ __('all') }}</option>
-                            @foreach(\App\Models\Project::statuses() as $key => $label)
-                                <option value="{{ $key }}" {{ $status == $key ? 'selected' : '' }}>{{ $label }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </form>
+                        <div class="col-md-3">
+                            <select name="status" class="form-select" onchange="this.form.submit()">
+                                <option value="">{{ __('status') }}: {{ __('all') }}</option>
+                                @foreach(\App\Models\Project::statuses() as $key => $label)
+                                    <option value="{{ $key }}" {{ $status == $key ? 'selected' : '' }}>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </form>
+                    @include('shared.bulk-actions', ['tableId' => 'projects', 'route' => route('projects.bulk-destroy')])
+                </div>
             </div>
 
             <!-- Table -->
             <div class="table-responsive">
-                <table class="table table-striped table-hover table-light-header align-middle mb-0">
+                <table class="table table-striped table-hover table-light-header align-middle mb-0" id="projects-table">
                     <thead>
                     <tr>
-                        <th class="ps-3">
+                        <th class="ps-3" style="width: 40px;">
+                            <input type="checkbox" class="form-check-input bulk-select-all" data-table="projects">
+                        </th>
+                        <th>
                             <a href="{{ route('projects', ['sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'status' => $status]) }}" class="text-decoration-none">
                                 {{ __('name') }}
                                 @if(request('sort') === 'name')
@@ -97,18 +103,21 @@
                     </thead>
                     <tbody>
                     @foreach($projects as $project)
-                        <tr onclick="window.location='{{ route('projects.show', $project->id) }}'" style="cursor: pointer;">
-                            <td class="ps-3">
+                        <tr>
+                            <td class="ps-3" onclick="event.stopPropagation();">
+                                <input type="checkbox" class="form-check-input bulk-select-item" data-table="projects" value="{{ $project->id }}">
+                            </td>
+                            <td onclick="window.location='{{ route('projects.show', $project->id) }}'" style="cursor: pointer;">
                                 <span class="fw-medium">{{ $project->name }}</span>
                             </td>
-                            <td>
+                            <td onclick="window.location='{{ route('projects.show', $project->id) }}'" style="cursor: pointer;">
                                 @if($project->customer)
                                     <a href="{{ route('customers.show', $project->customer_id) }}" onclick="event.stopPropagation()">
                                         {{ $project->customer->name }}
                                     </a>
                                 @endif
                             </td>
-                            <td>
+                            <td onclick="window.location='{{ route('projects.show', $project->id) }}'" style="cursor: pointer;">
                                 @php
                                     $statusColors = ['planned' => 'secondary', 'active' => 'primary', 'on_hold' => 'warning', 'completed' => 'success'];
                                 @endphp
@@ -116,7 +125,7 @@
                                     {{ __($project->status) }}
                                 </span>
                             </td>
-                            <td>{{ $project->due_date?->format('M d, Y') }}</td>
+                            <td onclick="window.location='{{ route('projects.show', $project->id) }}'" style="cursor: pointer;">{{ $project->due_date?->format('M d, Y') }}</td>
                             <td class="pe-3 text-end">
                                 <div class="dropdown" onclick="event.stopPropagation();">
                                     <button class="btn btn-sm btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -152,7 +161,7 @@
                     @endforeach
                     @if($projects->isEmpty())
                         <tr>
-                            <td colspan="5" class="text-center text-muted py-5">
+                            <td colspan="6" class="text-center text-muted py-5">
                                 <i class="bi bi-inbox display-4 d-block mb-3"></i>
                                 {{ __('no_records_found') }}
                             </td>
@@ -166,4 +175,6 @@
             {{ __('showing') }} {{ $projects->count() }} {{ __('records') }}
         </div>
     </div>
+
+    @include('shared.bulk-actions-script')
 @endsection

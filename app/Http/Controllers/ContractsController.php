@@ -172,4 +172,23 @@ class ContractsController extends Controller
 
         return redirect(route('contracts.show', $contract->id))->with('success', __('file_deleted_message'));
     }
+
+    public function bulkDestroy(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:contracts,id',
+        ]);
+
+        $contracts = Contract::whereIn('id', $request->input('ids'))->get();
+
+        foreach ($contracts as $contract) {
+            foreach ($contract->files as $file) {
+                $file->deleteFromStorage();
+            }
+            $contract->delete();
+        }
+
+        return redirect(route('contracts'))->with('success', __('records_deleted_message'));
+    }
 }

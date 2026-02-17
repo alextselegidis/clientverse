@@ -33,42 +33,48 @@
         <div class="card-body">
             <!-- Search and Filters -->
             <div class="table-filters">
-                <form action="{{ route('contracts') }}" method="GET" class="row g-3">
-                    <div class="col-md-3">
-                        <div class="input-group">
-                            <span class="input-group-text border-end-0">
-                                <i class="bi bi-search text-muted"></i>
-                            </span>
-                            <input type="text" id="q" name="q" class="form-control border-start-0"
-                                   value="{{ $q }}"
-                                   placeholder="{{ __('search') }}...">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <form action="{{ route('contracts') }}" method="GET" class="row g-3 flex-grow-1">
+                        <div class="col-md-3">
+                            <div class="input-group">
+                                <span class="input-group-text border-end-0">
+                                    <i class="bi bi-search text-muted"></i>
+                                </span>
+                                <input type="text" id="q" name="q" class="form-control border-start-0"
+                                       value="{{ $q }}"
+                                       placeholder="{{ __('search') }}...">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-2">
-                        <select name="type" class="form-select" onchange="this.form.submit()">
-                            <option value="">{{ __('type') }}: {{ __('all') }}</option>
-                            @foreach(\App\Models\Contract::types() as $key => $label)
-                                <option value="{{ $key }}" {{ $type == $key ? 'selected' : '' }}>{{ $label }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <select name="status" class="form-select" onchange="this.form.submit()">
-                            <option value="">{{ __('status') }}: {{ __('all') }}</option>
-                            @foreach(\App\Models\Contract::statuses() as $key => $label)
-                                <option value="{{ $key }}" {{ $status == $key ? 'selected' : '' }}>{{ $label }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </form>
+                        <div class="col-md-2">
+                            <select name="type" class="form-select" onchange="this.form.submit()">
+                                <option value="">{{ __('type') }}: {{ __('all') }}</option>
+                                @foreach(\App\Models\Contract::types() as $key => $label)
+                                    <option value="{{ $key }}" {{ $type == $key ? 'selected' : '' }}>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <select name="status" class="form-select" onchange="this.form.submit()">
+                                <option value="">{{ __('status') }}: {{ __('all') }}</option>
+                                @foreach(\App\Models\Contract::statuses() as $key => $label)
+                                    <option value="{{ $key }}" {{ $status == $key ? 'selected' : '' }}>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </form>
+                    @include('shared.bulk-actions', ['tableId' => 'contracts', 'route' => route('contracts.bulk-destroy')])
+                </div>
             </div>
 
             <!-- Table -->
             <div class="table-responsive">
-                <table class="table table-striped table-hover table-light-header align-middle mb-0">
+                <table class="table table-striped table-hover table-light-header align-middle mb-0" id="contracts-table">
                     <thead>
                     <tr>
-                        <th class="ps-3">
+                        <th class="ps-3" style="width: 40px;">
+                            <input type="checkbox" class="form-check-input bulk-select-all" data-table="contracts">
+                        </th>
+                        <th>
                             <a href="{{ route('contracts', ['sort' => 'title', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none">
                                 {{ __('title') }}
                                 @if(request('sort') === 'title')
@@ -121,23 +127,26 @@
                     </thead>
                     <tbody>
                     @foreach($contracts as $contract)
-                        <tr onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
-                            <td class="ps-3">
+                        <tr>
+                            <td class="ps-3" onclick="event.stopPropagation();">
+                                <input type="checkbox" class="form-check-input bulk-select-item" data-table="contracts" value="{{ $contract->id }}">
+                            </td>
+                            <td onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
                                 <span class="fw-medium">{{ $contract->title }}</span>
                             </td>
-                            <td>
+                            <td onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
                                 @if($contract->customer)
                                     <a href="{{ route('customers.show', $contract->customer_id) }}" onclick="event.stopPropagation()">
                                         {{ $contract->customer->name }}
                                     </a>
                                 @endif
                             </td>
-                            <td>
+                            <td onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
                                 <span class="badge bg-{{ $contract->type == 'recurring' ? 'info' : 'secondary' }}">
                                     {{ __($contract->type) }}
                                 </span>
                             </td>
-                            <td>
+                            <td onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
                                 @php
                                     $statusColors = ['draft' => 'secondary', 'active' => 'success', 'expired' => 'warning', 'cancelled' => 'danger'];
                                 @endphp
@@ -145,14 +154,14 @@
                                     {{ __($contract->status) }}
                                 </span>
                             </td>
-                            <td>
+                            <td onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
                                 @if($contract->value)
                                     {{ $contract->customer?->currency ?? 'USD' }} {{ number_format($contract->value, 2) }}
                                 @else
                                     -
                                 @endif
                             </td>
-                            <td>
+                            <td onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
                                 <small>
                                     {{ $contract->start_date?->format('M d, Y') ?? '-' }}
                                     @if($contract->end_date)
@@ -190,7 +199,7 @@
                     @endforeach
                     @if($contracts->isEmpty())
                         <tr>
-                            <td colspan="7" class="text-center text-muted py-5">
+                            <td colspan="8" class="text-center text-muted py-5">
                                 <i class="bi bi-inbox display-4 d-block mb-3"></i>
                                 {{ __('no_records_found') }}
                             </td>
@@ -204,4 +213,6 @@
             {{ __('showing') }} {{ $contracts->count() }} {{ __('records') }}
         </div>
     </div>
+
+    @include('shared.bulk-actions-script')
 @endsection

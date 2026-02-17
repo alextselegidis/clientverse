@@ -33,34 +33,40 @@
         <div class="card-body">
             <!-- Search and Filters -->
             <div class="table-filters">
-                <form action="{{ route('sales') }}" method="GET" class="row g-3">
-                    <div class="col-md-4">
-                        <div class="input-group">
-                            <span class="input-group-text border-end-0">
-                                <i class="bi bi-search text-muted"></i>
-                            </span>
-                            <input type="text" id="q" name="q" class="form-control border-start-0"
-                                   value="{{ $q }}"
-                                   placeholder="{{ __('search') }}...">
+                <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                    <form action="{{ route('sales') }}" method="GET" class="row g-3 flex-grow-1">
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <span class="input-group-text border-end-0">
+                                    <i class="bi bi-search text-muted"></i>
+                                </span>
+                                <input type="text" id="q" name="q" class="form-control border-start-0"
+                                       value="{{ $q }}"
+                                       placeholder="{{ __('search') }}...">
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-3">
-                        <select name="stage" class="form-select" onchange="this.form.submit()">
-                            <option value="">{{ __('stage') }}: {{ __('all') }}</option>
-                            @foreach(\App\Models\Sale::stages() as $key => $label)
-                                <option value="{{ $key }}" {{ $stage == $key ? 'selected' : '' }}>{{ $label }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </form>
+                        <div class="col-md-3">
+                            <select name="stage" class="form-select" onchange="this.form.submit()">
+                                <option value="">{{ __('stage') }}: {{ __('all') }}</option>
+                                @foreach(\App\Models\Sale::stages() as $key => $label)
+                                    <option value="{{ $key }}" {{ $stage == $key ? 'selected' : '' }}>{{ $label }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </form>
+                    @include('shared.bulk-actions', ['tableId' => 'sales', 'route' => route('sales.bulk-destroy')])
+                </div>
             </div>
 
             <!-- Table -->
             <div class="table-responsive">
-                <table class="table table-striped table-hover table-light-header align-middle mb-0">
+                <table class="table table-striped table-hover table-light-header align-middle mb-0" id="sales-table">
                     <thead>
                     <tr>
-                        <th class="ps-3">
+                        <th class="ps-3" style="width: 40px;">
+                            <input type="checkbox" class="form-check-input bulk-select-all" data-table="sales">
+                        </th>
+                        <th>
                             <a href="{{ route('sales', ['sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'stage' => $stage]) }}" class="text-decoration-none">
                                 {{ __('name') }}
                                 @if(request('sort') === 'name')
@@ -105,23 +111,26 @@
                     </thead>
                     <tbody>
                     @foreach($sales as $sale)
-                        <tr onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">
-                            <td class="ps-3">
+                        <tr>
+                            <td class="ps-3" onclick="event.stopPropagation();">
+                                <input type="checkbox" class="form-check-input bulk-select-item" data-table="sales" value="{{ $sale->id }}">
+                            </td>
+                            <td onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">
                                 <span class="fw-medium">{{ $sale->name }}</span>
                             </td>
-                            <td>
+                            <td onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">
                                 @if($sale->customer)
                                     <a href="{{ route('customers.show', $sale->customer_id) }}" onclick="event.stopPropagation()">
                                         {{ $sale->customer->name }}
                                     </a>
                                 @endif
                             </td>
-                            <td>
+                            <td onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">
                                 @if($sale->value)
                                     {{ $sale->currency ?? 'USD' }} {{ number_format($sale->value, 2) }}
                                 @endif
                             </td>
-                            <td>
+                            <td onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">
                                 @php
                                     $stageColors = ['lead' => 'secondary', 'qualified' => 'info', 'proposal_sent' => 'warning', 'won' => 'success', 'lost' => 'danger'];
                                 @endphp
@@ -129,7 +138,7 @@
                                     {{ __($sale->stage) }}
                                 </span>
                             </td>
-                            <td>{{ $sale->probability }}%</td>
+                            <td onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">{{ $sale->probability }}%</td>
                             <td class="pe-3 text-end">
                                 <div class="dropdown" onclick="event.stopPropagation();">
                                     <button class="btn btn-sm btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">
@@ -178,7 +187,7 @@
                     @endforeach
                     @if($sales->isEmpty())
                         <tr>
-                            <td colspan="6" class="text-center text-muted py-5">
+                            <td colspan="7" class="text-center text-muted py-5">
                                 <i class="bi bi-inbox display-4 d-block mb-3"></i>
                                 {{ __('no_records_found') }}
                             </td>
@@ -192,4 +201,6 @@
             {{ __('showing') }} {{ $sales->count() }} {{ __('records') }}
         </div>
     </div>
+
+    @include('shared.bulk-actions-script')
 @endsection

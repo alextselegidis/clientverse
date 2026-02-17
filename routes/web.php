@@ -57,6 +57,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/about', [AboutController::class, 'index'])->name('about');
 
     // CustomersController
+    Route::delete('customers/bulk-destroy', [CustomersController::class, 'bulkDestroy'])->name('customers.bulk-destroy');
     Route::resource('customers', CustomersController::class)->names([
         'index' => 'customers',
     ]);
@@ -78,6 +79,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/customers/{customer}/files/{file}', [CustomersController::class, 'deleteFile'])->name('customers.files.delete');
 
     // ProjectsController
+    Route::delete('projects/bulk-destroy', [ProjectsController::class, 'bulkDestroy'])->name('projects.bulk-destroy');
     Route::resource('projects', ProjectsController::class)->names([
         'index' => 'projects',
     ]);
@@ -99,6 +101,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/projects/{project}/files/{file}', [ProjectsController::class, 'deleteFile'])->name('projects.files.delete');
 
     // SalesController
+    Route::delete('sales/bulk-destroy', [SalesController::class, 'bulkDestroy'])->name('sales.bulk-destroy');
     Route::resource('sales', SalesController::class)->names([
         'index' => 'sales',
     ]);
@@ -106,6 +109,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/sales/{sale}/convert-to-project', [SalesController::class, 'convertToProject'])->name('sales.convert-to-project');
 
     // ContractsController
+    Route::delete('contracts/bulk-destroy', [ContractsController::class, 'bulkDestroy'])->name('contracts.bulk-destroy');
     Route::resource('contracts', ContractsController::class)->names([
         'index' => 'contracts',
     ]);
@@ -121,6 +125,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/localization', [SettingsController::class, 'index'])->name('setup.localization');
         Route::put('/localization', [SettingsController::class, 'update'])->name('setup.localization.update');
         // UsersController
+        Route::delete('users/bulk-destroy', [UsersController::class, 'bulkDestroy'])->name('setup.users.bulk-destroy');
         Route::resource('users', UsersController::class)->except(['show'])->names([
             'index' => 'setup.users',
             'create' => 'setup.users.create',

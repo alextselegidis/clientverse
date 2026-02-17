@@ -42,24 +42,30 @@
                 <div class="card-body">
                     <!-- Search -->
                     <div class="table-filters">
-                        <form action="{{ route('setup.users') }}" method="GET">
-                            <div class="input-group">
-                                <span class="input-group-text border-end-0">
-                                    <i class="bi bi-search text-muted"></i>
-                                </span>
-                                <input type="text" id="q" name="q" class="form-control border-start-0"
-                                       value="{{ $q }}"
-                                       placeholder="{{ __('search') }}..." style="max-width: 300px;">
-                            </div>
-                        </form>
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                            <form action="{{ route('setup.users') }}" method="GET">
+                                <div class="input-group">
+                                    <span class="input-group-text border-end-0">
+                                        <i class="bi bi-search text-muted"></i>
+                                    </span>
+                                    <input type="text" id="q" name="q" class="form-control border-start-0"
+                                           value="{{ $q }}"
+                                           placeholder="{{ __('search') }}..." style="max-width: 300px;">
+                                </div>
+                            </form>
+                            @include('shared.bulk-actions', ['tableId' => 'users', 'route' => route('setup.users.bulk-destroy')])
+                        </div>
                     </div>
 
                     <!-- Table -->
                     <div class="table-responsive" style="overflow: visible;">
-                        <table class="table table-striped table-hover table-light-header align-middle mb-0">
+                        <table class="table table-striped table-hover table-light-header align-middle mb-0" id="users-table">
                             <thead>
                                 <tr>
-                                    <th class="ps-4">
+                                    <th class="ps-4" style="width: 40px;">
+                                        <input type="checkbox" class="form-check-input bulk-select-all" data-table="users">
+                                    </th>
+                                    <th>
                                         <a href="{{ route('setup.users', ['sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}" class="text-decoration-none">
                                             {{ __('name') }}
                                             @if(request('sort') === 'name')
@@ -96,19 +102,22 @@
                             </thead>
                             <tbody>
                                 @foreach($users as $user)
-                                    <tr onclick="window.location='{{ route('setup.users.edit', $user->id) }}'" style="cursor: pointer;">
-                                        <td class="ps-4">
+                                    <tr>
+                                        <td class="ps-4" onclick="event.stopPropagation();">
+                                            <input type="checkbox" class="form-check-input bulk-select-item" data-table="users" value="{{ $user->id }}">
+                                        </td>
+                                        <td onclick="window.location='{{ route('setup.users.edit', $user->id) }}'" style="cursor: pointer;">
                                             <span class="fw-medium">{{ $user->name }}</span>
                                         </td>
-                                        <td>
+                                        <td onclick="window.location='{{ route('setup.users.edit', $user->id) }}'" style="cursor: pointer;">
                                             <a href="mailto:{{ $user->email }}" class="text-decoration-none" onclick="event.stopPropagation();">
                                                 {{ $user->email }}
                                             </a>
                                         </td>
-                                        <td>
+                                        <td onclick="window.location='{{ route('setup.users.edit', $user->id) }}'" style="cursor: pointer;">
                                             <span class="badge bg-light text-dark">{{ __($user->role) }}</span>
                                         </td>
-                                        <td>
+                                        <td onclick="window.location='{{ route('setup.users.edit', $user->id) }}'" style="cursor: pointer;">
                                             @if($user->is_active)
                                                 <span class="badge bg-success-subtle text-success">{{ __('yes') }}</span>
                                             @else
@@ -144,7 +153,7 @@
                                 @endforeach
                                 @if($users->isEmpty())
                                     <tr>
-                                        <td colspan="5" class="text-center text-muted py-5">
+                                        <td colspan="6" class="text-center text-muted py-5">
                                             <i class="bi bi-inbox display-4 d-block mb-3"></i>
                                             {{ __('no_records_found') }}
                                         </td>
@@ -161,4 +170,5 @@
         </div>
     </div>
     @include('modals.create-modal', ['route' => route('setup.users.store')])
+    @include('shared.bulk-actions-script')
 @endsection

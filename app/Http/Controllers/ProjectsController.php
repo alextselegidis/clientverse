@@ -172,4 +172,23 @@ class ProjectsController extends Controller
 
         return redirect(route('projects.show', $project->id))->with('success', __('file_deleted_message'));
     }
+
+    public function bulkDestroy(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:projects,id',
+        ]);
+
+        $projects = Project::whereIn('id', $request->input('ids'))->get();
+
+        foreach ($projects as $project) {
+            foreach ($project->files as $file) {
+                $file->deleteFromStorage();
+            }
+            $project->delete();
+        }
+
+        return redirect(route('projects'))->with('success', __('records_deleted_message'));
+    }
 }
