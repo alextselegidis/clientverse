@@ -29,6 +29,7 @@ class SettingsController extends Controller
         return view('pages.settings', [
             'defaultLocale' => setting('default_locale'),
             'defaultTimezone' => setting('default_timezone'),
+            'defaultCurrency' => setting('default_currency') ?? 'USD',
         ]);
     }
 
@@ -39,11 +40,13 @@ class SettingsController extends Controller
         $request->validate([
             'default_locale' => 'required',
             'default_timezone' => 'required',
+            'default_currency' => 'required',
         ]);
 
         setting([
             'default_locale' => $request->input('default_locale'),
             'default_timezone' => $request->input('default_timezone'),
+            'default_currency' => $request->input('default_currency'),
         ]);
 
         return redirect(route('setup.localization'))->with('success', __('record_saved_message'));

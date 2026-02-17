@@ -29,92 +29,94 @@
 @endsection
 
 @section('content')
-    <div class="card border-0 shadow-sm">
+    <div class="card card-table border-0 shadow-sm">
         <div class="card-body">
             <!-- Search and Filters -->
-            <form action="{{ route('contracts') }}" method="GET" class="row g-3 mb-4">
-                <div class="col-md-3">
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-end-0">
-                            <i class="bi bi-search text-muted"></i>
-                        </span>
-                        <input type="text" id="q" name="q" class="form-control bg-light border-start-0"
-                               value="{{ $q }}"
-                               placeholder="{{ __('search') }}...">
+            <div class="table-filters">
+                <form action="{{ route('contracts') }}" method="GET" class="row g-3">
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <span class="input-group-text border-end-0">
+                                <i class="bi bi-search text-muted"></i>
+                            </span>
+                            <input type="text" id="q" name="q" class="form-control border-start-0"
+                                   value="{{ $q }}"
+                                   placeholder="{{ __('search') }}...">
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-2">
-                    <select name="type" class="form-select" onchange="this.form.submit()">
-                        <option value="">{{ __('type') }}: {{ __('all') }}</option>
-                        @foreach(\App\Models\Contract::types() as $key => $label)
-                            <option value="{{ $key }}" {{ $type == $key ? 'selected' : '' }}>{{ $label }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-md-2">
-                    <select name="status" class="form-select" onchange="this.form.submit()">
-                        <option value="">{{ __('status') }}: {{ __('all') }}</option>
-                        @foreach(\App\Models\Contract::statuses() as $key => $label)
-                            <option value="{{ $key }}" {{ $status == $key ? 'selected' : '' }}>{{ $label }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </form>
+                    <div class="col-md-2">
+                        <select name="type" class="form-select" onchange="this.form.submit()">
+                            <option value="">{{ __('type') }}: {{ __('all') }}</option>
+                            @foreach(\App\Models\Contract::types() as $key => $label)
+                                <option value="{{ $key }}" {{ $type == $key ? 'selected' : '' }}>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <select name="status" class="form-select" onchange="this.form.submit()">
+                            <option value="">{{ __('status') }}: {{ __('all') }}</option>
+                            @foreach(\App\Models\Contract::statuses() as $key => $label)
+                                <option value="{{ $key }}" {{ $status == $key ? 'selected' : '' }}>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </form>
+            </div>
 
             <!-- Table -->
             <div class="table-responsive">
-                <table class="table table-striped table-hover align-middle mb-0">
-                    <thead class="table-dark">
+                <table class="table table-striped table-hover table-light-header align-middle mb-0">
+                    <thead>
                     <tr>
-                        <th class="border-0 ps-3">
-                            <a href="{{ route('contracts', ['sort' => 'title', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none text-white">
+                        <th class="ps-3">
+                            <a href="{{ route('contracts', ['sort' => 'title', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none">
                                 {{ __('title') }}
                                 @if(request('sort') === 'title')
                                     <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                 @endif
                             </a>
                         </th>
-                        <th class="border-0">
-                            <a href="{{ route('contracts', ['sort' => 'customer', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none text-white">
+                        <th>
+                            <a href="{{ route('contracts', ['sort' => 'customer', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none">
                                 {{ __('customer') }}
                                 @if(request('sort') === 'customer')
                                     <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                 @endif
                             </a>
                         </th>
-                        <th class="border-0">
-                            <a href="{{ route('contracts', ['sort' => 'type', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none text-white">
+                        <th>
+                            <a href="{{ route('contracts', ['sort' => 'type', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none">
                                 {{ __('type') }}
                                 @if(request('sort') === 'type')
                                     <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                 @endif
                             </a>
                         </th>
-                        <th class="border-0">
-                            <a href="{{ route('contracts', ['sort' => 'status', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none text-white">
+                        <th>
+                            <a href="{{ route('contracts', ['sort' => 'status', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none">
                                 {{ __('status') }}
                                 @if(request('sort') === 'status')
                                     <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                 @endif
                             </a>
                         </th>
-                        <th class="border-0">
-                            <a href="{{ route('contracts', ['sort' => 'value', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none text-white">
+                        <th>
+                            <a href="{{ route('contracts', ['sort' => 'value', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none">
                                 {{ __('value') }}
                                 @if(request('sort') === 'value')
                                     <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                 @endif
                             </a>
                         </th>
-                        <th class="border-0">
-                            <a href="{{ route('contracts', ['sort' => 'start_date', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none text-white">
+                        <th>
+                            <a href="{{ route('contracts', ['sort' => 'start_date', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none">
                                 {{ __('dates') }}
                                 @if(request('sort') === 'start_date')
                                     <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                 @endif
                             </a>
                         </th>
-                        <th class="border-0 pe-3 text-end" style="width: 100px;"></th>
+                        <th class="pe-3 text-end" style="width: 100px;"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -188,7 +190,7 @@
                     @endforeach
                     @if($contracts->isEmpty())
                         <tr>
-                            <td colspan="7" class="border-0 text-center text-muted py-5">
+                            <td colspan="7" class="text-center text-muted py-5">
                                 <i class="bi bi-inbox display-4 d-block mb-3"></i>
                                 {{ __('no_records_found') }}
                             </td>
@@ -197,6 +199,9 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+        <div class="card-footer text-muted small">
+            {{ __('showing') }} {{ $contracts->count() }} {{ __('records') }}
         </div>
     </div>
 @endsection

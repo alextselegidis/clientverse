@@ -29,76 +29,78 @@
 @endsection
 
 @section('content')
-    <div class="card border-0 shadow-sm">
+    <div class="card card-table border-0 shadow-sm">
         <div class="card-body">
             <!-- Search and Filters -->
-            <form action="{{ route('sales') }}" method="GET" class="row g-3 mb-4">
-                <div class="col-md-4">
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-end-0">
-                            <i class="bi bi-search text-muted"></i>
-                        </span>
-                        <input type="text" id="q" name="q" class="form-control bg-light border-start-0"
-                               value="{{ $q }}"
-                               placeholder="{{ __('search') }}...">
+            <div class="table-filters">
+                <form action="{{ route('sales') }}" method="GET" class="row g-3">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-text border-end-0">
+                                <i class="bi bi-search text-muted"></i>
+                            </span>
+                            <input type="text" id="q" name="q" class="form-control border-start-0"
+                                   value="{{ $q }}"
+                                   placeholder="{{ __('search') }}...">
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <select name="stage" class="form-select" onchange="this.form.submit()">
-                        <option value="">{{ __('stage') }}: {{ __('all') }}</option>
-                        @foreach(\App\Models\Sale::stages() as $key => $label)
-                            <option value="{{ $key }}" {{ $stage == $key ? 'selected' : '' }}>{{ $label }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </form>
+                    <div class="col-md-3">
+                        <select name="stage" class="form-select" onchange="this.form.submit()">
+                            <option value="">{{ __('stage') }}: {{ __('all') }}</option>
+                            @foreach(\App\Models\Sale::stages() as $key => $label)
+                                <option value="{{ $key }}" {{ $stage == $key ? 'selected' : '' }}>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </form>
+            </div>
 
             <!-- Table -->
             <div class="table-responsive">
-                <table class="table table-striped table-hover align-middle mb-0">
-                    <thead class="table-dark">
+                <table class="table table-striped table-hover table-light-header align-middle mb-0">
+                    <thead>
                     <tr>
-                        <th class="border-0 ps-3">
-                            <a href="{{ route('sales', ['sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'stage' => $stage]) }}" class="text-decoration-none text-white">
+                        <th class="ps-3">
+                            <a href="{{ route('sales', ['sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'stage' => $stage]) }}" class="text-decoration-none">
                                 {{ __('name') }}
                                 @if(request('sort') === 'name')
                                     <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                 @endif
                             </a>
                         </th>
-                        <th class="border-0">
-                            <a href="{{ route('sales', ['sort' => 'customer', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'stage' => $stage]) }}" class="text-decoration-none text-white">
+                        <th>
+                            <a href="{{ route('sales', ['sort' => 'customer', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'stage' => $stage]) }}" class="text-decoration-none">
                                 {{ __('customer') }}
                                 @if(request('sort') === 'customer')
                                     <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                 @endif
                             </a>
                         </th>
-                        <th class="border-0">
-                            <a href="{{ route('sales', ['sort' => 'value', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'stage' => $stage]) }}" class="text-decoration-none text-white">
+                        <th>
+                            <a href="{{ route('sales', ['sort' => 'value', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'stage' => $stage]) }}" class="text-decoration-none">
                                 {{ __('value') }}
                                 @if(request('sort') === 'value')
                                     <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                 @endif
                             </a>
                         </th>
-                        <th class="border-0">
-                            <a href="{{ route('sales', ['sort' => 'stage', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'stage' => $stage]) }}" class="text-decoration-none text-white">
+                        <th>
+                            <a href="{{ route('sales', ['sort' => 'stage', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'stage' => $stage]) }}" class="text-decoration-none">
                                 {{ __('stage') }}
                                 @if(request('sort') === 'stage')
                                     <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                 @endif
                             </a>
                         </th>
-                        <th class="border-0">
-                            <a href="{{ route('sales', ['sort' => 'probability', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'stage' => $stage]) }}" class="text-decoration-none text-white">
+                        <th>
+                            <a href="{{ route('sales', ['sort' => 'probability', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'stage' => $stage]) }}" class="text-decoration-none">
                                 {{ __('probability') }}
                                 @if(request('sort') === 'probability')
                                     <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                 @endif
                             </a>
                         </th>
-                        <th class="border-0 pe-3 text-end" style="width: 100px;"></th>
+                        <th class="pe-3 text-end" style="width: 100px;"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -176,7 +178,7 @@
                     @endforeach
                     @if($sales->isEmpty())
                         <tr>
-                            <td colspan="6" class="border-0 text-center text-muted py-5">
+                            <td colspan="6" class="text-center text-muted py-5">
                                 <i class="bi bi-inbox display-4 d-block mb-3"></i>
                                 {{ __('no_records_found') }}
                             </td>
@@ -185,6 +187,9 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+        <div class="card-footer text-muted small">
+            {{ __('showing') }} {{ $sales->count() }} {{ __('records') }}
         </div>
     </div>
 @endsection

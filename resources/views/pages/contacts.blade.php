@@ -31,68 +31,70 @@
 @endsection
 
 @section('content')
-    <div class="card border-0 shadow-sm">
+    <div class="card card-table border-0 shadow-sm">
         <div class="card-body">
             <!-- Search -->
-            <form action="{{ route('customers.contacts', $customer->id) }}" method="GET" class="row g-3 mb-4">
-                <div class="col-md-4">
-                    <div class="input-group">
-                        <span class="input-group-text bg-light border-end-0">
-                            <i class="bi bi-search text-muted"></i>
-                        </span>
-                        <input type="text" id="q" name="q" class="form-control bg-light border-start-0"
-                               value="{{ $q }}"
-                               placeholder="{{ __('search') }}...">
+            <div class="table-filters">
+                <form action="{{ route('customers.contacts', $customer->id) }}" method="GET" class="row g-3">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-text border-end-0">
+                                <i class="bi bi-search text-muted"></i>
+                            </span>
+                            <input type="text" id="q" name="q" class="form-control border-start-0"
+                                   value="{{ $q }}"
+                                   placeholder="{{ __('search') }}...">
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
 
             <!-- Table -->
             <div class="table-responsive">
-                <table class="table table-striped table-hover align-middle mb-0">
-                    <thead class="table-dark">
+                <table class="table table-striped table-hover table-light-header align-middle mb-0">
+                    <thead>
                     <tr>
-                        <th class="border-0 ps-3">
-                            <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none text-white">
+                        <th class="ps-3">
+                            <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none">
                                 {{ __('name') }}
                                 @if(request('sort') === 'name')
                                     <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                 @endif
                             </a>
                         </th>
-                        <th class="border-0">
-                            <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'email', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none text-white">
+                        <th>
+                            <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'email', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none">
                                 {{ __('email') }}
                                 @if(request('sort') === 'email')
                                     <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                 @endif
                             </a>
                         </th>
-                        <th class="border-0">
-                            <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'phone', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none text-white">
+                        <th>
+                            <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'phone', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none">
                                 {{ __('phone') }}
                                 @if(request('sort') === 'phone')
                                     <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                 @endif
                             </a>
                         </th>
-                        <th class="border-0">
-                            <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'role', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none text-white">
+                        <th>
+                            <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'role', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none">
                                 {{ __('role') }}
                                 @if(request('sort') === 'role')
                                     <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                 @endif
                             </a>
                         </th>
-                        <th class="border-0">
-                            <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'is_primary', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none text-white">
+                        <th>
+                            <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'is_primary', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none">
                                 {{ __('primary') }}
                                 @if(request('sort') === 'is_primary')
                                     <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                 @endif
                             </a>
                         </th>
-                        <th class="border-0 pe-3 text-end" style="width: 100px;"></th>
+                        <th class="pe-3 text-end" style="width: 100px;"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -155,7 +157,7 @@
                     @endforeach
                     @if($contacts->isEmpty())
                         <tr>
-                            <td colspan="6" class="border-0 text-center text-muted py-5">
+                            <td colspan="6" class="text-center text-muted py-5">
                                 <i class="bi bi-inbox display-4 d-block mb-3"></i>
                                 {{ __('no_records_found') }}
                             </td>
@@ -164,6 +166,9 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+        <div class="card-footer text-muted small">
+            {{ __('showing') }} {{ $contacts->firstItem() ?? 0 }} - {{ $contacts->lastItem() ?? 0 }} {{ __('of') }} {{ $contacts->total() }} {{ __('records') }}
         </div>
     </div>
 @endsection

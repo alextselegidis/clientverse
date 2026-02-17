@@ -176,8 +176,73 @@ a:hover {
 /* Better button styling */
 .btn {
     font-weight: 500;
-    padding: 0.5rem 1.25rem;
     border-radius: 0.375rem;
+}
+
+/* Clean table design */
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+.table > :not(caption) > * > * {
+    border-bottom-width: 1px;
+    border-bottom-color: #e9ecef;
+}
+
+/* Remove last row border */
+.table > tbody > tr:last-child > * {
+    border-bottom: 0;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+    background-color: #fafafa;
+}
+
+.table-hover > tbody > tr:hover > * {
+    background-color: #f5f5f5;
+}
+
+/* Light gray table header */
+.table-light-header > thead {
+    background-color: #f8f9fa;
+}
+
+.table-light-header > thead > tr > th {
+    background-color: #f8f9fa;
+    color: #495057;
+    font-weight: normal;
+    border-bottom: 1px solid #dee2e6;
+    transition: background-color 0.15s ease-in-out;
+}
+
+.table-light-header > thead > tr > th:has(a):hover {
+    background-color: #e9ecef;
+}
+
+.table-light-header > thead > tr > th a {
+    color: #495057;
+}
+
+.table-light-header > thead > tr > th a:hover {
+    color: #212529;
+}
+
+/* Card with table - zero padding on card-body */
+.card-table > .card-body {
+    padding: 0;
+}
+
+/* Filter/search section above table */
+.card-table .table-filters {
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+/* Pagination section below table */
+.card-table .table-pagination {
+    padding: 1rem;
+    border-top: 1px solid #e9ecef;
 }
 
 @media (min-width: 992px) {

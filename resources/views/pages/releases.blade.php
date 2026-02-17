@@ -27,86 +27,88 @@
         <!-- Main Content -->
         <div class="flex-grow-1">
             <h5 class="fw-bold mb-3">{{ __('releases') }}</h5>
-            <!-- Search -->
-            <form action="{{route('releases')}}" method="GET" class="mb-4">
-                <div class="input-group">
-                    <span class="input-group-text bg-light border-end-0">
-                        <i class="bi bi-search text-muted"></i>
-                    </span>
-                    <input type="text" id="q" name="q" class="form-control bg-light border-start-0"
-                           value="{{$q}}"
-                           placeholder="{{__('search')}}..." style="max-width: 300px;">
-                </div>
-            </form>
-            <div class="card border-0 shadow-sm rounded-3">
-                <div class="card-body p-0">
+            <div class="card card-table border-0 shadow-sm rounded-3">
+                <div class="card-body">
+                    <!-- Search -->
+                    <div class="table-filters">
+                        <form action="{{route('releases')}}" method="GET">
+                            <div class="input-group">
+                                <span class="input-group-text border-end-0">
+                                    <i class="bi bi-search text-muted"></i>
+                                </span>
+                                <input type="text" id="q" name="q" class="form-control border-start-0"
+                                       value="{{$q}}"
+                                       placeholder="{{__('search')}}..." style="max-width: 300px;">
+                            </div>
+                        </form>
+                    </div>
                     <!-- Table -->
                     <div class="table-responsive" style="overflow: visible;">
-                        <table class="table table-striped table-hover align-middle mb-0">
-                            <thead class="table-dark">
+                        <table class="table table-striped table-hover table-light-header align-middle mb-0">
+                            <thead>
                                 <tr>
-                                    <th class="border-0 ps-4">
-                                        <a href="{{ route('releases', ['sort' => 'id', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none text-white">
+                                    <th class="ps-4">
+                                        <a href="{{ route('releases', ['sort' => 'id', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none">
                                             {{ __('id') }}
                                             @if(request('sort') === 'id')
                                                 <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                             @endif
                                         </a>
                                     </th>
-                                    <th class="border-0">
-                                        <a href="{{ route('releases', ['sort' => 'project', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none text-white">
+                                    <th>
+                                        <a href="{{ route('releases', ['sort' => 'project', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none">
                                             {{ __('project') }}
                                             @if(request('sort') === 'project')
                                                 <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                             @endif
                                         </a>
                                     </th>
-                                    <th class="border-0">
-                                        <a href="{{ route('releases', ['sort' => 'version', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none text-white">
+                                    <th>
+                                        <a href="{{ route('releases', ['sort' => 'version', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none">
                                             {{ __('version') }}
                                             @if(request('sort') === 'version')
                                                 <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                             @endif
                                         </a>
                                     </th>
-                                    <th class="border-0">
-                                        <a href="{{ route('releases', ['sort' => 'environment', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none text-white">
+                                    <th>
+                                        <a href="{{ route('releases', ['sort' => 'environment', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none">
                                             {{ __('environment') }}
                                             @if(request('sort') === 'environment')
                                                 <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                             @endif
                                         </a>
                                     </th>
-                                    <th class="border-0">
-                                        <a href="{{ route('releases', ['sort' => 'released_at', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none text-white">
+                                    <th>
+                                        <a href="{{ route('releases', ['sort' => 'released_at', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none">
                                             {{ __('released_at') }}
                                             @if(request('sort') === 'released_at')
                                                 <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
                                             @endif
                                         </a>
                                     </th>
-                                    <th class="border-0 pe-4 text-end" style="width: 100px;"></th>
+                                    <th class="pe-4 text-end" style="width: 100px;"></th>
                                 </tr>
                             </thead>
                             <tbody>
                             @foreach($releases as $release)
                                 <tr onclick="window.location='{{route('releases.show', $release->id)}}'" style="cursor: pointer;">
-                                    <td class="border-0 ps-4">
+                                    <td class="ps-4">
                                         <span class="fw-medium">{{ $release->id }}</span>
                                     </td>
-                                    <td class="border-0">
+                                    <td>
                                         {{$release->project?->name ?? '-'}}
                                     </td>
-                                    <td class="border-0">
+                                    <td>
                                         {{$release->version}}
                                     </td>
-                                    <td class="border-0">
+                                    <td>
                                         {{$release->environment}}
                                     </td>
-                                    <td class="border-0">
+                                    <td>
                                         {{ $release->released_at?->format('M d, Y H:i') ?? '-' }}
                                     </td>
-                                    <td class="border-0 pe-4 text-end">
+                                    <td class="pe-4 text-end">
                                         <div class="dropdown" onclick="event.stopPropagation();">
                                             <button class="btn btn-sm btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">
                                                 {{__('actions')}}
@@ -135,7 +137,7 @@
                             @endforeach
                             @if($releases->isEmpty())
                                 <tr>
-                                    <td colspan="6" class="border-0 text-center text-muted py-5">
+                                    <td colspan="6" class="text-center text-muted py-5">
                                         <i class="bi bi-inbox display-4 d-block mb-3"></i>
                                         {{ __('no_records_found') }}
                                     </td>
@@ -144,6 +146,9 @@
                             </tbody>
                         </table>
                     </div>
+                </div>
+                <div class="card-footer text-muted small">
+                    {{ __('showing') }} {{ $releases->count() }} {{ __('records') }}
                 </div>
             </div>
         </div>
