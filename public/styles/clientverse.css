@@ -68,6 +68,17 @@ a:hover {
     --bs-btn-active-border-color: #3e5375;
 }
 
+.btn-dark {
+    --bs-btn-bg: #333333;
+    --bs-btn-border-color: #333333;
+    --bs-btn-hover-bg: #222222;
+    --bs-btn-hover-border-color: #1a1a1a;
+    --bs-btn-active-bg: #1a1a1a;
+    --bs-btn-active-border-color: #111111;
+    --bs-btn-disabled-bg: #333333;
+    --bs-btn-disabled-border-color: #333333;
+}
+
 .bg-primary {
     background-color: #3e5375 !important;
 }

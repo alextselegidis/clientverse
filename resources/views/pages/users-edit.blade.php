@@ -118,9 +118,6 @@
                 </div>
                 <!-- Card Footer with Save Button -->
                 <div class="card-footer bg-body-secondary border-top text-end py-3 px-4">
-                    <button type="button" class="btn btn-outline-secondary me-2" onclick="history.back()">
-                        {{ __('cancel') }}
-                    </button>
                     <button type="submit" form="edit-form" class="btn btn-dark">
                         {{ __('save') }}
                     </button>

@@ -11,7 +11,7 @@
 @section('navActions')
     <a href="#" class="nav-link me-lg-3" data-bs-toggle="modal" data-bs-target="#create-modal">
         <i class="bi bi-plus-square me-2"></i>
-        {{__('create')}}
+        {{__('add')}}
     </a>
 
     <form action="{{route('releases.destroy', $release->id)}}"
@@ -105,9 +105,6 @@
             </form>
         </div>
         <div class="card-footer bg-body-secondary border-top text-end py-3 px-4">
-            <button type="button" class="btn btn-outline-secondary me-2" onclick="history.back()">
-                {{__('cancel')}}
-            </button>
             <button type="submit" form="edit-form" class="btn btn-dark">
                 {{__('save')}}
             </button>

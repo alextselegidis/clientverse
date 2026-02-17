@@ -24,21 +24,43 @@
     ]])
 @endsection
 
+@section('navActions')
+    @if($milestone->exists)
+        <a href="{{ route('projects.milestones.create', $project->id) }}" class="nav-link me-lg-3">
+            <i class="bi bi-plus-square me-2"></i>
+            {{ __('add') }}
+        </a>
+        <form action="{{ route('projects.milestones.destroy', [$project->id, $milestone->id]) }}"
+              method="POST"
+              onsubmit="return confirm('{{ __('delete_record_prompt') }}')">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="nav-link">
+                <i class="bi bi-trash me-2"></i>
+                {{ __('delete') }}
+            </button>
+        </form>
+    @endif
+@endsection
+
 @section('content')
-    <div class="d-flex flex-column flex-lg-row gap-4">
-        @if($milestone->exists)
+    @if($milestone->exists)
+        <div class="d-flex flex-column flex-lg-row gap-4">
             <!-- Edit Sidebar -->
             <div class="flex-shrink-0" style="min-width: 180px;">
                 @include('shared.edit-sidebar', ['items' => [
                     ['label' => __('details'), 'route' => 'projects.milestones.edit', 'params' => ['project' => $project->id, 'milestone' => $milestone->id], 'icon' => 'file-text']
                 ]])
             </div>
-        @endif
-        <!-- Main Content -->
-        <div class="flex-grow-1">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-            <form action="{{ $milestone->exists ? route('projects.milestones.update', [$project->id, $milestone->id]) : route('projects.milestones.store', $project->id) }}" method="POST">
+            <!-- Main Content -->
+            <div class="flex-grow-1">
+    @else
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+    @endif
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+            <form action="{{ $milestone->exists ? route('projects.milestones.update', [$project->id, $milestone->id]) : route('projects.milestones.store', $project->id) }}" method="POST" id="edit-form">
                 @csrf
                 @if($milestone->exists)
                     @method('PUT')
@@ -74,16 +96,12 @@
                            value="1" {{ old('is_completed', $milestone->is_completed) ? 'checked' : '' }}>
                     <label for="is_completed" class="form-check-label">{{ __('completed') }}</label>
                 </div>
-
-                <div class="d-flex gap-2 justify-content-end">
-                    <a href="{{ route('projects.milestones', $project->id) }}" class="btn btn-outline-secondary">
-                        {{ __('cancel') }}
-                    </a>
-                    <button type="submit" class="btn btn-primary">
-                        {{ __('save') }}
-                    </button>
-                </div>
             </form>
+        </div>
+        <div class="card-footer bg-body-secondary border-top text-end py-3 px-4">
+            <button type="submit" form="edit-form" class="btn btn-dark">
+                {{ __('save') }}
+            </button>
         </div>
     </div>
         </div>

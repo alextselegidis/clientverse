@@ -23,6 +23,10 @@
 @endsection
 
 @section('navActions')
+    <a href="{{ route('customers.create') }}" class="nav-link me-lg-3">
+        <i class="bi bi-plus-square me-2"></i>
+        {{ __('add') }}
+    </a>
     <a href="{{ route('customers.edit', $customer->id) }}" class="nav-link me-lg-3">
         <i class="bi bi-pencil me-2"></i>
         {{ __('edit') }}
@@ -33,7 +37,7 @@
           class="d-inline">
         @csrf
         @method('DELETE')
-        <button type="submit" class="nav-link text-danger">
+        <button type="submit" class="nav-link">
             <i class="bi bi-trash me-2"></i>
             {{ __('delete') }}
         </button>

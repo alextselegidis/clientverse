@@ -24,21 +24,43 @@
     ]])
 @endsection
 
+@section('navActions')
+    @if($contact->exists)
+        <a href="{{ route('customers.contacts.create', $customer->id) }}" class="nav-link me-lg-3">
+            <i class="bi bi-plus-square me-2"></i>
+            {{ __('add') }}
+        </a>
+        <form action="{{ route('customers.contacts.destroy', [$customer->id, $contact->id]) }}"
+              method="POST"
+              onsubmit="return confirm('{{ __('delete_record_prompt') }}')">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="nav-link">
+                <i class="bi bi-trash me-2"></i>
+                {{ __('delete') }}
+            </button>
+        </form>
+    @endif
+@endsection
+
 @section('content')
-    <div class="d-flex flex-column flex-lg-row gap-4">
-        @if($contact->exists)
+    @if($contact->exists)
+        <div class="d-flex flex-column flex-lg-row gap-4">
             <!-- Edit Sidebar -->
             <div class="flex-shrink-0" style="min-width: 180px;">
                 @include('shared.edit-sidebar', ['items' => [
                     ['label' => __('details'), 'route' => 'customers.contacts.edit', 'params' => ['customer' => $customer->id, 'contact' => $contact->id], 'icon' => 'file-text']
                 ]])
             </div>
-        @endif
-        <!-- Main Content -->
-        <div class="flex-grow-1">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-            <form action="{{ $contact->exists ? route('customers.contacts.update', [$customer->id, $contact->id]) : route('customers.contacts.store', $customer->id) }}" method="POST">
+            <!-- Main Content -->
+            <div class="flex-grow-1">
+    @else
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+    @endif
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+            <form action="{{ $contact->exists ? route('customers.contacts.update', [$customer->id, $contact->id]) : route('customers.contacts.store', $customer->id) }}" method="POST" id="edit-form">
                 @csrf
                 @if($contact->exists)
                     @method('PUT')
@@ -109,16 +131,12 @@
                     <label for="notes" class="form-label">{{ __('notes') }}</label>
                     <textarea id="notes" name="notes" class="form-control" rows="3">{{ old('notes', $contact->notes) }}</textarea>
                 </div>
-
-                <div class="d-flex gap-2 justify-content-end">
-                    <a href="{{ $contact->exists ? route('customers.contacts.show', [$customer->id, $contact->id]) : route('customers.contacts', $customer->id) }}" class="btn btn-outline-secondary">
-                        {{ __('cancel') }}
-                    </a>
-                    <button type="submit" class="btn btn-primary">
-                        {{ __('save') }}
-                    </button>
-                </div>
             </form>
+        </div>
+        <div class="card-footer bg-body-secondary border-top text-end py-3 px-4">
+            <button type="submit" form="edit-form" class="btn btn-dark">
+                {{ __('save') }}
+            </button>
         </div>
     </div>
         </div>

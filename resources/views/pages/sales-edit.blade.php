@@ -22,32 +22,54 @@
     ]])
 @endsection
 
+@section('navActions')
+    @if($sale->exists)
+        <a href="{{ route('sales.create') }}" class="nav-link me-lg-3">
+            <i class="bi bi-plus-square me-2"></i>
+            {{ __('add') }}
+        </a>
+        <form action="{{ route('sales.destroy', $sale->id) }}"
+              method="POST"
+              onsubmit="return confirm('{{ __('delete_record_prompt') }}')">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="nav-link">
+                <i class="bi bi-trash me-2"></i>
+                {{ __('delete') }}
+            </button>
+        </form>
+    @endif
+@endsection
+
 @section('content')
-    <div class="d-flex flex-column flex-lg-row gap-4">
-        @if($sale->exists)
+    @if($sale->exists)
+        <div class="d-flex flex-column flex-lg-row gap-4">
             <!-- Edit Sidebar -->
             <div class="flex-shrink-0" style="min-width: 180px;">
                 @include('shared.edit-sidebar', ['items' => [
                     ['label' => __('details'), 'route' => 'sales.edit', 'params' => ['sale' => $sale->id], 'icon' => 'file-text']
                 ]])
             </div>
-        @endif
-        <!-- Main Content -->
-        <div class="flex-grow-1">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <form action="{{ $sale->exists ? route('sales.update', $sale->id) : route('sales.store') }}" method="POST">
-                        @csrf
-                        @if($sale->exists)
-                            @method('PUT')
-                        @endif
+            <!-- Main Content -->
+            <div class="flex-grow-1">
+    @else
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+    @endif
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <form action="{{ $sale->exists ? route('sales.update', $sale->id) : route('sales.store') }}" method="POST" id="edit-form">
+                            @csrf
+                            @if($sale->exists)
+                                @method('PUT')
+                            @endif
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="name" class="form-label">
-                                    {{ __('name') }}
-                                    <span class="text-danger">*</span>
-                                </label>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="name" class="form-label">
+                                        {{ __('name') }}
+                                        <span class="text-danger">*</span>
+                                    </label>
                                 <input type="text" id="name" name="name" class="form-control" required
                                        value="{{ old('name', $sale->name) }}">
                                 @error('name')
@@ -117,16 +139,12 @@
                             <label for="notes" class="form-label">{{ __('notes') }}</label>
                             <textarea id="notes" name="notes" class="form-control" rows="4">{{ old('notes', $sale->notes) }}</textarea>
                         </div>
-
-                        <div class="d-flex gap-2 justify-content-end">
-                            <a href="{{ $sale->exists ? route('sales.show', $sale->id) : route('sales') }}" class="btn btn-outline-secondary">
-                                {{ __('cancel') }}
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                {{ __('save') }}
-                            </button>
-                        </div>
                     </form>
+                </div>
+                <div class="card-footer bg-body-secondary border-top text-end py-3 px-4">
+                    <button type="submit" form="edit-form" class="btn btn-dark">
+                        {{ __('save') }}
+                    </button>
                 </div>
             </div>
         </div>

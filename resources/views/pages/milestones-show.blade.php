@@ -25,14 +25,18 @@
 @endsection
 
 @section('navActions')
-    <a href="{{ route('projects.milestones.edit', [$project->id, $milestone->id]) }}" class="nav-link me-3">
+    <a href="{{ route('projects.milestones.create', $project->id) }}" class="nav-link me-lg-3">
+        <i class="bi bi-plus-square me-2"></i>
+        {{ __('add') }}
+    </a>
+    <a href="{{ route('projects.milestones.edit', [$project->id, $milestone->id]) }}" class="nav-link me-lg-3">
         <i class="bi bi-pencil me-2"></i>{{ __('edit') }}
     </a>
     <form action="{{ route('projects.milestones.destroy', [$project->id, $milestone->id]) }}" method="POST"
           onsubmit="return confirm('{{ __('delete_record_prompt') }}')">
         @csrf
         @method('DELETE')
-        <button type="submit" class="nav-link text-danger">
+        <button type="submit" class="nav-link">
             <i class="bi bi-trash me-2"></i>{{ __('delete') }}
         </button>
     </form>

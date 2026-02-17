@@ -21,12 +21,16 @@
 @endsection
 
 @section('navActions')
-    <a href="{{ route('users.edit', ['user' => $user->id]) }}" class="nav-link me-lg-3">
+    <a href="#" class="nav-link me-lg-3" data-bs-toggle="modal" data-bs-target="#create-modal">
+        <i class="bi bi-plus-square me-2"></i>
+        {{__('add')}}
+    </a>
+    <a href="{{ route('setup.users.edit', ['user' => $user->id]) }}" class="nav-link me-lg-3">
         <i class="bi bi-pencil me-2"></i>
         {{__('edit')}}
     </a>
 
-    <form action="{{route('users.destroy', $user->id)}}"
+    <form action="{{route('setup.users.destroy', $user->id)}}"
           method="POST"
           onsubmit="return confirm('{{__('delete_record_prompt')}}')">
         @csrf

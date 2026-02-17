@@ -30,7 +30,7 @@
                     <div class="d-flex align-items-center">
                         <div class="flex-shrink-0">
                             <div class="bg-primary bg-opacity-10 rounded-3 p-3">
-                                <i class="bi bi-people text-primary fs-4"></i>
+                                <i class="bi bi-people text-white fs-4"></i>
                             </div>
                         </div>
                         <div class="flex-grow-1 ms-3">
@@ -145,8 +145,8 @@
                     <div class="list-group list-group-flush">
                         @foreach($recentCustomers as $customer)
                             <a href="{{ route('customers.show', $customer->id) }}" class="list-group-item list-group-item-action d-flex align-items-center">
-                                <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-3">
-                                    <i class="bi bi-person-plus text-primary"></i>
+                                <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                    <i class="bi bi-person-plus text-white"></i>
                                 </div>
                                 <div class="flex-grow-1">
                                     <div class="fw-medium">{{ $customer->name }}</div>
@@ -157,7 +157,7 @@
                         @endforeach
                         @foreach($recentProjects as $project)
                             <a href="{{ route('projects.show', $project->id) }}" class="list-group-item list-group-item-action d-flex align-items-center">
-                                <div class="bg-success bg-opacity-10 rounded-circle p-2 me-3">
+                                <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                                     <i class="bi bi-kanban text-success"></i>
                                 </div>
                                 <div class="flex-grow-1">

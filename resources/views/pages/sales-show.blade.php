@@ -23,6 +23,10 @@
 @endsection
 
 @section('navActions')
+    <a href="{{ route('sales.create') }}" class="nav-link me-lg-3">
+        <i class="bi bi-plus-square me-2"></i>
+        {{ __('add') }}
+    </a>
     <a href="{{ route('sales.edit', $sale->id) }}" class="nav-link me-lg-3">
         <i class="bi bi-pencil me-2"></i>
         {{ __('edit') }}
@@ -36,6 +40,16 @@
             </button>
         </form>
     @endif
+    <form action="{{ route('sales.destroy', $sale->id) }}"
+          method="POST"
+          onsubmit="return confirm('{{ __('delete_record_prompt') }}')">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="nav-link">
+            <i class="bi bi-trash me-2"></i>
+            {{ __('delete') }}
+        </button>
+    </form>
 @endsection
 
 @section('content')
