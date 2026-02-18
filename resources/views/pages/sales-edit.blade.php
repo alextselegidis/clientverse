@@ -70,7 +70,7 @@
                                         {{ __('name') }}
                                         <span class="text-danger">*</span>
                                     </label>
-                                <input type="text" id="name" name="name" class="form-control" required
+                                <input type="text" id="name" name="name" class="form-control" required autofocus
                                        value="{{ old('name', $sale->name) }}">
                                 @error('name')
                                 <span class="form-text text-danger">{{ $message }}</span>

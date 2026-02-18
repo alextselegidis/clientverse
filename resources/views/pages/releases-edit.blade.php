@@ -48,7 +48,7 @@
                         {{ __('version') }}
                         <span class="text-danger">*</span>
                     </label>
-                    <input type="text" id="version" name="version" class="form-control" required
+                    <input type="text" id="version" name="version" class="form-control" required autofocus
                            value="{{ old('version', $release?->version ?? null) }}">
                     @error('version')
                     <span class="form-text text-danger">{{ $message }}</span>

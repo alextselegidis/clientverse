@@ -60,8 +60,14 @@ class SalesController extends Controller
 
     public function create(Request $request)
     {
+        $sale = new Sale();
+        
+        if ($request->has('customer_id')) {
+            $sale->customer_id = $request->query('customer_id');
+        }
+        
         return view('pages.sales-edit', [
-            'sale' => new Sale(),
+            'sale' => $sale,
             'customers' => Customer::toOptions(),
         ]);
     }

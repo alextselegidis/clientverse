@@ -58,7 +58,7 @@
                                     <label for="name" class="form-label text-dark small fw-medium">
                                         <span class="text-danger">*</span> {{ __('name') }}
                                     </label>
-                                    <input type="text" id="name" name="name" class="form-control" required
+                                    <input type="text" id="name" name="name" class="form-control" required autofocus
                                            value="{{ old('name', $user?->name ?? null) }}">
                                     @error('name')
                                     <span class="form-text text-danger">{{ $message }}</span>

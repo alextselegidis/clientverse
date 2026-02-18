@@ -48,7 +48,7 @@
                         {{ __('plan') }}
                         <span class="text-danger">*</span>
                     </label>
-                    <input type="text" id="plan" name="plan" class="form-control" required
+                    <input type="text" id="plan" name="plan" class="form-control" required autofocus
                            value="{{ old('plan', $subscription?->plan ?? null) }}">
                     @error('plan')
                     <span class="form-text text-danger">{{ $message }}</span>

@@ -151,7 +151,12 @@
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
                     <h6 class="mb-0"><i class="bi bi-kanban me-2"></i>{{ __('projects') }}</h6>
-                    <span class="badge bg-primary">{{ $customer->projects->count() }}</span>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-primary">{{ $customer->projects->count() }}</span>
+                        <a href="{{ route('projects.create', ['customer_id' => $customer->id]) }}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-plus"></i> {{ __('add') }}
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body p-0">
                     @if($customer->projects->count())
@@ -175,7 +180,12 @@
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
                     <h6 class="mb-0"><i class="bi bi-graph-up me-2"></i>{{ __('sales') }}</h6>
-                    <span class="badge bg-warning">{{ $customer->sales->count() }}</span>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-warning">{{ $customer->sales->count() }}</span>
+                        <a href="{{ route('sales.create', ['customer_id' => $customer->id]) }}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-plus"></i> {{ __('add') }}
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body p-0">
                     @if($customer->sales->count())
@@ -197,7 +207,12 @@
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
                     <h6 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>{{ __('contracts') }}</h6>
-                    <span class="badge bg-info">{{ $customer->contracts->count() }}</span>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-info">{{ $customer->contracts->count() }}</span>
+                        <a href="{{ route('contracts.create', ['customer_id' => $customer->id]) }}" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-plus"></i> {{ __('add') }}
+                        </a>
+                    </div>
                 </div>
                 <div class="card-body p-0">
                     @if($customer->contracts->count())

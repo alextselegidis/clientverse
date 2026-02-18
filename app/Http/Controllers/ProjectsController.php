@@ -63,8 +63,14 @@ class ProjectsController extends Controller
 
     public function create(Request $request)
     {
+        $project = new Project();
+        
+        if ($request->has('customer_id')) {
+            $project->customer_id = $request->query('customer_id');
+        }
+        
         return view('pages.projects-edit', [
-            'project' => new Project(),
+            'project' => $project,
             'customers' => Customer::toOptions(),
             'users' => User::all(),
             'uploadLimits' => File::getUploadLimits(),

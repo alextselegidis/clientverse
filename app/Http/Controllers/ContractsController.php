@@ -69,8 +69,14 @@ class ContractsController extends Controller
 
     public function create(Request $request)
     {
+        $contract = new Contract();
+        
+        if ($request->has('customer_id')) {
+            $contract->customer_id = $request->query('customer_id');
+        }
+        
         return view('pages.contracts-edit', [
-            'contract' => new Contract(),
+            'contract' => $contract,
             'customers' => Customer::toOptions(),
             'projects' => Project::toOptions(),
             'sales' => Sale::toOptions(),
