@@ -69,6 +69,11 @@ class Customer extends Model
         return $this->morphMany(File::class, 'fileable');
     }
 
+    public function customerNotes()
+    {
+        return $this->hasMany(CustomerNote::class)->orderBy('created_at', 'desc');
+    }
+
     public function primaryContact()
     {
         return $this->hasOne(Contact::class)->where('is_primary', true);

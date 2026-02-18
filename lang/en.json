@@ -341,5 +341,8 @@
     "file_not_found": "File not found.",
     "delete_file_prompt": "Are you sure you want to delete this file?",
     "showing": "Showing",
-    "of": "of"
+    "of": "of",
+    "enter_note": "Enter note",
+    "no_notes_yet": "No notes yet",
+    "unknown": "Unknown"
 }

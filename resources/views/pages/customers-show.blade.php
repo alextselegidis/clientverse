@@ -85,13 +85,11 @@
                             @if($customer->currency)
                                 <p class="mb-2"><i class="bi bi-currency-exchange me-2 text-muted"></i>{{ __('currency') }}: {{ $customer->currency }}</p>
                             @endif
+                        @if($customer->billing_address)
+                                <p class="mb-2"><i class="bi bi-receipt me-2 text-muted"></i>{{ __('billing_address') }}: {{ $customer->billing_address }}</p>
+                            @endif
                         </div>
                     </div>
-                    @if($customer->notes)
-                        <hr>
-                        <h6>{{ __('notes') }}</h6>
-                        <p class="text-muted mb-0">{!! nl2br(e($customer->notes)) !!}</p>
-                    @endif
                 </div>
                 <div class="card-footer bg-transparent text-muted small">
                     {{ __('created') }}: {{ $customer->created_at->format('M d, Y') }} |
@@ -131,6 +129,82 @@
                         </div>
                     @else
                         <div class="text-center text-muted py-4">{{ __('no_records_found') }}</div>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Notes Section -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0"><i class="bi bi-sticky me-2"></i>{{ __('notes') }}</h6>
+                    <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="collapse" data-bs-target="#add-note-form">
+                        <i class="bi bi-plus"></i> {{ __('add') }}
+                    </button>
+                </div>
+                <div class="card-body">
+                    <!-- Add Note Form -->
+                    <div class="collapse mb-3" id="add-note-form">
+                        <form action="{{ route('customers.notes.store', $customer->id) }}" method="POST">
+                            @csrf
+                            <div class="mb-2">
+                                <textarea name="content" class="form-control" rows="3" placeholder="{{ __('enter_note') }}..." required></textarea>
+                            </div>
+                            <div class="text-end">
+                                <button type="button" class="btn btn-sm btn-secondary" data-bs-toggle="collapse" data-bs-target="#add-note-form">{{ __('cancel') }}</button>
+                                <button type="submit" class="btn btn-sm btn-primary">{{ __('save') }}</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    @if($customer->customerNotes->count())
+                        @foreach($customer->customerNotes as $note)
+                            <div class="border-bottom pb-3 mb-3" id="note-{{ $note->id }}">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <small class="text-muted">
+                                        {{ $note->user?->name ?? __('unknown') }} &middot; {{ $note->created_at->format('M d, Y H:i') }}
+                                    </small>
+                                    <div class="dropdown">
+                                        <button class="btn btn-sm btn-link text-muted p-0" type="button" data-bs-toggle="dropdown">
+                                            <i class="bi bi-three-dots"></i>
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li>
+                                                <a href="#" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('edit-note-{{ $note->id }}').classList.toggle('d-none'); document.getElementById('view-note-{{ $note->id }}').classList.toggle('d-none');">
+                                                    <i class="bi bi-pencil me-2"></i>{{ __('edit') }}
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <form action="{{ route('customers.notes.destroy', [$customer->id, $note->id]) }}" method="POST" onsubmit="return confirm('{{ __('delete_record_prompt') }}')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="dropdown-item text-danger">
+                                                        <i class="bi bi-trash me-2"></i>{{ __('delete') }}
+                                                    </button>
+                                                </form>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <div id="view-note-{{ $note->id }}">
+                                    <p class="mb-0">{!! nl2br(e($note->content)) !!}</p>
+                                </div>
+                                <div id="edit-note-{{ $note->id }}" class="d-none">
+                                    <form action="{{ route('customers.notes.update', [$customer->id, $note->id]) }}" method="POST">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="mb-2">
+                                            <textarea name="content" class="form-control" rows="3" required>{{ $note->content }}</textarea>
+                                        </div>
+                                        <div class="text-end">
+                                            <button type="button" class="btn btn-sm btn-secondary" onclick="document.getElementById('edit-note-{{ $note->id }}').classList.add('d-none'); document.getElementById('view-note-{{ $note->id }}').classList.remove('d-none');">{{ __('cancel') }}</button>
+                                            <button type="submit" class="btn btn-sm btn-primary">{{ __('save') }}</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="text-center text-muted py-3">{{ __('no_notes_yet') }}</div>
                     @endif
                 </div>
             </div>
@@ -219,7 +293,7 @@
                         <div class="list-group list-group-flush">
                             @foreach($customer->contracts->take(5) as $contract)
                                 <a href="{{ route('contracts.show', $contract->id) }}" class="list-group-item list-group-item-action">
-                                    {{ $contract->name }}
+                                    {{ $contract->title }}
                                     <span class="badge bg-{{ $contract->status == 'active' ? 'success' : 'secondary' }} float-end">
                                         {{ __($contract->status) }}
                                     </span>

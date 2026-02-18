@@ -14,6 +14,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\ContractsController;
+use App\Http\Controllers\CustomerNotesController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
@@ -77,6 +78,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/customers/{customer}/files', [CustomersController::class, 'uploadFiles'])->name('customers.files.upload');
     Route::get('/customers/{customer}/files/{file}/download', [CustomersController::class, 'downloadFile'])->name('customers.files.download');
     Route::delete('/customers/{customer}/files/{file}', [CustomersController::class, 'deleteFile'])->name('customers.files.delete');
+
+    // Customer notes routes
+    Route::post('/customers/{customer}/notes', [CustomerNotesController::class, 'store'])->name('customers.notes.store');
+    Route::put('/customers/{customer}/notes/{note}', [CustomerNotesController::class, 'update'])->name('customers.notes.update');
+    Route::delete('/customers/{customer}/notes/{note}', [CustomerNotesController::class, 'destroy'])->name('customers.notes.destroy');
 
     // ProjectsController
     Route::delete('projects/bulk-destroy', [ProjectsController::class, 'bulkDestroy'])->name('projects.bulk-destroy');
