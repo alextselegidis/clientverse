@@ -37,7 +37,7 @@ class LoginController extends Controller
 
         $this->ensureIsNotRateLimited($request);
 
-        if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+        if (!Auth::attempt(array_merge($request->only('email', 'password'), ['is_active' => true]), $request->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey($request));
 
             throw ValidationException::withMessages([

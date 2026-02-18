@@ -41,7 +41,7 @@
                         @method('PUT')
                         <div class="mb-3">
                             <label for="default-locale" class="form-label text-dark small fw-medium">
-                                <span class="text-danger">*</span> {{ __('default_locale') }}
+                                {{ __('default_locale') }} <span class="text-danger">*</span>
                             </label>
                             @include('shared.locale-dropdown', [
                                 'name' => 'default_locale',
@@ -56,7 +56,7 @@
 
                         <div class="mb-3">
                             <label for="default-timezone" class="form-label text-dark small fw-medium">
-                                <span class="text-danger">*</span> {{ __('default_timezone') }}
+                                {{ __('default_timezone') }} <span class="text-danger">*</span>
                             </label>
 
                             @include('shared.timezone-dropdown', [
@@ -73,7 +73,7 @@
 
                         <div class="mb-3">
                             <label for="default-currency" class="form-label text-dark small fw-medium">
-                                <span class="text-danger">*</span> {{ __('default_currency') }}
+                                {{ __('default_currency') }} <span class="text-danger">*</span>
                             </label>
                             <select name="default_currency" id="default-currency" class="form-select" required>
                                 <optgroup label="Common Currencies">

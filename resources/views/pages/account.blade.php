@@ -38,7 +38,7 @@
                         <!-- Name -->
                         <div class="mb-3">
                             <label for="name" class="form-label text-dark fw-medium">
-                                <span class="text-danger">*</span> {{ __('name') }}
+                                {{ __('name') }} <span class="text-danger">*</span>
                             </label>
                             <input
                                 type="text"
@@ -56,7 +56,7 @@
                         <!-- Email -->
                         <div class="mb-3">
                             <label for="email" class="form-label text-dark fw-medium">
-                                <span class="text-danger">*</span> {{ __('email') }}
+                                {{ __('email') }} <span class="text-danger">*</span>
                             </label>
                             <input
                                 type="email"

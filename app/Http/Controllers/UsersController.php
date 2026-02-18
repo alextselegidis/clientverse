@@ -89,6 +89,7 @@ class UsersController extends Controller
         ]);
 
         $payload = $request->input();
+        $payload['is_active'] = $request->has('is_active');
 
         if (empty($payload['password'])) {
             unset($payload['password'], $payload['password_confirmation']);
@@ -99,6 +100,20 @@ class UsersController extends Controller
             $user->isAdmin() &&
             $payload['role'] !== RoleEnum::ADMIN->value &&
             User::where('role', RoleEnum::ADMIN->value)->count() === 1
+        ) {
+            return back()->with('error', __('cannot_deactivate_last_admin'));
+        }
+
+        // Prevent deactivating self
+        if ($user->id === $request->user()->id && !$payload['is_active']) {
+            return back()->with('error', __('cannot_deactivate_self'));
+        }
+
+        // Prevent deactivating last admin
+        if (
+            $user->isAdmin() &&
+            !$payload['is_active'] &&
+            User::where('role', RoleEnum::ADMIN->value)->where('is_active', true)->count() === 1
         ) {
             return back()->with('error', __('cannot_deactivate_last_admin'));
         }

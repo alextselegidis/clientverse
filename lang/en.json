@@ -307,6 +307,8 @@
     "filter_by_tag": "Filter by Tag",
     "clear": "Clear",
     "cannot_deactivate_last_admin": "You cannot deactivate the last admin.",
+    "cannot_deactivate_self": "You cannot deactivate your own account.",
+    "inactive_users_cannot_login": "Inactive users cannot log in to the application.",
     "admin": "Admin",
     "mark_as_archived": "Marked as archived",
     "current_password": "Current Password",
