@@ -156,7 +156,7 @@
                             </td>
                             <td onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
                                 @if($contract->value)
-                                    {{ $contract->customer?->currency ?? 'USD' }} {{ number_format($contract->value, 2) }}
+                                    {{ format_currency($contract->value, $contract->customer?->currency) }}
                                 @else
                                     -
                                 @endif

@@ -127,7 +127,7 @@
                             </td>
                             <td onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">
                                 @if($sale->value)
-                                    {{ $sale->currency ?? 'USD' }} {{ number_format($sale->value, 2) }}
+                                    {{ format_currency($sale->value, $sale->currency) }}
                                 @endif
                             </td>
                             <td onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">

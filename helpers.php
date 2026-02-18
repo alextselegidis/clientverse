@@ -52,3 +52,23 @@ if (!function_exists('setting')) {
         return $setting->value ?? $default;
     }
 }
+
+if (!function_exists('default_currency')) {
+    function default_currency(): string
+    {
+        return setting('default_currency') ?? 'USD';
+    }
+}
+
+if (!function_exists('format_currency')) {
+    function format_currency(float|int|null $amount, ?string $currency = null): string
+    {
+        if ($amount === null) {
+            return '-';
+        }
+        
+        $currency = $currency ?? default_currency();
+        
+        return $currency . ' ' . number_format($amount, 2);
+    }
+}

@@ -79,7 +79,7 @@
                             <p class="mb-2">
                                 <strong>{{ __('value') }}:</strong>
                                 @if($sale->value)
-                                    {{ $sale->currency ?? 'USD' }} {{ number_format($sale->value, 2) }}
+                                    {{ format_currency($sale->value, $sale->currency) }}
                                 @else
                                     -
                                 @endif
@@ -93,7 +93,7 @@
                             <p class="mb-2">
                                 <strong>{{ __('expected_value') }}:</strong>
                                 @if($sale->value && $sale->probability)
-                                    {{ $sale->currency ?? 'USD' }} {{ number_format($sale->expected_value, 2) }}
+                                    {{ format_currency($sale->expected_value, $sale->currency) }}
                                 @else
                                     -
                                 @endif

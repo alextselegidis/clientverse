@@ -72,7 +72,7 @@
                             <small class="text-muted d-block">{{ __('value') }}</small>
                             <span class="fs-5 fw-bold">
                                 @if($contract->value)
-                                    {{ $contract->customer?->currency ?? 'USD' }} {{ number_format($contract->value, 2) }}
+                                    {{ format_currency($contract->value, $contract->customer?->currency) }}
                                 @else
                                     -
                                 @endif

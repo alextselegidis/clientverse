@@ -143,7 +143,7 @@
                     <div class="col-md-6 mb-3">
                         <label for="currency" class="form-label">{{ __('currency') }}</label>
                         <input type="text" id="currency" name="currency" class="form-control" maxlength="3"
-                               value="{{ old('currency', $customer->currency ?? 'USD') }}">
+                               value="{{ old('currency', $customer->currency ?? default_currency()) }}">
                     </div>
                 </div>
 

@@ -77,7 +77,7 @@
                             <h3 class="mb-0">{{ $openDeals }}</h3>
                             <small class="text-muted">{{ __('open_deals') }}</small>
                             @if($openDealsValue > 0)
-                                <div><small class="text-success">${{ number_format($openDealsValue, 2) }}</small></div>
+                                <div><small class="text-success">{{ format_currency($openDealsValue) }}</small></div>
                             @endif
                         </div>
                     </div>
@@ -184,7 +184,7 @@
                     <h6 class="mb-0"><i class="bi bi-bar-chart me-2"></i>{{ __('monthly_sales') }}</h6>
                 </div>
                 <div class="card-body text-center">
-                    <h2 class="text-success mb-0">${{ number_format($monthlySales, 2) }}</h2>
+                    <h2 class="text-success mb-0">{{ format_currency($monthlySales) }}</h2>
                     <small class="text-muted">{{ now()->format('F Y') }}</small>
                 </div>
             </div>
