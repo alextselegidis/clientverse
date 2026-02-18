@@ -55,10 +55,10 @@
                     <thead>
                     <tr>
                         <th class="ps-3">
-                            <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none">
+                            <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'first_name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none">
                                 {{ __('name') }}
-                                @if(request('sort') === 'name')
-                                    <i class="bi bi-chevron-{{ request('direction') === 'asc' ? 'up' : 'down' }} ms-1"></i>
+                                @if(request('sort') === 'first_name' || !request('sort'))
+                                    <i class="bi bi-chevron-{{ request('direction') === 'asc' || !request('direction') ? 'up' : 'down' }} ms-1"></i>
                                 @endif
                             </a>
                         </th>
@@ -101,7 +101,7 @@
                     @foreach($contacts as $contact)
                         <tr onclick="window.location='{{ route('customers.contacts.show', [$customer->id, $contact->id]) }}'" style="cursor: pointer;">
                             <td class="ps-3">
-                                <span class="fw-medium">{{ $contact->name }}</span>
+                                <span class="fw-medium">{{ $contact->full_name }}</span>
                                 @if($contact->position)
                                     <small class="text-muted d-block">{{ $contact->position }}</small>
                                 @endif

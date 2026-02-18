@@ -13,12 +13,14 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Contact extends Model
 {
     protected $fillable = [
         'customer_id',
-        'name',
+        'first_name',
+        'last_name',
         'email',
         'phone',
         'position',
@@ -33,9 +35,21 @@ class Contact extends Model
         'has_portal_access' => 'boolean',
     ];
 
+    protected $appends = ['full_name'];
+
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    /**
+     * Get the contact's full name.
+     */
+    protected function fullName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => trim($this->first_name . ' ' . ($this->last_name ?? '')),
+        );
     }
 
     public static function roles(): array
@@ -56,6 +70,6 @@ class Contact extends Model
             $query->where($where);
         }
 
-        return $query->selectRaw('name AS label, id AS value')->get();
+        return $query->selectRaw("CONCAT(first_name, ' ', COALESCE(last_name, '')) AS label, id AS value")->get();
     }
 }

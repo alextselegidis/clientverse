@@ -114,7 +114,7 @@
                                 <a href="{{ route('customers.contacts.show', [$customer->id, $contact->id]) }}" class="list-group-item list-group-item-action">
                                     <div class="d-flex justify-content-between align-items-center">
                                         <div>
-                                            <strong>{{ $contact->name }}</strong>
+                                            <strong>{{ $contact->full_name }}</strong>
                                             @if($contact->is_primary)
                                                 <span class="badge bg-primary ms-2">{{ __('is_primary') }}</span>
                                             @endif

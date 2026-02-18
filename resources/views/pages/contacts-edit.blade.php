@@ -20,7 +20,7 @@
         ['label' => __('customers'), 'url' => route('customers')],
         ['label' => $customer->name, 'url' => route('customers.show', $customer->id)],
         ['label' => __('contacts'), 'url' => route('customers.contacts', $customer->id)],
-        ['label' => $contact->exists ? $contact->name : __('create')]
+        ['label' => $contact->exists ? $contact->full_name : __('create')]
     ]])
 @endsection
 
@@ -68,21 +68,21 @@
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="name" class="form-label">
-                            {{ __('name') }}
+                        <label for="first_name" class="form-label">
+                            {{ __('first_name') }}
                             <span class="text-danger">*</span>
                         </label>
-                        <input type="text" id="name" name="name" class="form-control" required autofocus
-                               value="{{ old('name', $contact->name) }}">
-                        @error('name')
+                        <input type="text" id="first_name" name="first_name" class="form-control" required autofocus
+                               value="{{ old('first_name', $contact->first_name) }}">
+                        @error('first_name')
                         <span class="form-text text-danger">{{ $message }}</span>
                         @enderror
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label for="position" class="form-label">{{ __('position') }}</label>
-                        <input type="text" id="position" name="position" class="form-control"
-                               value="{{ old('position', $contact->position) }}">
+                        <label for="last_name" class="form-label">{{ __('last_name') }}</label>
+                        <input type="text" id="last_name" name="last_name" class="form-control"
+                               value="{{ old('last_name', $contact->last_name) }}">
                     </div>
                 </div>
 
@@ -102,6 +102,12 @@
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
+                        <label for="position" class="form-label">{{ __('position') }}</label>
+                        <input type="text" id="position" name="position" class="form-control"
+                               value="{{ old('position', $contact->position) }}">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
                         <label for="role" class="form-label">{{ __('role') }}</label>
                         <select id="role" name="role" class="form-select">
                             @foreach(\App\Models\Contact::roles() as $key => $label)
@@ -111,9 +117,10 @@
                             @endforeach
                         </select>
                     </div>
+                </div>
 
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label d-block">&nbsp;</label>
+                <div class="row">
+                    <div class="col-12 mb-3">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" id="is_primary" name="is_primary" value="1"
                                    {{ old('is_primary', $contact->is_primary) ? 'checked' : '' }}>

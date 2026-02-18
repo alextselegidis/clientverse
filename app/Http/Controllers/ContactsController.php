@@ -26,13 +26,14 @@ class ContactsController extends Controller
         if ($q) {
             $query->where(function ($query) use ($q) {
                 $query
-                    ->where('name', 'like', "%{$q}%")
+                    ->where('first_name', 'like', "%{$q}%")
+                    ->orWhere('last_name', 'like', "%{$q}%")
                     ->orWhere('email', 'like', "%{$q}%")
                     ->orWhere('phone', 'like', "%{$q}%");
             });
         }
 
-        $sort = $request->query('sort', 'name');
+        $sort = $request->query('sort', 'first_name');
         $direction = $request->query('direction', 'asc');
         if ($sort && $direction) {
             $query->orderBy($sort, $direction);
@@ -58,7 +59,7 @@ class ContactsController extends Controller
     public function store(Request $request, Customer $customer)
     {
         $request->validate([
-            'name' => 'required',
+            'first_name' => 'required',
         ]);
 
         $data = $request->all();
@@ -88,7 +89,7 @@ class ContactsController extends Controller
     public function update(Request $request, Customer $customer, Contact $contact)
     {
         $request->validate([
-            'name' => 'required|min:2',
+            'first_name' => 'required|min:2',
             'email' => 'nullable|email',
         ]);
 

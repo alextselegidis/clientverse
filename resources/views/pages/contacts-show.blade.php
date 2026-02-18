@@ -12,7 +12,7 @@
 @extends('layouts.main-layout')
 
 @section('pageTitle')
-    {{ $contact->name }}
+    {{ $contact->full_name }}
 @endsection
 
 @section('breadcrumbs')
@@ -20,7 +20,7 @@
         ['label' => __('customers'), 'url' => route('customers')],
         ['label' => $customer->name, 'url' => route('customers.show', $customer->id)],
         ['label' => __('contacts'), 'url' => route('customers.contacts', $customer->id)],
-        ['label' => $contact->name]
+        ['label' => $contact->full_name]
     ]])
 @endsection
 
@@ -49,7 +49,7 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start mb-4">
                         <div>
-                            <h4 class="mb-1">{{ $contact->name }}</h4>
+                            <h4 class="mb-1">{{ $contact->full_name }}</h4>
                             @if($contact->position)
                                 <span class="text-muted">{{ $contact->position }}</span>
                             @endif
