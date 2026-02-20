@@ -100,6 +100,11 @@
                                             <i class="bi bi-info-circle me-2"></i>{{ __('about') }}
                                         </a>
                                     </li>
+                                    <li>
+                                        <a class="dropdown-item text-danger" href="https://clientverse.org/premium" target="_blank">
+                                            <i class="bi bi-star me-2 text-warning"></i>{{ __('premium') }}
+                                        </a>
+                                    </li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
                                         <form action="{{ route('logout.perform') }}" method="POST">

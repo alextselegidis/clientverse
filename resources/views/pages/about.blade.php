@@ -42,6 +42,20 @@
                     alextselegidis.com
                 </a>
             </div>
+
+            <hr class="my-5">
+
+            <div class="mb-4">
+                <h2 class="fs-4 mb-3">
+                    <i class="bi bi-star-fill text-warning me-2"></i>{{ __('premium') }}
+                </h2>
+                <p class="text-secondary mb-4">
+                    {{ __('premium_description') }}
+                </p>
+                <a href="https://clientverse.org/premium" class="btn btn-primary btn-lg w-100" target="_blank">
+                    <i class="bi bi-star me-2"></i>{{ __('get_premium') }}
+                </a>
+            </div>
         </div>
     </div>
 @endsection
