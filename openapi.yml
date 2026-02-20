@@ -2,8 +2,113 @@ openapi: 3.0.3
 info:
   title: Clientverse API
   version: 1.0.0
-  description: These are the OpenAPI specs that describe the REST API of Timecrack.
-  termsOfService: github.com/alextselegidis/clientverse
+  description: |
+    REST API for Clientverse CRM powered by Laravel Orion. Authenticate using Bearer tokens generated from your account settings.
+    
+    ## Authentication
+    All API endpoints require authentication via Bearer token. Generate tokens from your Account page.
+    
+    Include the token in the Authorization header:
+    ```
+    Authorization: Bearer YOUR_API_TOKEN
+    ```
+    
+    ## Pagination
+    List endpoints support pagination via query parameters:
+    - `page` - Page number (default: 1)
+    - `per_page` - Items per page (default: 15, max: 100)
+    
+    ## Filtering (GET requests)
+    Use the `filter` query parameter to filter results:
+    ```
+    ?filter[status]=active
+    ?filter[created_at]=2024-01-01
+    ```
+    
+    ## Sorting (GET requests)
+    Use the `sort` query parameter. Prefix with `-` for descending order:
+    ```
+    ?sort=-created_at
+    ?sort=name,-updated_at
+    ```
+    
+    ## Including Relations
+    Use the `include` query parameter to include related resources:
+    ```
+    ?include=customer,contacts
+    ```
+    
+    ## Advanced Search (POST /search)
+    Each resource has a `/search` endpoint that accepts a JSON body with advanced options:
+    
+    ### Scopes
+    Apply model scopes:
+    ```json
+    {
+      "scopes": [
+        {"name": "active"},
+        {"name": "whereStatus", "parameters": ["lead"]}
+      ]
+    }
+    ```
+    
+    ### Filters
+    Filter with operators (`=`, `!=`, `<`, `<=`, `>`, `>=`, `like`, `not like`, `in`, `not in`):
+    ```json
+    {
+      "filters": [
+        {"field": "status", "operator": "=", "value": "active"},
+        {"field": "created_at", "operator": ">=", "value": "2024-01-01"},
+        {"field": "type", "operator": "in", "value": ["company", "individual"]},
+        {"type": "or", "field": "name", "operator": "like", "value": "%acme%"}
+      ]
+    }
+    ```
+    
+    ### Search
+    Full-text search across searchable fields:
+    ```json
+    {
+      "search": {
+        "value": "John Doe"
+      }
+    }
+    ```
+    
+    ### Sort
+    Sort by multiple fields:
+    ```json
+    {
+      "sort": [
+        {"field": "name", "direction": "asc"},
+        {"field": "created_at", "direction": "desc"}
+      ]
+    }
+    ```
+    
+    ### Aggregates
+    Get aggregate data on relationships:
+    ```json
+    {
+      "aggregates": [
+        {"relation": "contacts", "type": "count"},
+        {"relation": "sales", "type": "sum", "field": "value"},
+        {
+          "relation": "projects",
+          "type": "count",
+          "filters": [{"field": "status", "operator": "=", "value": "active"}]
+        }
+      ]
+    }
+    ```
+    Supported aggregate types: `count`, `sum`, `avg`, `min`, `max`, `exists`
+    
+    ## Batch Operations
+    - `POST /batch` - Create multiple resources
+    - `PATCH /batch` - Update multiple resources
+    - `DELETE /batch` - Delete multiple resources
+    
+  termsOfService: https://github.com/alextselegidis/clientverse
   contact:
     name: Clientverse
     url: https://github.com/alextselegidis/clientverse
@@ -13,14 +118,2026 @@ info:
     url: https://www.gnu.org/licenses/gpl-3.0.en.html
 servers:
   - url: http://localhost/api/v1
+    description: Local development server
+  - url: https://your-domain.com/api/v1
+    description: Production server
 tags:
-  - name: example
+  - name: Authentication
+    description: User authentication endpoints
+  - name: Customers
+    description: Customer management
+  - name: Contacts
+    description: Contact management
+  - name: Projects
+    description: Project management
+  - name: Sales
+    description: Sales pipeline management
+  - name: Contracts
+    description: Contract management
+  - name: Milestones
+    description: Project milestone management
+  - name: Tags
+    description: Tag management
+  - name: Customer Notes
+    description: Customer notes management
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: API Token
+      description: API token generated from account settings
+
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      description: Page number for pagination
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+    PerPageParam:
+      name: per_page
+      in: query
+      description: Number of items per page (max 100)
+      schema:
+        type: integer
+        default: 15
+        minimum: 1
+        maximum: 100
+    SortParam:
+      name: sort
+      in: query
+      description: |
+        Sort field(s). Prefix with `-` for descending order.
+        Multiple fields can be comma-separated.
+      schema:
+        type: string
+      examples:
+        ascending:
+          value: name
+          summary: Sort by name ascending
+        descending:
+          value: -created_at
+          summary: Sort by created_at descending
+        multiple:
+          value: name,-created_at
+          summary: Sort by name asc, then created_at desc
+    IncludeParam:
+      name: include
+      in: query
+      description: Comma-separated list of relations to include
+      schema:
+        type: string
+    WithCountParam:
+      name: with_count
+      in: query
+      description: Comma-separated list of relations to count
+      schema:
+        type: string
+    IdPathParam:
+      name: id
+      in: path
+      required: true
+      description: Resource ID
+      schema:
+        type: integer
+
+  schemas:
+    SearchRequest:
+      type: object
+      description: Advanced search request body for POST /search endpoints
+      properties:
+        scopes:
+          type: array
+          description: Model scopes to apply
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Scope name
+              parameters:
+                type: array
+                description: Scope parameters
+                items:
+                  type: string
+            required:
+              - name
+        filters:
+          type: array
+          description: Filter conditions
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum: [and, or]
+                default: and
+                description: Logical operator for combining with previous filters
+              field:
+                type: string
+                description: Field name to filter on
+              operator:
+                type: string
+                enum: ['=', '!=', '<', '<=', '>', '>=', 'like', 'not like', 'in', 'not in']
+                default: '='
+              value:
+                oneOf:
+                  - type: string
+                  - type: number
+                  - type: boolean
+                  - type: array
+                    items:
+                      type: string
+                description: Filter value
+            required:
+              - field
+              - value
+        search:
+          type: object
+          description: Full-text search
+          properties:
+            value:
+              type: string
+              description: Search term
+          required:
+            - value
+        sort:
+          type: array
+          description: Sort configuration
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              direction:
+                type: string
+                enum: [asc, desc]
+                default: asc
+            required:
+              - field
+        aggregates:
+          type: array
+          description: Aggregate calculations on relationships
+          items:
+            type: object
+            properties:
+              relation:
+                type: string
+                description: Relationship name
+              type:
+                type: string
+                enum: [count, sum, avg, min, max, exists]
+              field:
+                type: string
+                description: Field for sum/avg/min/max aggregates
+              filters:
+                type: array
+                description: Filters to apply on the relation
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                    operator:
+                      type: string
+                    value:
+                      type: string
+            required:
+              - relation
+              - type
+
+    BatchCreateRequest:
+      type: object
+      properties:
+        resources:
+          type: array
+          description: Array of resources to create
+          items:
+            type: object
+      required:
+        - resources
+
+    BatchUpdateRequest:
+      type: object
+      properties:
+        resources:
+          type: array
+          description: Array of resources to update (must include id)
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+            required:
+              - id
+      required:
+        - resources
+
+    BatchResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+    Customer:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        website:
+          type: string
+          format: uri
+        company:
+          type: string
+        address:
+          type: string
+        billing_address:
+          type: string
+        vat_id:
+          type: string
+        currency:
+          type: string
+          maxLength: 3
+        type:
+          type: string
+          enum: [company, individual]
+        status:
+          type: string
+          enum: [lead, active, inactive]
+        notes:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - name
+
+    Contact:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        customer_id:
+          type: integer
+        first_name:
+          type: string
+          maxLength: 255
+        last_name:
+          type: string
+          maxLength: 255
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        position:
+          type: string
+        role:
+          type: string
+          enum: [decision_maker, finance, technical, other]
+        is_primary:
+          type: boolean
+        has_portal_access:
+          type: boolean
+        notes:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - customer_id
+        - first_name
+
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        customer_id:
+          type: integer
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        status:
+          type: string
+          enum: [planned, active, on_hold, completed, cancelled]
+        visibility:
+          type: string
+          enum: [internal, client]
+        start_date:
+          type: string
+          format: date
+        due_date:
+          type: string
+          format: date
+        notes:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - name
+
+    Sale:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        customer_id:
+          type: integer
+        name:
+          type: string
+          maxLength: 255
+        value:
+          type: number
+          format: decimal
+        currency:
+          type: string
+          maxLength: 3
+        probability:
+          type: integer
+          minimum: 0
+          maximum: 100
+        stage:
+          type: string
+          enum: [lead, qualified, proposal_sent, won, lost]
+        expected_close_date:
+          type: string
+          format: date
+        notes:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - name
+        - customer_id
+
+    Contract:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        customer_id:
+          type: integer
+        project_id:
+          type: integer
+        sale_id:
+          type: integer
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        value:
+          type: number
+          format: decimal
+        currency:
+          type: string
+          maxLength: 3
+        type:
+          type: string
+          enum: [fixed, recurring]
+        status:
+          type: string
+          enum: [draft, active, expired, cancelled]
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+        signed_date:
+          type: string
+          format: date
+        notes:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - title
+
+    Milestone:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        project_id:
+          type: integer
+        name:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        due_date:
+          type: string
+          format: date
+        is_completed:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - project_id
+        - name
+
+    Tag:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 255
+        color:
+          type: string
+          maxLength: 7
+        user_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - name
+
+    CustomerNote:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        customer_id:
+          type: integer
+        user_id:
+          type: integer
+          readOnly: true
+        content:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - customer_id
+        - content
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+
+    PaginatedResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items: {}
+        links:
+          type: object
+          properties:
+            first:
+              type: string
+            last:
+              type: string
+            prev:
+              type: string
+              nullable: true
+            next:
+              type: string
+              nullable: true
+        meta:
+          type: object
+          properties:
+            current_page:
+              type: integer
+            from:
+              type: integer
+            last_page:
+              type: integer
+            per_page:
+              type: integer
+            to:
+              type: integer
+            total:
+              type: integer
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+        errors:
+          type: object
+
+security:
+  - bearerAuth: []
+
 paths:
-  /example:
+  /me:
     get:
       tags:
-        - example
-      summary: Example
+        - Authentication
+      summary: Get current user
+      description: Returns the authenticated user's information
       responses:
         '200':
-          description: OK
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthenticated
+
+  # ============== CUSTOMERS ==============
+  /customers:
+    get:
+      tags:
+        - Customers
+      summary: List all customers
+      description: Returns a paginated list of customers with filtering, sorting, and relation loading
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SortParam'
+        - $ref: '#/components/parameters/IncludeParam'
+        - $ref: '#/components/parameters/WithCountParam'
+        - name: filter[name]
+          in: query
+          schema:
+            type: string
+        - name: filter[email]
+          in: query
+          schema:
+            type: string
+        - name: filter[phone]
+          in: query
+          schema:
+            type: string
+        - name: filter[company]
+          in: query
+          schema:
+            type: string
+        - name: filter[type]
+          in: query
+          schema:
+            type: string
+            enum: [company, individual]
+        - name: filter[status]
+          in: query
+          schema:
+            type: string
+            enum: [lead, active, inactive]
+        - name: filter[created_at]
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: filter[updated_at]
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Customer'
+    post:
+      tags:
+        - Customers
+      summary: Create a customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        '201':
+          description: Customer created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Customer'
+        '422':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /customers/search:
+    post:
+      tags:
+        - Customers
+      summary: Advanced search customers
+      description: |
+        Search customers with advanced filtering, scopes, sorting, and aggregates.
+        Searchable fields: name, email, phone, company, address
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+            examples:
+              simpleSearch:
+                summary: Simple text search
+                value:
+                  search:
+                    value: "Acme Corp"
+              filteredSearch:
+                summary: Search with filters
+                value:
+                  filters:
+                    - field: status
+                      operator: "="
+                      value: active
+                    - field: type
+                      operator: "="
+                      value: company
+                  sort:
+                    - field: name
+                      direction: asc
+              withAggregates:
+                summary: Search with aggregates
+                value:
+                  filters:
+                    - field: status
+                      operator: "="
+                      value: active
+                  aggregates:
+                    - relation: contacts
+                      type: count
+                    - relation: sales
+                      type: sum
+                      field: value
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Customer'
+
+  /customers/batch:
+    post:
+      tags:
+        - Customers
+      summary: Batch create customers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchCreateRequest'
+      responses:
+        '200':
+          description: Customers created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BatchResponse'
+    patch:
+      tags:
+        - Customers
+      summary: Batch update customers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchUpdateRequest'
+      responses:
+        '200':
+          description: Customers updated
+    delete:
+      tags:
+        - Customers
+      summary: Batch delete customers
+      parameters:
+        - name: resources
+          in: query
+          description: Comma-separated list of resource IDs to delete
+          required: true
+          schema:
+            type: string
+            example: "1,2,3"
+      responses:
+        '200':
+          description: Customers deleted
+
+  /customers/{id}:
+    get:
+      tags:
+        - Customers
+      summary: Get a customer
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+        - $ref: '#/components/parameters/IncludeParam'
+        - $ref: '#/components/parameters/WithCountParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Customer'
+        '404':
+          description: Customer not found
+    patch:
+      tags:
+        - Customers
+      summary: Update a customer
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+      responses:
+        '200':
+          description: Customer updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Customer'
+        '404':
+          description: Customer not found
+        '422':
+          description: Validation error
+    delete:
+      tags:
+        - Customers
+      summary: Delete a customer
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '200':
+          description: Customer deleted
+        '404':
+          description: Customer not found
+
+  # ============== CONTACTS ==============
+  /contacts:
+    get:
+      tags:
+        - Contacts
+      summary: List all contacts
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SortParam'
+        - $ref: '#/components/parameters/IncludeParam'
+        - name: filter[first_name]
+          in: query
+          schema:
+            type: string
+        - name: filter[last_name]
+          in: query
+          schema:
+            type: string
+        - name: filter[email]
+          in: query
+          schema:
+            type: string
+        - name: filter[phone]
+          in: query
+          schema:
+            type: string
+        - name: filter[role]
+          in: query
+          schema:
+            type: string
+            enum: [decision_maker, finance, technical, other]
+        - name: filter[is_primary]
+          in: query
+          schema:
+            type: boolean
+        - name: filter[customer_id]
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Contact'
+    post:
+      tags:
+        - Contacts
+      summary: Create a contact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+      responses:
+        '201':
+          description: Contact created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Contact'
+
+  /contacts/search:
+    post:
+      tags:
+        - Contacts
+      summary: Advanced search contacts
+      description: |
+        Search contacts with advanced filtering.
+        Searchable fields: first_name, last_name, email, phone, position
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful response
+
+  /contacts/batch:
+    post:
+      tags:
+        - Contacts
+      summary: Batch create contacts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchCreateRequest'
+      responses:
+        '200':
+          description: Contacts created
+    patch:
+      tags:
+        - Contacts
+      summary: Batch update contacts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchUpdateRequest'
+      responses:
+        '200':
+          description: Contacts updated
+    delete:
+      tags:
+        - Contacts
+      summary: Batch delete contacts
+      parameters:
+        - name: resources
+          in: query
+          description: Comma-separated list of resource IDs to delete
+          required: true
+          schema:
+            type: string
+            example: "1,2,3"
+      responses:
+        '200':
+          description: Contacts deleted
+
+  /contacts/{id}:
+    get:
+      tags:
+        - Contacts
+      summary: Get a contact
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Contact'
+    patch:
+      tags:
+        - Contacts
+      summary: Update a contact
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+      responses:
+        '200':
+          description: Contact updated
+    delete:
+      tags:
+        - Contacts
+      summary: Delete a contact
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '200':
+          description: Contact deleted
+
+  # ============== PROJECTS ==============
+  /projects:
+    get:
+      tags:
+        - Projects
+      summary: List all projects
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SortParam'
+        - $ref: '#/components/parameters/IncludeParam'
+        - name: filter[name]
+          in: query
+          schema:
+            type: string
+        - name: filter[status]
+          in: query
+          schema:
+            type: string
+            enum: [planned, active, on_hold, completed, cancelled]
+        - name: filter[visibility]
+          in: query
+          schema:
+            type: string
+            enum: [internal, client]
+        - name: filter[customer_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[start_date]
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: filter[due_date]
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Project'
+    post:
+      tags:
+        - Projects
+      summary: Create a project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '201':
+          description: Project created
+
+  /projects/search:
+    post:
+      tags:
+        - Projects
+      summary: Advanced search projects
+      description: |
+        Search projects with advanced filtering.
+        Searchable fields: name, description, notes
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful response
+
+  /projects/batch:
+    post:
+      tags:
+        - Projects
+      summary: Batch create projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchCreateRequest'
+      responses:
+        '200':
+          description: Projects created
+    patch:
+      tags:
+        - Projects
+      summary: Batch update projects
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchUpdateRequest'
+      responses:
+        '200':
+          description: Projects updated
+    delete:
+      tags:
+        - Projects
+      summary: Batch delete projects
+      parameters:
+        - name: resources
+          in: query
+          description: Comma-separated list of resource IDs to delete
+          required: true
+          schema:
+            type: string
+            example: "1,2,3"
+      responses:
+        '200':
+          description: Projects deleted
+
+  /projects/{id}:
+    get:
+      tags:
+        - Projects
+      summary: Get a project
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      responses:
+        '200':
+          description: Successful response
+    patch:
+      tags:
+        - Projects
+      summary: Update a project
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Project'
+      responses:
+        '200':
+          description: Project updated
+    delete:
+      tags:
+        - Projects
+      summary: Delete a project
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '200':
+          description: Project deleted
+
+  # ============== SALES ==============
+  /sales:
+    get:
+      tags:
+        - Sales
+      summary: List all sales
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SortParam'
+        - $ref: '#/components/parameters/IncludeParam'
+        - name: filter[name]
+          in: query
+          schema:
+            type: string
+        - name: filter[stage]
+          in: query
+          schema:
+            type: string
+            enum: [lead, qualified, proposal_sent, won, lost]
+        - name: filter[probability]
+          in: query
+          schema:
+            type: integer
+        - name: filter[value]
+          in: query
+          schema:
+            type: number
+        - name: filter[currency]
+          in: query
+          schema:
+            type: string
+        - name: filter[customer_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[expected_close_date]
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Sale'
+    post:
+      tags:
+        - Sales
+      summary: Create a sale
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Sale'
+      responses:
+        '201':
+          description: Sale created
+
+  /sales/search:
+    post:
+      tags:
+        - Sales
+      summary: Advanced search sales
+      description: |
+        Search sales with advanced filtering.
+        Searchable fields: name, notes
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful response
+
+  /sales/batch:
+    post:
+      tags:
+        - Sales
+      summary: Batch create sales
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchCreateRequest'
+      responses:
+        '200':
+          description: Sales created
+    patch:
+      tags:
+        - Sales
+      summary: Batch update sales
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchUpdateRequest'
+      responses:
+        '200':
+          description: Sales updated
+    delete:
+      tags:
+        - Sales
+      summary: Batch delete sales
+      parameters:
+        - name: resources
+          in: query
+          description: Comma-separated list of resource IDs to delete
+          required: true
+          schema:
+            type: string
+            example: "1,2,3"
+      responses:
+        '200':
+          description: Sales deleted
+
+  /sales/{id}:
+    get:
+      tags:
+        - Sales
+      summary: Get a sale
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      responses:
+        '200':
+          description: Successful response
+    patch:
+      tags:
+        - Sales
+      summary: Update a sale
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Sale'
+      responses:
+        '200':
+          description: Sale updated
+    delete:
+      tags:
+        - Sales
+      summary: Delete a sale
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '200':
+          description: Sale deleted
+
+  # ============== CONTRACTS ==============
+  /contracts:
+    get:
+      tags:
+        - Contracts
+      summary: List all contracts
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SortParam'
+        - $ref: '#/components/parameters/IncludeParam'
+        - name: filter[title]
+          in: query
+          schema:
+            type: string
+        - name: filter[type]
+          in: query
+          schema:
+            type: string
+            enum: [fixed, recurring]
+        - name: filter[status]
+          in: query
+          schema:
+            type: string
+            enum: [draft, active, expired, cancelled]
+        - name: filter[value]
+          in: query
+          schema:
+            type: number
+        - name: filter[currency]
+          in: query
+          schema:
+            type: string
+        - name: filter[customer_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[project_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[sale_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[start_date]
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: filter[end_date]
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Contract'
+    post:
+      tags:
+        - Contracts
+      summary: Create a contract
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contract'
+      responses:
+        '201':
+          description: Contract created
+
+  /contracts/search:
+    post:
+      tags:
+        - Contracts
+      summary: Advanced search contracts
+      description: |
+        Search contracts with advanced filtering.
+        Searchable fields: title, description, notes
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful response
+
+  /contracts/batch:
+    post:
+      tags:
+        - Contracts
+      summary: Batch create contracts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchCreateRequest'
+      responses:
+        '200':
+          description: Contracts created
+    patch:
+      tags:
+        - Contracts
+      summary: Batch update contracts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchUpdateRequest'
+      responses:
+        '200':
+          description: Contracts updated
+    delete:
+      tags:
+        - Contracts
+      summary: Batch delete contracts
+      parameters:
+        - name: resources
+          in: query
+          description: Comma-separated list of resource IDs to delete
+          required: true
+          schema:
+            type: string
+            example: "1,2,3"
+      responses:
+        '200':
+          description: Contracts deleted
+
+  /contracts/{id}:
+    get:
+      tags:
+        - Contracts
+      summary: Get a contract
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      responses:
+        '200':
+          description: Successful response
+    patch:
+      tags:
+        - Contracts
+      summary: Update a contract
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contract'
+      responses:
+        '200':
+          description: Contract updated
+    delete:
+      tags:
+        - Contracts
+      summary: Delete a contract
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '200':
+          description: Contract deleted
+
+  # ============== MILESTONES ==============
+  /milestones:
+    get:
+      tags:
+        - Milestones
+      summary: List all milestones
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SortParam'
+        - $ref: '#/components/parameters/IncludeParam'
+        - name: filter[name]
+          in: query
+          schema:
+            type: string
+        - name: filter[is_completed]
+          in: query
+          schema:
+            type: boolean
+        - name: filter[project_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[due_date]
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Milestone'
+    post:
+      tags:
+        - Milestones
+      summary: Create a milestone
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Milestone'
+      responses:
+        '201':
+          description: Milestone created
+
+  /milestones/search:
+    post:
+      tags:
+        - Milestones
+      summary: Advanced search milestones
+      description: |
+        Search milestones with advanced filtering.
+        Searchable fields: name, description
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful response
+
+  /milestones/batch:
+    post:
+      tags:
+        - Milestones
+      summary: Batch create milestones
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchCreateRequest'
+      responses:
+        '200':
+          description: Milestones created
+    patch:
+      tags:
+        - Milestones
+      summary: Batch update milestones
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchUpdateRequest'
+      responses:
+        '200':
+          description: Milestones updated
+    delete:
+      tags:
+        - Milestones
+      summary: Batch delete milestones
+      parameters:
+        - name: resources
+          in: query
+          description: Comma-separated list of resource IDs to delete
+          required: true
+          schema:
+            type: string
+            example: "1,2,3"
+      responses:
+        '200':
+          description: Milestones deleted
+
+  /milestones/{id}:
+    get:
+      tags:
+        - Milestones
+      summary: Get a milestone
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      responses:
+        '200':
+          description: Successful response
+    patch:
+      tags:
+        - Milestones
+      summary: Update a milestone
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Milestone'
+      responses:
+        '200':
+          description: Milestone updated
+    delete:
+      tags:
+        - Milestones
+      summary: Delete a milestone
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '200':
+          description: Milestone deleted
+
+  # ============== TAGS ==============
+  /tags:
+    get:
+      tags:
+        - Tags
+      summary: List all tags
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SortParam'
+        - name: filter[name]
+          in: query
+          schema:
+            type: string
+        - name: filter[color]
+          in: query
+          schema:
+            type: string
+        - name: filter[user_id]
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Tag'
+    post:
+      tags:
+        - Tags
+      summary: Create a tag
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+      responses:
+        '201':
+          description: Tag created
+
+  /tags/search:
+    post:
+      tags:
+        - Tags
+      summary: Advanced search tags
+      description: |
+        Search tags with advanced filtering.
+        Searchable fields: name
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful response
+
+  /tags/batch:
+    post:
+      tags:
+        - Tags
+      summary: Batch create tags
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchCreateRequest'
+      responses:
+        '200':
+          description: Tags created
+    patch:
+      tags:
+        - Tags
+      summary: Batch update tags
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchUpdateRequest'
+      responses:
+        '200':
+          description: Tags updated
+    delete:
+      tags:
+        - Tags
+      summary: Batch delete tags
+      parameters:
+        - name: resources
+          in: query
+          description: Comma-separated list of resource IDs to delete
+          required: true
+          schema:
+            type: string
+            example: "1,2,3"
+      responses:
+        '200':
+          description: Tags deleted
+
+  /tags/{id}:
+    get:
+      tags:
+        - Tags
+      summary: Get a tag
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '200':
+          description: Successful response
+    patch:
+      tags:
+        - Tags
+      summary: Update a tag
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Tag'
+      responses:
+        '200':
+          description: Tag updated
+    delete:
+      tags:
+        - Tags
+      summary: Delete a tag
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '200':
+          description: Tag deleted
+
+  # ============== CUSTOMER NOTES ==============
+  /customer-notes:
+    get:
+      tags:
+        - Customer Notes
+      summary: List all customer notes
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SortParam'
+        - $ref: '#/components/parameters/IncludeParam'
+        - name: filter[customer_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[user_id]
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CustomerNote'
+    post:
+      tags:
+        - Customer Notes
+      summary: Create a customer note
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerNote'
+      responses:
+        '201':
+          description: Customer note created
+
+  /customer-notes/search:
+    post:
+      tags:
+        - Customer Notes
+      summary: Advanced search customer notes
+      description: |
+        Search customer notes with advanced filtering.
+        Searchable fields: content
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful response
+
+  /customer-notes/batch:
+    post:
+      tags:
+        - Customer Notes
+      summary: Batch create customer notes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchCreateRequest'
+      responses:
+        '200':
+          description: Customer notes created
+    patch:
+      tags:
+        - Customer Notes
+      summary: Batch update customer notes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchUpdateRequest'
+      responses:
+        '200':
+          description: Customer notes updated
+    delete:
+      tags:
+        - Customer Notes
+      summary: Batch delete customer notes
+      parameters:
+        - name: resources
+          in: query
+          description: Comma-separated list of resource IDs to delete
+          required: true
+          schema:
+            type: string
+            example: "1,2,3"
+      responses:
+        '200':
+          description: Customer notes deleted
+
+  /customer-notes/{id}:
+    get:
+      tags:
+        - Customer Notes
+      summary: Get a customer note
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      responses:
+        '200':
+          description: Successful response
+    patch:
+      tags:
+        - Customer Notes
+      summary: Update a customer note
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomerNote'
+      responses:
+        '200':
+          description: Customer note updated
+    delete:
+      tags:
+        - Customer Notes
+      summary: Delete a customer note
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '200':
+          description: Customer note deleted

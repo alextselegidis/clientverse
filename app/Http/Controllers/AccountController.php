@@ -15,7 +15,8 @@ class AccountController extends Controller
 {
     public function index()
     {
-        return view('pages.account');
+        $tokens = auth()->user()->tokens;
+        return view('pages.account', compact('tokens'));
     }
     public function update(Request $request)
     {
@@ -32,5 +33,23 @@ class AccountController extends Controller
         }
         $user->save();
         return back()->with('success', __('record_saved_message'));
+    }
+
+    public function createToken(Request $request)
+    {
+        $request->validate([
+            'token_name' => 'required|string|max:255',
+        ]);
+
+        $token = auth()->user()->createToken($request->token_name);
+
+        return back()->with('new_token', $token->plainTextToken)->with('success', __('api_token_created'));
+    }
+
+    public function deleteToken(Request $request, $tokenId)
+    {
+        auth()->user()->tokens()->where('id', $tokenId)->delete();
+
+        return back()->with('success', __('api_token_deleted'));
     }
 }

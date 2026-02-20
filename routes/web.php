@@ -53,6 +53,8 @@ Route::middleware('auth')->group(function () {
     // AccountController
     Route::get('/account', [AccountController::class, 'index'])->name('account');
     Route::put('/account', [AccountController::class, 'update'])->name('account.update');
+    Route::post('/account/tokens', [AccountController::class, 'createToken'])->name('account.tokens.create');
+    Route::delete('/account/tokens/{token}', [AccountController::class, 'deleteToken'])->name('account.tokens.delete');
 
     // AboutController
     Route::get('/about', [AboutController::class, 'index'])->name('about');
