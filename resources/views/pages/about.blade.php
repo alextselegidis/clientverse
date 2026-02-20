@@ -53,7 +53,7 @@
                     {{ __('premium_description') }}
                 </p>
                 <a href="https://clientverse.org/premium" class="btn btn-primary btn-lg w-100" target="_blank">
-                    <i class="bi bi-star me-2"></i>{{ __('get_premium') }}
+                    <i class="bi bi-star me-2"></i>{{ __('go_premium') }}
                 </a>
             </div>
         </div>
