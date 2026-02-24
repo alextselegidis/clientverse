@@ -23,7 +23,7 @@
         </h1>
 
         <p class="fs-5 text-muted mb-5">
-            Simple Bookmark Manager
+            Efficient CRM App
         </p>
 
         <a href="{{route('login')}}" class="btn btn-primary" style="min-width: 12rem">
