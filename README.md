@@ -32,13 +32,14 @@
 
 ## About
 
-**Clientverse** is a bookmark manager application, designed for simplicity and efficiency. Everyone knows that running 
-any software to production requires a lot of care so that everything works according to the plan. With Clientverse you 
-can spectate the current health state of your systems in real time.
+**Clientverse** is a modern CRM application designed for clarity, control, and efficiency. Managing clients, projects, 
+and relationships takes care and structure—especially as your business grows. With Clientverse, you get a real-time 
+overview of your customers, interactions, and ongoing work, helping you stay organized, informed, and always one step 
+ahead.
 
 ## Features
 
-The application will allow you to manage and organize your bookmark links.
+The application allows you to manage and organize your clients, contacts, and customer relationships in one centralized system.
 
 ## Setup
 
