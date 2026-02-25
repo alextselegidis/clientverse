@@ -48,7 +48,7 @@ class SalesController extends Controller
             $query->orderBy($sort, $direction);
         }
 
-        $sales = $query->cursorPaginate(25);
+        $sales = $query->paginate(25)->withQueryString();
 
         return view('pages.sales', [
             'sales' => $sales,

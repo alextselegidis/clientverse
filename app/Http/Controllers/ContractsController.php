@@ -56,7 +56,7 @@ class ContractsController extends Controller
             $query->orderBy($sort, $direction);
         }
 
-        $contracts = $query->cursorPaginate(25);
+        $contracts = $query->paginate(25)->withQueryString();
 
         return view('pages.contracts', [
             'contracts' => $contracts,

@@ -58,7 +58,7 @@ class CustomersController extends Controller
             $query->orderBy($sort, $direction);
         }
 
-        $customers = $query->cursorPaginate(25);
+        $customers = $query->paginate(25)->withQueryString();
 
         return view('pages.customers', [
             'customers' => $customers,

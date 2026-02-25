@@ -62,7 +62,7 @@
                             </li>
                         </ul>
                         <!-- Global Search -->
-                        <form action="{{ route('dashboard') }}" method="GET" class="d-flex me-lg-3 my-2 my-lg-0">
+                        <form action="{{ route('search') }}" method="GET" class="d-flex me-lg-3 my-2 my-lg-0">
                             <div class="input-group input-group-sm">
                                 <span class="input-group-text bg-white border-end-0">
                                     <i class="bi bi-search text-muted"></i>

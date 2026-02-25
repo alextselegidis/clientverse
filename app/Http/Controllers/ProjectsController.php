@@ -51,7 +51,7 @@ class ProjectsController extends Controller
             $query->orderBy($sort, $direction);
         }
 
-        $projects = $query->cursorPaginate(25);
+        $projects = $query->paginate(25)->withQueryString();
 
         return view('pages.projects', [
             'projects' => $projects,

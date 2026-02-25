@@ -170,9 +170,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-        <div class="card-footer text-muted small">
-            {{ __('showing') }} {{ $projects->count() }} {{ __('records') }}
+
+            <!-- Pagination -->
+            @include('shared.pagination', ['paginator' => $projects])
         </div>
     </div>
 

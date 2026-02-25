@@ -245,6 +245,47 @@ a:hover {
     border-top: 1px solid #e9ecef;
 }
 
+/* Fix pagination styling */
+.pagination {
+    gap: 0.25rem;
+}
+
+.pagination .page-item .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2rem;
+    height: 2rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    border-radius: 0.25rem;
+    color: #333;
+    background-color: #ededed;
+    border-color: #ededed;
+}
+
+.pagination .page-item .page-link:hover {
+    color: #3e5375;
+    background-color: #f8f9fa;
+    border-color: #3e5375;
+}
+
+.pagination .page-item.active .page-link {
+    color: #fff;
+    background-color: #333;
+    border-color: #333;
+}
+
+.pagination .page-item.disabled .page-link {
+    color: #6c757d;
+    background-color: #fff;
+    border-color: #dee2e6;
+}
+
+.pagination .page-item .page-link i {
+    font-size: 0.75rem;
+}
+
 @media (min-width: 992px) {
     .navbar-nav .nav-item .nav-link.nav-menu-item {
         min-width: 120px;

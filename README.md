@@ -92,3 +92,10 @@ Twitter [@alextselegidis](https://twitter.com/AlexTselegidis)
 ###### ⇾ [Plainpad &middot; Self Hosted Note Taking App](https://github.com/alextselegidis/plainpad)
 ###### ⇾ [Easy!Appointments &middot; Online Appointment Scheduler](https://github.com/alextselegidis/easyappointments)
 ###### ⇾ [Integravy &middot; Service Orchestration At Your Fingertips](https://github.com/alextselegidis/integravy)
+
+
+General changes:
+
+- The pagination must have the colors of the current theme and noth teh greenish colors of the old design
+- The table footer needs ome bottom margin that matches the top margin of the table footer
+- 

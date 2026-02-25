@@ -357,5 +357,12 @@
     "existing_tokens": "Existing Tokens",
     "no_api_tokens": "You haven't created any API tokens yet.",
     "delete_token_prompt": "Are you sure you want to delete this token? Any applications using it will no longer have access.",
-    "last_used": "Last used"
+    "last_used": "Last used",
+    "to": "to",
+    "entries": "entries",
+    "search": "Search",
+    "found": "Found",
+    "results_for": "results for",
+    "enter_at_least_2_characters": "Please enter at least 2 characters to search.",
+    "enter_search_term": "Enter a search term to find customers, projects, sales, contracts and more."
 }

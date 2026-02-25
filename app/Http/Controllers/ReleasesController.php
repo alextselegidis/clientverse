@@ -23,7 +23,7 @@ class ReleasesController extends Controller
             $query->orderBy($sort, $direction);
         }
 
-        $releases = $query->cursorPaginate(25);
+        $releases = $query->paginate(25)->withQueryString();
 
         return view('pages.releases', compact('releases', 'q'));
     }

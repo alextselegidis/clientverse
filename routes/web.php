@@ -23,6 +23,7 @@ use App\Http\Controllers\MilestonesController;
 use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\RecoveryController;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\WelcomeController;
@@ -49,6 +50,9 @@ Route::middleware('auth')->group(function () {
 
     // DashboardController
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // SearchController
+    Route::get('/search', [SearchController::class, 'index'])->name('search');
 
     // AccountController
     Route::get('/account', [AccountController::class, 'index'])->name('account');

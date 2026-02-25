@@ -40,7 +40,7 @@ class UsersController extends Controller
             $query->orderBy($sort, $direction);
         }
 
-        $users = $query->cursorPaginate(25);
+        $users = $query->paginate(25)->withQueryString();
 
         return view('pages.users', [
             'users' => $users,

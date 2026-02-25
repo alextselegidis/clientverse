@@ -172,14 +172,7 @@
             </div>
 
             <!-- Pagination -->
-            @if($customers->hasPages())
-                <div class="table-pagination">
-                    {{ $customers->links() }}
-                </div>
-            @endif
-        </div>
-        <div class="card-footer text-muted small">
-            {{ __('showing') }} {{ $customers->count() }} {{ __('records') }}
+            @include('shared.pagination', ['paginator' => $customers])
         </div>
     </div>
 

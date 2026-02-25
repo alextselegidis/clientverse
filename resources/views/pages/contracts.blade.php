@@ -162,12 +162,10 @@
                                 @endif
                             </td>
                             <td onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
-                                <small>
-                                    {{ $contract->start_date?->format('M d, Y') ?? '-' }}
-                                    @if($contract->end_date)
-                                        <br>→ {{ $contract->end_date->format('M d, Y') }}
-                                    @endif
-                                </small>
+                                {{ $contract->start_date?->format('M d, Y') ?? '-' }}
+                                @if($contract->end_date)
+                                    <br>→ {{ $contract->end_date->format('M d, Y') }}
+                                @endif
                             </td>
                             <td class="pe-3 text-end">
                                 <div class="dropdown" onclick="event.stopPropagation();">
@@ -208,9 +206,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-        <div class="card-footer text-muted small">
-            {{ __('showing') }} {{ $contracts->count() }} {{ __('records') }}
+
+            <!-- Pagination -->
+            @include('shared.pagination', ['paginator' => $contracts])
         </div>
     </div>
 

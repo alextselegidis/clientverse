@@ -196,9 +196,9 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-        <div class="card-footer text-muted small">
-            {{ __('showing') }} {{ $sales->count() }} {{ __('records') }}
+
+            <!-- Pagination -->
+            @include('shared.pagination', ['paginator' => $sales])
         </div>
     </div>
 

@@ -23,7 +23,7 @@ class SubscriptionsController extends Controller
             $query->orderBy($sort, $direction);
         }
 
-        $subscriptions = $query->cursorPaginate(25);
+        $subscriptions = $query->paginate(25)->withQueryString();
 
         return view('pages.subscriptions', compact('subscriptions', 'q'));
     }
