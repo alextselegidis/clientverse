@@ -19,7 +19,7 @@ php artisan clear-compiled
 
 # Remove Various
 
-rm build.zip
+rm clientverse-0.0.0.zip
 
 rm public/hot
 
@@ -27,7 +27,7 @@ find . -name ".DS_Store" -delete
 
 # Zip Files
 
-zip -r build.zip . \
+zip -r clientverse-0.0.0.zip . \
     -x '.git/*' \
     -x '.idea/*' \
     -x '.run/*' \
