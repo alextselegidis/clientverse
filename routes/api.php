@@ -33,7 +33,7 @@ use Orion\Facades\Orion;
 |
 */
 
-Route::prefix('v1')->middleware(['auth:sanctum'])->group(function () {
+Route::prefix('v1')->as('api.v1.')->middleware(['auth:sanctum'])->group(function () {
     // Current user endpoint
     Route::get('/me', MeApiV1Controller::class);
 
