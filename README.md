@@ -25,6 +25,7 @@
   <a href="#features">Features</a> •
   <a href="#setup">Setup</a> •
   <a href="#installation">Installation</a> •
+  <a href="#seeding-demo-data">Seeding Demo Data</a> •
   <a href="#license">License</a>
 </p>
 
@@ -75,6 +76,51 @@ You will need to perform the following steps to install the application on your 
 * Open the browser on the Clientverse URL and log in with admin@example.org and 12345678 as the password. 
 
 That's it! You can now use Clientverse at your will.
+
+## Seeding Demo Data
+
+Clientverse ships with a dedicated `DemoSeeder` that populates the database with
+a realistic dataset for an IT services / managed support company. It is useful
+for evaluating the application, recording demos, or developing against a fully
+populated CRM.
+
+The seeder generates approximately:
+
+* 100 corporate customers across 15 industries (with VAT IDs, addresses,
+  currencies and metadata)
+* 2–5 contacts per customer (decision maker, finance, technical, etc.)
+* A sales pipeline of 1–3 opportunities per customer with coherent stages
+  and probabilities
+* Projects, milestones and signed contracts derived from "won" sales
+* Customer notes, tags, project teams and file metadata
+* ~12 internal staff users (account managers, engineers, project managers)
+
+> **Important:** `DemoSeeder` is **not** registered in `DatabaseSeeder.php` and
+> will **never** run during a normal `php artisan db:seed`. It is opt-in and
+> must be invoked explicitly.
+
+### Run the seeder
+
+From the project root (or inside the PHP-FPM container if you use Docker):
+
+```bash
+# Seed demo data into an existing database
+php artisan db:seed --class=DemoSeeder
+
+# Reset the database and load demo data in one shot
+php artisan migrate:fresh --seed --seeder=DemoSeeder
+```
+
+### Demo credentials
+
+* The default admin user (`admin@example.org` / `12345678`) is preserved.
+* Generated staff users use the email pattern
+  `firstname.lastname@clientverse-demo.test` and the password `password`.
+
+### Resetting
+
+To wipe demo data and start over, run `php artisan migrate:fresh` followed by
+either the regular installer steps or the `DemoSeeder` command above.
 
 You will find the latest release at [github.com/alextselegidis/clientverse](github.com/alextselegidis/clientverse).
 You can also report problems on the [issues page](https://github.com/alextselegidis/clientverse/issues)
