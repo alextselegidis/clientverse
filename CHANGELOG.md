@@ -1,5 +1,11 @@
 # Release Notes
 
+## [Unreleased]
+
+### Fixed
+
+- Incorrect `http://` URLs when deployed behind a reverse proxy; proxies are now trusted via the `TRUSTED_PROXIES` env var (#19)
+
 ## [1.0.0] - 2026-03-26
 
 ### Added

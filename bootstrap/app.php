@@ -13,6 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        $middleware->trustProxies(at: explode(',', (string) env('TRUSTED_PROXIES', '*')));
         $middleware->statefulApi();
         $middleware->web(append: [
             ExtendRememberSession::class,
