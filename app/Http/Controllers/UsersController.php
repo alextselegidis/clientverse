@@ -1,13 +1,13 @@
 <?php
 
 /* ----------------------------------------------------------------------------
- * Clientverse - Simple Bookmark Manager
+ * Clientverse - Self-Hosted CRM
  *
  * @package     Clientverse
  * @author      A.Tselegidis <alextselegidis@gmail.com>
  * @copyright   Copyright (c) Alex Tselegidis
  * @license     https://opensource.org/licenses/GPL-3.0 - GPLv3
- * @link        https://github.com/alextselegidis/clientverse
+ * @link        https://clientverse.org
  * ---------------------------------------------------------------------------- */
 
 namespace App\Http\Controllers;
@@ -130,7 +130,7 @@ class UsersController extends Controller
         Gate::authorize('delete', $user);
 
         if ($user->id === request()->user()->id) {
-            return redirect()->route('setup.users')->with('error', __('cannotDeleteCurrentUser'));
+            return redirect()->route('setup.users')->with('error', __('cannot_delete_current_user'));
         }
 
         // Check if user is an admin
