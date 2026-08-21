@@ -16,6 +16,9 @@ These are deliberate product decisions, not gaps to fill:
   shared markup lives in `resources/views/shared/`.
 - **Never create a branch** unless the developer explicitly asks. Work on the current one.
 - **Never commit or push** unless the developer explicitly asks.
+- **Commit messages are a single line.** Subject only - no body, and no trailing
+  attribution lines: no `Co-Authored-By:` trailer and no "Generated with Claude Code"
+  line, in commit messages or in pull request descriptions.
 
 ## Stack
 
@@ -106,6 +109,12 @@ public/manifest.json, public/sw.js PWA manifest and service worker
   `*-bg-subtle` / `*-text-emphasis` pair. Do not hand-roll `bg-*-subtle text-*` combos.
 - Tables are hover-only (no `table-striped`) with `table-light-header` for the quiet
   uppercase header row.
+- **Row density.** A row's height is set by whichever cell wraps, so keep them from
+  wrapping rather than shrinking the type: dates and money get `text-nowrap`, record
+  names are clamped (`.table td .fw-medium`, two lines with a pointer and three on a
+  phone), and cell padding is `0.5rem` vertically, going back to `0.75rem` below `lg`
+  where a row is a tap target. A column that cannot fit on one line at `lg` belongs at
+  `xl` - that is where the contracts date range lives. Desktop rows land at ~48px.
 - Global search is the navbar icon opening `#search-modal` (in `shared/header.blade.php`) —
   a centred, header-free dialog holding just the input. The navbar is too tight for a
   usable inline input.
@@ -136,16 +145,23 @@ suffix its name too.
 
 ## Mobile
 
-Every screen is checked at 390px. Two rules carry most of it:
+Every screen is checked at 390px and 768px. Two rules carry most of it:
 
-- **Column priority.** List tables mark their secondary columns `d-none d-lg-table-cell`
-  and their primary column `w-100`, so each table fits a phone with no sideways
-  scrolling and the record name gets the freed space. Add a column and you decide which
-  side of `lg` it belongs on. `.table-responsive` is still there as the safety net.
+- **Column priority, in three tiers.** A list table shows the record name (`w-100
+  w-md-auto`) plus its status column on a phone, so it fits with no sideways scrolling
+  and the name gets the freed space. Exactly one secondary column is marked `d-none
+  d-md-table-cell` and appears on a tablet - the most identifying or actionable one
+  (email, customer, value, due date) - because a 768px table showing two columns wastes
+  half its width. Everything else is `d-none d-lg-table-cell`. Add a column and you
+  decide which of the three tiers it belongs on. `.table-responsive` is still there as
+  the safety net.
 - **Touch targets.** One media query near the end of `public/styles/clientverse.css`
-  brings checkboxes, sort links, `btn-sm`, breadcrumb links, dropdown items, page links
-  and `mailto:`/`tel:` links up to roughly 40px below `lg`. Adjust it there rather than
-  per-page.
+  brings sort links, `btn-sm`, breadcrumb links, dropdown items, page links and
+  `mailto:`/`tel:` links up to roughly 40px below `lg`; checkboxes go to 24px with a
+  label of the same height. Adjust it there rather than per-page. Two rules in that
+  block overlap, so the dense-link rule excludes `.dropdown-item` and `mailto:`/`tel:`
+  explicitly - a selector like `.table td a` otherwise outweighs them and flattens a row
+  action back to 30px.
 
 Also below `lg`: bulk-select columns are hidden (touch multi-select is not worth the
 width, and the toolbar never unhides without checkboxes), record names clamp to three
@@ -153,6 +169,10 @@ lines, a lone card-footer button goes full width, and the paginator wraps.
 
 ## Frontend gotchas
 
+- The navbar expands at `lg`, but the even 120px nav-item grid only fits from `xl`, so
+  `min-width` on `.nav-menu-item` is scoped to `min-width: 1200px` and the items use
+  `px-lg-2 px-xl-4`. Without that the whole page scrolls sideways on a 1024px tablet in
+  landscape. Adding a navbar item means re-checking 992px.
 - `.table-responsive` scrolls horizontally below `992px` and is `overflow: visible` above,
   so row dropdowns can escape on desktop. Do not add inline `overflow` overrides — that
   breaks horizontal scrolling and pushes the whole page sideways on phones.

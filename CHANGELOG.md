@@ -2,9 +2,22 @@
 
 ## [Unreleased]
 
+### Added
+
+- Latest blog posts from clientverse.org on the About page, read once a day and cached
+
+### Changed
+
+- One secondary column in every list table now shows from 768px, so tablets no longer waste half the row width
+- Denser desktop table rows: dates and money no longer wrap, record names clamp to two lines, tighter cell padding
+
 ### Fixed
 
 - Incorrect `http://` URLs when deployed behind a reverse proxy; proxies are now trusted via the `TRUSTED_PROXIES` env var (#19)
+- Row action dropdown items were 30px tall on a phone instead of the intended 40px
+- `mailto:`/`tel:`, sort and breadcrumb links now reach the intended 40px touch target below 992px
+- Page scrolled sideways between 992px and 1199px, so the navbar now fits a 1024px tablet in landscape
+- List tables needed horizontal scrolling at 320px
 
 ## [1.0.0] - 2026-03-26
 
