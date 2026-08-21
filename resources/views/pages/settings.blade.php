@@ -1,12 +1,12 @@
 {{--
 /* ----------------------------------------------------------------------------
- * Clientverse - Simple Bookmark Manager
+ * Clientverse - Self-Hosted CRM
  *
  * @package     Clientverse
  * @author      A.Tselegidis <alextselegidis@gmail.com>
  * @copyright   Copyright (c) Alex Tselegidis
  * @license     https://opensource.org/licenses/GPL-3.0 - GPLv3
- * @link        https://github.com/alextselegidis/clientverse
+ * @link        https://clientverse.org
  * ---------------------------------------------------------------------------- */
 --}}
 
@@ -245,7 +245,7 @@
 
                 <!-- Card Footer with Save Button -->
                 <div class="card-footer bg-body-secondary border-top text-end py-3 px-4">
-                    <button type="submit" form="settings-form" class="btn btn-dark">
+                    <button type="submit" form="settings-form" class="btn btn-primary">
                         {{ __('save') }}
                     </button>
                 </div>

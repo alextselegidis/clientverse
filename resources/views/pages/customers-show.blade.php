@@ -60,7 +60,7 @@
                     <span class="badge bg-light text-dark ms-2">{{ __($customer->type) }}</span>
                 </div>
                 <div class="card-body">
-                    <div class="row">
+                    <div class="row g-3">
                         <div class="col-md-6">
                             @if($customer->company)
                                 <p class="mb-2"><i class="bi bi-building me-2 text-muted"></i>{{ $customer->company }}</p>
@@ -110,7 +110,7 @@
                         <div class="list-group list-group-flush">
                             @foreach($customer->contacts as $contact)
                                 <a href="{{ route('customers.contacts.show', [$customer->id, $contact->id]) }}" class="list-group-item list-group-item-action">
-                                    <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-1">
                                         <div>
                                             <strong>{{ $contact->full_name }}</strong>
                                             @if($contact->is_primary)
@@ -120,7 +120,7 @@
                                                 <small class="text-muted d-block">{{ $contact->position }}</small>
                                             @endif
                                         </div>
-                                        <div class="text-muted small">
+                                        <div class="text-muted small text-break">
                                             {{ $contact->email }}
                                         </div>
                                     </div>
@@ -164,7 +164,8 @@
                                         {{ $note->user?->name ?? __('unknown') }} &middot; {{ $note->created_at->format('M d, Y H:i') }}
                                     </small>
                                     <div class="dropdown">
-                                        <button class="btn btn-sm btn-link text-muted p-0" type="button" data-bs-toggle="dropdown">
+                                        <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown"
+                                                aria-label="{{ __('actions') }}" title="{{ __('actions') }}">
                                             <i class="bi bi-three-dots"></i>
                                         </button>
                                         <ul class="dropdown-menu dropdown-menu-end">

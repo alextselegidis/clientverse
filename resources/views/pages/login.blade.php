@@ -1,12 +1,12 @@
 {{--
 /* ----------------------------------------------------------------------------
- * Clientverse - Simple Bookmark Manager
+ * Clientverse - Self-Hosted CRM
  *
  * @package     Clientverse
  * @author      A.Tselegidis <alextselegidis@gmail.com>
  * @copyright   Copyright (c) Alex Tselegidis
  * @license     https://opensource.org/licenses/GPL-3.0 - GPLv3
- * @link        https://github.com/alextselegidis/clientverse
+ * @link        https://clientverse.org
  * ---------------------------------------------------------------------------- */
 --}}
 
@@ -35,17 +35,18 @@
             <label for="email" class="form-label">
                 {{__('email')}} <span class="text-danger">*</span>
             </label>
-            <input type="email" name="email" class="form-control" maxlength="100" required>
+            <input type="email" id="email" name="email" class="form-control" maxlength="100"
+                   autocomplete="email" autofocus required>
         </div>
 
         <div class="mb-3">
             <label for="password" class="form-label">
                 {{__('password')}} <span class="text-danger">*</span>
             </label>
-            <input type="password" name="password" class="form-control" maxlength="100" required>
+            <input type="password" id="password" name="password" class="form-control" maxlength="100"
+                   autocomplete="current-password" required>
         </div>
 
-        {{-- <div class="d-flex flex-column align-items-center flex-lg-row-reverse justify-content-lg-between mb-3"> --}}
         <div class="d-flex justify-content-between align-items-center mb-3">
             <div class="form-check form-switch mb-0">
                 <input class="form-check-input" type="checkbox" role="switch" id="remember" name="remember">

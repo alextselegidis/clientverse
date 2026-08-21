@@ -99,7 +99,7 @@
             </form>
         </div>
         <div class="card-footer bg-body-secondary border-top text-end py-3 px-4">
-            <button type="submit" form="edit-form" class="btn btn-dark">
+            <button type="submit" form="edit-form" class="btn btn-primary">
                 {{ __('save') }}
             </button>
         </div>

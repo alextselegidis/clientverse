@@ -14,9 +14,9 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <nav class="navbar navbar-expand-lg py-0">
-                    <a class="navbar-brand d-flex align-items-center p-0 m-0" href="{{ route('dashboard') }}">
-                        <img src="images/logo.png" alt="Logo" class="me-2" style="height: 32px">
+                <nav class="navbar navbar-expand-lg py-2 py-lg-0">
+                    <a class="navbar-brand d-flex align-items-center" href="{{ route('dashboard') }}">
+                        <img src="images/logo-light.svg" alt="Logo" class="me-2" style="height: 32px">
                         <strong class="fs-4 text-white">CLIENTVERSE</strong>
                     </a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#top-nav"
@@ -62,17 +62,15 @@
                             </li>
                         </ul>
                         <!-- Global Search -->
-                        <form action="{{ route('search') }}" method="GET" class="d-flex me-lg-3 my-2 my-lg-0">
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-text bg-white border-end-0">
-                                    <i class="bi bi-search text-muted"></i>
-                                </span>
-                                <input type="text" name="q" class="form-control border-start-0"
-                                       value="{{ request('q') }}"
-                                       placeholder="{{ __('search') }}..."
-                                       style="min-width: 150px;">
-                            </div>
-                        </form>
+                        <ul class="navbar-nav me-lg-2">
+                            <li class="nav-item">
+                                <button type="button" class="nav-link text-white" data-bs-toggle="modal"
+                                        data-bs-target="#search-modal" aria-label="{{ __('search') }}">
+                                    <i class="bi bi-search"></i>
+                                    <span class="d-lg-none ms-2">{{ __('search') }}</span>
+                                </button>
+                            </li>
+                        </ul>
                         <!-- Account Dropdown -->
                         <ul class="navbar-nav">
                             <li class="nav-item dropdown">
@@ -120,6 +118,28 @@
                     </div>
                 </nav>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Global Search Modal -->
+<div class="modal fade" tabindex="-1" id="search-modal" aria-label="{{ __('search') }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <form action="{{ route('search') }}" method="GET" class="modal-body">
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text border-end-0">
+                        <i class="bi bi-search text-muted"></i>
+                    </span>
+                    <input type="search" name="q" class="form-control border-start-0"
+                           value="{{ request('q') }}"
+                           aria-label="{{ __('search') }}"
+                           placeholder="{{ __('search') }}...">
+                    <button type="submit" class="btn btn-primary">
+                        {{ __('search') }}
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

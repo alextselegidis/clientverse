@@ -64,7 +64,7 @@
                         </div>
                     </div>
 
-                    <div class="row mb-4">
+                    <div class="row g-3 mb-4">
                         <div class="col-md-4">
                             <small class="text-muted d-block">{{ __('visibility') }}</small>
                             <span>{{ __($project->visibility ?? 'internal') }}</span>
@@ -107,13 +107,13 @@
                     @if($project->milestones->count() > 0)
                         <ul class="list-group list-group-flush">
                             @foreach($project->milestones as $milestone)
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <li class="list-group-item d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
                                     <div>
                                         <span class="{{ $milestone->is_completed ? 'text-decoration-line-through text-muted' : '' }}">
                                             {{ $milestone->name }}
                                         </span>
                                         @if($milestone->due_date)
-                                            <small class="text-muted ms-2">
+                                            <small class="text-muted d-block d-sm-inline ms-sm-2">
                                                 {{ __('due') }}: {{ $milestone->due_date->format('M d, Y') }}
                                             </small>
                                         @endif

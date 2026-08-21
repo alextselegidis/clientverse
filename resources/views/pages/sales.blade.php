@@ -60,13 +60,13 @@
 
             <!-- Table -->
             <div class="table-responsive">
-                <table class="table table-striped table-hover table-light-header align-middle mb-0" id="sales-table">
+                <table class="table table-hover table-light-header align-middle mb-0" id="sales-table">
                     <thead>
                     <tr>
                         <th class="ps-3" style="width: 40px;">
                             <input type="checkbox" class="form-check-input bulk-select-all" data-table="sales">
                         </th>
-                        <th>
+                        <th class="w-100 w-lg-auto">
                             <a href="{{ route('sales', ['sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'stage' => $stage]) }}" class="text-decoration-none">
                                 {{ __('name') }}
                                 @if(request('sort') === 'name')
@@ -74,7 +74,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th>
+                        <th class="d-none d-lg-table-cell">
                             <a href="{{ route('sales', ['sort' => 'customer', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'stage' => $stage]) }}" class="text-decoration-none">
                                 {{ __('customer') }}
                                 @if(request('sort') === 'customer')
@@ -82,7 +82,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th>
+                        <th class="d-none d-lg-table-cell">
                             <a href="{{ route('sales', ['sort' => 'value', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'stage' => $stage]) }}" class="text-decoration-none">
                                 {{ __('value') }}
                                 @if(request('sort') === 'value')
@@ -98,7 +98,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th>
+                        <th class="d-none d-lg-table-cell">
                             <a href="{{ route('sales', ['sort' => 'probability', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'stage' => $stage]) }}" class="text-decoration-none">
                                 {{ __('probability') }}
                                 @if(request('sort') === 'probability')
@@ -118,14 +118,14 @@
                             <td onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">
                                 <span class="fw-medium">{{ $sale->name }}</span>
                             </td>
-                            <td onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">
                                 @if($sale->customer)
                                     <a href="{{ route('customers.show', $sale->customer_id) }}" onclick="event.stopPropagation()">
                                         {{ $sale->customer->name }}
                                     </a>
                                 @endif
                             </td>
-                            <td onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">
                                 @if($sale->value)
                                     {{ format_currency($sale->value, $sale->currency) }}
                                 @endif
@@ -138,11 +138,12 @@
                                     {{ __($sale->stage) }}
                                 </span>
                             </td>
-                            <td onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">{{ $sale->probability }}%</td>
+                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">{{ $sale->probability }}%</td>
                             <td class="pe-3 text-end">
                                 <div class="dropdown" onclick="event.stopPropagation();">
-                                    <button class="btn btn-sm btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                        {{ __('actions') }}
+                                    <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown"
+                                            aria-label="{{ __('actions') }}" title="{{ __('actions') }}">
+                                        <i class="bi bi-three-dots"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>

@@ -149,12 +149,12 @@
 
                 <div class="mb-3">
                     <label for="address" class="form-label">{{ __('address') }}</label>
-                    <textarea id="address" name="address" class="form-control" rows="2">{{ old('address', $customer->address) }}</textarea>
+                    <textarea id="address" name="address" class="form-control" rows="3">{{ old('address', $customer->address) }}</textarea>
                 </div>
 
                 <div class="mb-3">
                     <label for="billing_address" class="form-label">{{ __('billing_address') }}</label>
-                    <textarea id="billing_address" name="billing_address" class="form-control" rows="2">{{ old('billing_address', $customer->billing_address) }}</textarea>
+                    <textarea id="billing_address" name="billing_address" class="form-control" rows="3">{{ old('billing_address', $customer->billing_address) }}</textarea>
                 </div>
 
                 <div class="mb-3">
@@ -164,7 +164,7 @@
             </form>
         </div>
         <div class="card-footer bg-body-secondary border-top text-end py-3 px-4">
-            <button type="submit" form="edit-form" class="btn btn-dark">
+            <button type="submit" form="edit-form" class="btn btn-primary">
                 {{ __('save') }}
             </button>
         </div>

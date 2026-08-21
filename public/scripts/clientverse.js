@@ -18,10 +18,12 @@ document.querySelectorAll('.toast').forEach(function (toastEl) {
     toast.show();
 });
 
-// Auto-focus create modal input
+// Auto-focus the first input of any modal
 
-document.getElementById('create-modal')?.addEventListener('shown.bs.modal', (event) => {
-    return event.target.querySelector('input:not([type="hidden"])').focus();
+document.querySelectorAll('.modal').forEach(function (modal) {
+    modal.addEventListener('shown.bs.modal', (event) => {
+        event.target.querySelector('input:not([type="hidden"])')?.focus();
+    });
 });
 
 // Close other table row dropdowns when one opens

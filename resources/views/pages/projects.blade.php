@@ -60,13 +60,13 @@
 
             <!-- Table -->
             <div class="table-responsive">
-                <table class="table table-striped table-hover table-light-header align-middle mb-0" id="projects-table">
+                <table class="table table-hover table-light-header align-middle mb-0" id="projects-table">
                     <thead>
                     <tr>
                         <th class="ps-3" style="width: 40px;">
                             <input type="checkbox" class="form-check-input bulk-select-all" data-table="projects">
                         </th>
-                        <th>
+                        <th class="w-100 w-lg-auto">
                             <a href="{{ route('projects', ['sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'status' => $status]) }}" class="text-decoration-none">
                                 {{ __('name') }}
                                 @if(request('sort') === 'name')
@@ -74,7 +74,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th>
+                        <th class="d-none d-lg-table-cell">
                             <a href="{{ route('projects', ['sort' => 'customer', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'status' => $status]) }}" class="text-decoration-none">
                                 {{ __('customer') }}
                                 @if(request('sort') === 'customer')
@@ -90,7 +90,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th>
+                        <th class="d-none d-lg-table-cell">
                             <a href="{{ route('projects', ['sort' => 'due_date', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'status' => $status]) }}" class="text-decoration-none">
                                 {{ __('due_date') }}
                                 @if(request('sort') === 'due_date')
@@ -110,7 +110,7 @@
                             <td onclick="window.location='{{ route('projects.show', $project->id) }}'" style="cursor: pointer;">
                                 <span class="fw-medium">{{ $project->name }}</span>
                             </td>
-                            <td onclick="window.location='{{ route('projects.show', $project->id) }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('projects.show', $project->id) }}'" style="cursor: pointer;">
                                 @if($project->customer)
                                     <a href="{{ route('customers.show', $project->customer_id) }}" onclick="event.stopPropagation()">
                                         {{ $project->customer->name }}
@@ -125,11 +125,12 @@
                                     {{ __($project->status) }}
                                 </span>
                             </td>
-                            <td onclick="window.location='{{ route('projects.show', $project->id) }}'" style="cursor: pointer;">{{ $project->due_date?->format('M d, Y') }}</td>
+                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('projects.show', $project->id) }}'" style="cursor: pointer;">{{ $project->due_date?->format('M d, Y') }}</td>
                             <td class="pe-3 text-end">
                                 <div class="dropdown" onclick="event.stopPropagation();">
-                                    <button class="btn btn-sm btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                        {{ __('actions') }}
+                                    <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown"
+                                            aria-label="{{ __('actions') }}" title="{{ __('actions') }}">
+                                        <i class="bi bi-three-dots"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>

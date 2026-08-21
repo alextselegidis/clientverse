@@ -41,7 +41,7 @@
 @endsection
 
 @section('content')
-    <div class="row">
+    <div class="row g-4">
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
@@ -67,7 +67,7 @@
                         </div>
                     </div>
 
-                    <div class="row mb-4">
+                    <div class="row g-3 mb-4">
                         <div class="col-md-4">
                             <small class="text-muted d-block">{{ __('value') }}</small>
                             <span class="fs-5 fw-bold">
@@ -134,7 +134,7 @@
                         <small class="text-muted">{{ __('sale') }}</small>
                         <p class="mb-3">
                             <a href="{{ route('sales.show', $contract->sale_id) }}">
-                                {{ $contract->sale->title }}
+                                {{ $contract->sale->name }}
                             </a>
                         </p>
                     @endif

@@ -1,16 +1,24 @@
 /* ----------------------------------------------------------------------------
- * Bookmarx - Simple Bookmark Manager
+ * Clientverse - Self-Hosted CRM
  *
- * @package     Bookmarx
+ * @package     Clientverse
  * @author      A.Tselegidis <alextselegidis@gmail.com>
  * @copyright   Copyright (c) Alex Tselegidis
  * @license     https://opensource.org/licenses/GPL-3.0 - GPLv3
- * @link        https://github.com/alextselegidis/bookmarx
+ * @link        https://clientverse.org
  * ---------------------------------------------------------------------------- */
-/* Global transition for smooth effects */
-*,
-*::before,
-*::after {
+/* Smooth transitions on interactive elements only */
+a,
+.btn,
+.nav-link,
+.dropdown-item,
+.list-group-item-action,
+.card,
+.page-link,
+.form-control,
+.form-select,
+.input-group-text,
+.badge {
     transition: background-color 0.15s ease-in-out,
     border-color 0.15s ease-in-out,
     box-shadow 0.15s ease-in-out,
@@ -18,16 +26,81 @@
     opacity 0.15s ease-in-out;
 }
 
-/* Override Bootstrap primary color */
+/* Design tokens - Bootstrap components all read these */
 :root {
-    --bs-primary: #3e5375;
-    --bs-primary-rgb: 62, 83, 117;
-    --bs-link-color: #3e5375;
-    --bs-link-color-rgb: 62, 83, 117;
-    --bs-link-hover-color: #2d3d56;
-    --bs-link-hover-color-rgb: 45, 61, 86;
-    --bs-secondary-color: #6c757d;
-    --bs-body-color: #495057;
+    /* Brand. Deep slate blue: confident without the corporate-navy heaviness. */
+    --bs-primary: #33507a;
+    --bs-primary-rgb: 51, 80, 122;
+    --cv-primary-hover: #2a4265;
+    --cv-primary-active: #223650;
+
+    --bs-link-color: #33507a;
+    --bs-link-color-rgb: 51, 80, 122;
+    --bs-link-hover-color: #2a4265;
+    --bs-link-hover-color-rgb: 42, 66, 101;
+
+    --bs-body-color: #384252;
+    --bs-secondary-color: #667085;
+
+    /* Semantic colours, desaturated from the Bootswatch defaults. The bright teal
+       and orange read as consumer-app; these hold up in a business report. */
+    --bs-secondary: #667085;
+    --bs-secondary-rgb: 102, 112, 133;
+    --bs-success: #0e9384;
+    --bs-success-rgb: 14, 147, 132;
+    --bs-info: #175cd3;
+    --bs-info-rgb: 23, 92, 211;
+    --bs-warning: #b54708;
+    --bs-warning-rgb: 181, 71, 8;
+    --bs-danger: #b42318;
+    --bs-danger-rgb: 180, 35, 24;
+
+    /* Tinted pill palette: background / border / text for each semantic colour */
+    --bs-primary-bg-subtle: #eef2f8;
+    --bs-primary-border-subtle: #d3dded;
+    --bs-primary-text-emphasis: #2a4265;
+
+    --bs-secondary-bg-subtle: #f1f3f7;
+    --bs-secondary-border-subtle: #dfe3eb;
+    --bs-secondary-text-emphasis: #4b5565;
+
+    --bs-success-bg-subtle: #e6f6f4;
+    --bs-success-border-subtle: #bfe8e2;
+    --bs-success-text-emphasis: #0b6f65;
+
+    --bs-info-bg-subtle: #eaf0fd;
+    --bs-info-border-subtle: #cbdcfa;
+    --bs-info-text-emphasis: #1447a8;
+
+    --bs-warning-bg-subtle: #fdf3e7;
+    --bs-warning-border-subtle: #f6dfc0;
+    --bs-warning-text-emphasis: #93450a;
+
+    --bs-danger-bg-subtle: #fdecea;
+    --bs-danger-border-subtle: #f8d2cf;
+    --bs-danger-text-emphasis: #912018;
+
+    /* System font stack: nothing to download, and it matches the host OS */
+    --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+    "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+
+    /* Rounder corners */
+    --bs-border-radius: 0.625rem;
+    --bs-border-radius-sm: 0.4rem;
+    --bs-border-radius-lg: 0.875rem;
+    --bs-border-radius-xl: 1.25rem;
+
+    /* Cool neutral ramp, replacing the warmer greys */
+    --bs-border-color: #e5e8ee;
+    --bs-border-color-translucent: rgba(20, 30, 50, 0.09);
+    --cv-canvas: #f5f6f9;
+    --cv-surface-muted: #f1f3f7;
+    --cv-hairline: #e9ecf2;
+
+    /* Softer, layered shadows instead of one hard drop */
+    --bs-box-shadow-sm: 0 1px 2px rgba(20, 30, 50, 0.04), 0 1px 3px rgba(20, 30, 50, 0.06);
+    --bs-box-shadow: 0 4px 6px -2px rgba(20, 30, 50, 0.05), 0 12px 20px -8px rgba(20, 30, 50, 0.1);
+    --bs-box-shadow-lg: 0 12px 16px -6px rgba(20, 30, 50, 0.05), 0 24px 48px -12px rgba(20, 30, 50, 0.14);
 }
 
 /* Link colors - darker than labels */
@@ -49,38 +122,27 @@ a:hover {
 }
 
 .btn-primary {
-    --bs-btn-bg: #3e5375;
-    --bs-btn-border-color: #3e5375;
-    --bs-btn-hover-bg: #2d3d56;
-    --bs-btn-hover-border-color: #263447;
-    --bs-btn-active-bg: #263447;
-    --bs-btn-active-border-color: #1f2b3a;
-    --bs-btn-disabled-bg: #3e5375;
-    --bs-btn-disabled-border-color: #3e5375;
+    --bs-btn-bg: var(--bs-primary);
+    --bs-btn-border-color: var(--bs-primary);
+    --bs-btn-hover-bg: var(--cv-primary-hover);
+    --bs-btn-hover-border-color: var(--cv-primary-hover);
+    --bs-btn-active-bg: var(--cv-primary-active);
+    --bs-btn-active-border-color: var(--cv-primary-active);
+    --bs-btn-disabled-bg: var(--bs-primary);
+    --bs-btn-disabled-border-color: var(--bs-primary);
 }
 
 .btn-outline-primary {
-    --bs-btn-color: #3e5375;
-    --bs-btn-border-color: #3e5375;
-    --bs-btn-hover-bg: #3e5375;
-    --bs-btn-hover-border-color: #3e5375;
-    --bs-btn-active-bg: #3e5375;
-    --bs-btn-active-border-color: #3e5375;
-}
-
-.btn-dark {
-    --bs-btn-bg: #333333;
-    --bs-btn-border-color: #333333;
-    --bs-btn-hover-bg: #222222;
-    --bs-btn-hover-border-color: #1a1a1a;
-    --bs-btn-active-bg: #1a1a1a;
-    --bs-btn-active-border-color: #111111;
-    --bs-btn-disabled-bg: #333333;
-    --bs-btn-disabled-border-color: #333333;
+    --bs-btn-color: var(--bs-primary);
+    --bs-btn-border-color: var(--bs-primary);
+    --bs-btn-hover-bg: var(--bs-primary);
+    --bs-btn-hover-border-color: var(--bs-primary);
+    --bs-btn-active-bg: var(--cv-primary-active);
+    --bs-btn-active-border-color: var(--cv-primary-active);
 }
 
 .bg-primary {
-    background-color: #3e5375 !important;
+    background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity, 1)) !important;
 }
 
 /* Dashboard card image gradient background */
@@ -88,36 +150,35 @@ a:hover {
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
 }
 
-/* Improved card footer styling - subtle warm gray */
+/* Card footer reads as a quiet strip, not a second surface */
 .card .card-footer {
-    background-color: #f5f5f5 !important;
-    border-top-color: #e8e8e8 !important;
+    background-color: transparent !important;
+    border-top-color: var(--cv-hairline) !important;
 }
 
-/* Improved background colors - warmer and softer */
+/* Neutral surfaces */
 .bg-light {
-    background-color: #fafafa !important;
+    background-color: var(--cv-canvas) !important;
 }
 
 .bg-body-secondary {
-    background-color: #f5f5f5 !important;
+    background-color: var(--cv-surface-muted) !important;
 }
 
 .bg-body-tertiary {
-    background-color: #f8f8f8 !important;
+    background-color: #f8f9fb !important;
 }
 
-/* Main layout background - softer */
 .main-layout {
-    background-color: #f5f6f8 !important;
+    background-color: var(--cv-canvas) !important;
 }
 
 .text-muted {
-    color: #6c757d !important;
+    color: #667085 !important;
 }
 
 .text-body-secondary {
-    color: #6c757d !important;
+    color: #667085 !important;
 }
 
 /* Responsive width utilities for lg breakpoint */
@@ -176,7 +237,7 @@ a:hover {
 /* Better button styling */
 .btn {
     font-weight: 500;
-    border-radius: 0.375rem;
+    border-radius: var(--bs-border-radius);
 }
 
 /* Clean table design */
@@ -187,7 +248,9 @@ a:hover {
 
 .table > :not(caption) > * > * {
     border-bottom-width: 1px;
-    border-bottom-color: #e9ecef;
+    border-bottom-color: var(--cv-hairline);
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
 }
 
 /* Remove last row border */
@@ -196,28 +259,31 @@ a:hover {
 }
 
 .table-striped > tbody > tr:nth-of-type(odd) > * {
-    background-color: #fafafa;
+    background-color: #fafbfc;
 }
 
 .table-hover > tbody > tr:hover > * {
-    background-color: #f5f5f5;
+    background-color: #eff2f7;
 }
 
-/* Light gray table header */
+/* Table header: quiet, uppercase, no heavy rule underneath */
 .table-light-header > thead {
-    background-color: #f8f9fa;
+    background-color: var(--cv-surface-muted);
 }
 
 .table-light-header > thead > tr > th {
-    background-color: #f8f9fa;
-    color: #495057;
-    font-weight: normal;
-    border-bottom: 1px solid #dee2e6;
+    background-color: var(--cv-surface-muted);
+    color: #6b7688;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--cv-hairline);
     transition: background-color 0.15s ease-in-out;
 }
 
 .table-light-header > thead > tr > th:has(a):hover {
-    background-color: #e9ecef;
+    background-color: #e7eaf1;
 }
 
 .table-light-header > thead > tr > th a {
@@ -236,13 +302,13 @@ a:hover {
 /* Filter/search section above table */
 .card-table .table-filters {
     padding: 1rem;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid var(--cv-hairline);
 }
 
 /* Pagination section below table */
 .card-table .table-pagination {
     padding: 1rem;
-    border-top: 1px solid #e9ecef;
+    border-top: 1px solid var(--cv-hairline);
 }
 
 /* Fix pagination styling */
@@ -254,32 +320,33 @@ a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 2rem;
-    height: 2rem;
+    min-width: 2.125rem;
+    height: 2.125rem;
     padding: 0.25rem 0.5rem;
     font-size: 0.875rem;
-    border-radius: 0.25rem;
-    color: #333;
-    background-color: #ededed;
-    border-color: #ededed;
+    font-weight: 500;
+    border-radius: var(--bs-border-radius-sm);
+    color: #52607a;
+    background-color: transparent;
+    border-color: transparent;
 }
 
 .pagination .page-item .page-link:hover {
-    color: #3e5375;
-    background-color: #f8f9fa;
-    border-color: #3e5375;
+    color: var(--bs-primary);
+    background-color: var(--cv-surface-muted);
+    border-color: transparent;
 }
 
 .pagination .page-item.active .page-link {
     color: #fff;
-    background-color: #333;
-    border-color: #333;
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
 }
 
 .pagination .page-item.disabled .page-link {
-    color: #6c757d;
-    background-color: #fff;
-    border-color: #dee2e6;
+    color: #aeb6c4;
+    background-color: transparent;
+    border-color: transparent;
 }
 
 .pagination .page-item .page-link i {
@@ -340,4 +407,379 @@ a:hover {
 
 .table-dark th a:hover::after {
     opacity: 0.6;
+}
+
+/* Borderless icon button, used for the row action and note menus. Transparent
+   rather than a white fill so it follows the row tint on hover. */
+.btn-icon {
+    --bs-btn-color: #5c6779;
+    --bs-btn-bg: transparent;
+    --bs-btn-border-color: transparent;
+    --bs-btn-hover-color: var(--bs-primary);
+    --bs-btn-hover-bg: var(--cv-surface-muted);
+    --bs-btn-hover-border-color: transparent;
+    --bs-btn-active-color: var(--bs-primary);
+    --bs-btn-active-bg: #e7eaf1;
+    --bs-btn-active-border-color: transparent;
+    --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
+    border-radius: var(--bs-border-radius);
+}
+
+/* The toggler reads as a menu icon, not a boxed button. The icon has to be
+   repainted white because the bar is dark but the navbar is not in dark mode -
+   switching it would also darken the account dropdown inside it. */
+.navbar-toggler {
+    --bs-navbar-toggler-border-color: transparent;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.navbar-toggler .navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+.navbar-toggler:focus {
+    box-shadow: none;
+}
+
+.navbar-toggler:focus-visible {
+    box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.3);
+}
+
+/* Pace loading bar in brand colors */
+.pace .pace-progress {
+    background: var(--bs-primary);
+}
+
+/* Flex children must be allowed to shrink, otherwise long text and
+   .table-responsive scroll containers push the whole page sideways */
+.flex-grow-1 {
+    min-width: 0;
+}
+
+/* Search input groups: white addon, and a single focus ring around the
+   whole group instead of a square one clipping over the addon/button */
+.input-group-text.border-end-0 {
+    background-color: #fff;
+}
+
+.input-group:focus-within {
+    border-radius: var(--bs-border-radius);
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+}
+
+.input-group:focus-within > .form-control:focus,
+.input-group:focus-within > .form-select:focus {
+    box-shadow: none;
+}
+
+.input-group:focus-within > .form-control,
+.input-group:focus-within > .form-select,
+.input-group:focus-within > .input-group-text,
+.input-group:focus-within > .btn {
+    border-color: var(--bs-primary);
+}
+
+/* Header search box - roomier, and a light focus ring so it stays visible
+   against the dark navbar */
+#top-nav .input-group .form-control {
+    min-width: 180px;
+}
+
+#top-nav .input-group:focus-within {
+    box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.3);
+}
+
+#top-nav .input-group:focus-within > .form-control,
+#top-nav .input-group:focus-within > .input-group-text {
+    border-color: #fff;
+}
+
+/* Long URLs and email addresses must wrap instead of spilling out of a card */
+.card-body a {
+    overflow-wrap: break-word;
+}
+
+/* --------------------------------------------------------------------------
+ * Modern UI pass - surfaces, badges, controls
+ * -------------------------------------------------------------------------- */
+
+/* Cards sit on a hairline ring so they read as surfaces, not floating boxes */
+.shadow-sm {
+    box-shadow: 0 0 0 1px rgba(20, 30, 50, 0.05),
+    0 1px 2px rgba(20, 30, 50, 0.04),
+    0 2px 6px rgba(20, 30, 50, 0.05) !important;
+}
+
+.card-header {
+    border-bottom-color: var(--cv-hairline);
+    padding-top: 0.875rem;
+    padding-bottom: 0.875rem;
+    font-weight: 600;
+}
+
+/* Badges: quiet tinted pills instead of saturated blocks */
+.badge {
+    padding: 0.35em 0.7em;
+    font-weight: 500;
+    font-size: 0.75em;
+    border: 1px solid transparent;
+    border-radius: var(--bs-border-radius-pill);
+}
+
+.badge.bg-primary {
+    background-color: var(--bs-primary-bg-subtle) !important;
+    border-color: var(--bs-primary-border-subtle);
+    color: var(--bs-primary-text-emphasis) !important;
+}
+
+.badge.bg-secondary {
+    background-color: var(--bs-secondary-bg-subtle) !important;
+    border-color: var(--bs-secondary-border-subtle);
+    color: var(--bs-secondary-text-emphasis) !important;
+}
+
+.badge.bg-success {
+    background-color: var(--bs-success-bg-subtle) !important;
+    border-color: var(--bs-success-border-subtle);
+    color: var(--bs-success-text-emphasis) !important;
+}
+
+.badge.bg-info {
+    background-color: var(--bs-info-bg-subtle) !important;
+    border-color: var(--bs-info-border-subtle);
+    color: var(--bs-info-text-emphasis) !important;
+}
+
+.badge.bg-warning {
+    background-color: var(--bs-warning-bg-subtle) !important;
+    border-color: var(--bs-warning-border-subtle);
+    color: var(--bs-warning-text-emphasis) !important;
+}
+
+.badge.bg-danger {
+    background-color: var(--bs-danger-bg-subtle) !important;
+    border-color: var(--bs-danger-border-subtle);
+    color: var(--bs-danger-text-emphasis) !important;
+}
+
+.badge.bg-light {
+    background-color: var(--cv-surface-muted) !important;
+    border-color: var(--cv-hairline);
+    color: #5c6779 !important;
+}
+
+/* Form controls */
+.form-control,
+.form-select {
+    border-color: #dde2ea;
+}
+
+/* Roomier single-line inputs, but leave textareas alone so `rows` still means rows */
+input.form-control,
+.form-select {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+.form-control::placeholder {
+    color: #9aa3b2;
+}
+
+.form-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.375rem;
+}
+
+.form-check-input {
+    border-color: #cbd2dd;
+}
+
+/* Dropdowns and modals */
+.dropdown-menu {
+    border-color: var(--cv-hairline);
+    border-radius: var(--bs-border-radius-lg);
+    box-shadow: var(--bs-box-shadow);
+    padding: 0.375rem;
+}
+
+.dropdown-item {
+    border-radius: var(--bs-border-radius-sm);
+    padding: 0.4rem 0.625rem;
+}
+
+.dropdown-divider {
+    border-top-color: var(--cv-hairline);
+}
+
+.modal-content {
+    border: 0;
+    border-radius: var(--bs-border-radius-xl);
+    box-shadow: var(--bs-box-shadow-lg);
+}
+
+.modal-header,
+.modal-footer {
+    border-color: var(--cv-hairline);
+}
+
+/* List groups used as row lists */
+.list-group-flush > .list-group-item {
+    border-color: var(--cv-hairline);
+}
+
+.list-group-item-action:hover {
+    background-color: #f7f9fc;
+}
+
+/* Toasts */
+.toast {
+    border-radius: var(--bs-border-radius-lg);
+    box-shadow: var(--bs-box-shadow);
+}
+
+/* Breadcrumb reads as a quiet trail, and scrolls rather than clipping when a
+   deep trail does not fit on a phone */
+.breadcrumb {
+    --bs-breadcrumb-divider-color: #b3bbc9;
+    font-weight: 500;
+    scrollbar-width: none;
+}
+
+.breadcrumb::-webkit-scrollbar {
+    display: none;
+}
+
+/* --------------------------------------------------------------------------
+ * Touch targets below the lg breakpoint
+ *
+ * A 16px checkbox, a 14px sort link and a 31px button are all reliable with a
+ * mouse and awkward with a thumb, so everything interactive grows to roughly
+ * 40px on phones and tablets.
+ * -------------------------------------------------------------------------- */
+
+@media (max-width: 991.98px) {
+    .form-check-input {
+        width: 1.5rem;
+        height: 1.5rem;
+        margin-top: 0;
+    }
+
+    .form-check {
+        min-height: 1.5rem;
+        padding-left: 2rem;
+    }
+
+    .form-check .form-check-input {
+        margin-left: -2rem;
+    }
+
+    .form-check-label {
+        line-height: 1.5rem;
+    }
+
+    .form-switch {
+        padding-left: 3.5rem;
+    }
+
+    .form-switch .form-check-input {
+        width: 3rem;
+        margin-left: -3.5rem;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Centering is only the default; the alignment utilities still win */
+    .btn.text-start {
+        justify-content: flex-start;
+    }
+
+    .btn.text-end {
+        justify-content: flex-end;
+    }
+
+    .btn-sm {
+        --bs-btn-padding-y: 0.5rem;
+        --bs-btn-padding-x: 0.75rem;
+        min-height: 2.5rem;
+    }
+
+    /* Sorting is triggered by the whole header cell, not just the label text */
+    .table-light-header > thead > tr > th a {
+        display: block;
+        padding: 0.5rem 0;
+    }
+
+    .breadcrumb-item a {
+        display: inline-block;
+        padding: 0.35rem 0.5rem;
+        margin: -0.35rem -0.5rem;
+    }
+
+    /* Links in dense areas need vertical room to be tappable. The mailto: and tel:
+       links on detail pages matter most - on a phone they are the primary action. */
+    .table td a,
+    .card-body p a,
+    footer a,
+    a[href^="mailto:"],
+    a[href^="tel:"] {
+        display: inline-block;
+        padding-top: 0.2rem;
+        padding-bottom: 0.2rem;
+    }
+
+    /* Bulk select needs a pointer and a keyboard to be worth anything. On a phone
+       the column only steals width from the record name, and with no checkboxes
+       the bulk actions toolbar simply never unhides itself. */
+    .table th:has(.bulk-select-all),
+    .table td:has(.bulk-select-item) {
+        display: none;
+    }
+
+    /* Compound record names would wrap to six lines in a narrow column, so rows
+       are clamped. The full name is on the detail page. */
+    .table td .fw-medium {
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+    }
+
+    /* A file name or URL with no spaces sets the cell's minimum width and pushes
+       the table wider than the phone; let it break mid-token instead */
+    .table td a,
+    .card-body p a {
+        overflow-wrap: anywhere;
+    }
+
+    /* A long paginator overflows a phone; let the links wrap instead */
+    .pagination {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .dropdown-item {
+        padding: 0.625rem 0.75rem;
+    }
+
+    /* Stacked checkboxes and switches sit flush; space them so a thumb cannot
+       hit the wrong one */
+    .form-check + .form-check {
+        margin-top: 0.5rem;
+    }
+
+    /* A lone form action becomes a full-width, thumb-friendly button */
+    .card-footer > .btn:only-child {
+        width: 100%;
+    }
+
+    .pagination .page-item .page-link {
+        min-width: 2.5rem;
+        height: 2.5rem;
+    }
 }

@@ -45,13 +45,13 @@
         <!-- Files List -->
         @if($model->files->count() > 0)
             <div class="table-responsive">
-                <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
+                <table class="table table-hover table-light-header align-middle mb-0">
+                    <thead>
                         <tr>
-                            <th>{{ __('file') }}</th>
-                            <th>{{ __('size') }}</th>
-                            <th>{{ __('uploaded') }}</th>
-                            <th class="text-end" style="width: 120px;"></th>
+                            <th class="w-100 w-lg-auto">{{ __('file') }}</th>
+                            <th class="d-none d-lg-table-cell">{{ __('size') }}</th>
+                            <th class="d-none d-lg-table-cell">{{ __('uploaded') }}</th>
+                            <th class="text-end" style="width: 110px;"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -63,15 +63,16 @@
                                         {{ $file->original_name }}
                                     </a>
                                 </td>
-                                <td>{{ $file->formatted_size }}</td>
-                                <td>{{ $file->created_at->format('M d, Y') }}</td>
+                                <td class="d-none d-lg-table-cell">{{ $file->formatted_size }}</td>
+                                <td class="d-none d-lg-table-cell">{{ $file->created_at->format('M d, Y') }}</td>
                                 <td class="text-end">
+                                    <div class="d-flex flex-nowrap justify-content-end gap-1">
                                     <a href="{{ route($downloadRoute, array_merge($routeParams ?? [], ['file' => $file->id])) }}"
-                                       class="btn btn-sm btn-outline-secondary me-1" title="{{ __('download') }}">
+                                       class="btn btn-sm btn-outline-secondary" title="{{ __('download') }}">
                                         <i class="bi bi-download"></i>
                                     </a>
                                     <form action="{{ route($deleteRoute, array_merge($routeParams ?? [], ['file' => $file->id])) }}"
-                                          method="POST" class="d-inline"
+                                          method="POST"
                                           onsubmit="return confirm('{{ __('delete_file_prompt') }}')">
                                         @csrf
                                         @method('DELETE')
@@ -79,6 +80,7 @@
                                             <i class="bi bi-trash"></i>
                                         </button>
                                     </form>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach

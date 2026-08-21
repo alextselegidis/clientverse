@@ -1,12 +1,12 @@
 {{--
 /* ----------------------------------------------------------------------------
- * Clientverse - Simple Bookmark Manager
+ * Clientverse - Self-Hosted CRM
  *
  * @package     Clientverse
  * @author      A.Tselegidis <alextselegidis@gmail.com>
  * @copyright   Copyright (c) Alex Tselegidis
  * @license     https://opensource.org/licenses/GPL-3.0 - GPLv3
- * @link        https://github.com/alextselegidis/clientverse
+ * @link        https://clientverse.org
  * ---------------------------------------------------------------------------- */
 --}}
 
@@ -58,14 +58,14 @@
                     </div>
 
                     <!-- Table -->
-                    <div class="table-responsive" style="overflow: visible;">
-                        <table class="table table-striped table-hover table-light-header align-middle mb-0" id="users-table">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-light-header align-middle mb-0" id="users-table">
                             <thead>
                                 <tr>
                                     <th class="ps-4" style="width: 40px;">
                                         <input type="checkbox" class="form-check-input bulk-select-all" data-table="users">
                                     </th>
-                                    <th>
+                                    <th class="w-100 w-lg-auto">
                                         <a href="{{ route('setup.users', ['sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}" class="text-decoration-none">
                                             {{ __('name') }}
                                             @if(request('sort') === 'name')
@@ -73,7 +73,7 @@
                                             @endif
                                         </a>
                                     </th>
-                                    <th>
+                                    <th class="d-none d-lg-table-cell">
                                         <a href="{{ route('setup.users', ['sort' => 'email', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}" class="text-decoration-none">
                                             {{ __('email') }}
                                             @if(request('sort') === 'email')
@@ -81,7 +81,7 @@
                                             @endif
                                         </a>
                                     </th>
-                                    <th>
+                                    <th class="d-none d-lg-table-cell">
                                         <a href="{{ route('setup.users', ['sort' => 'role', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}" class="text-decoration-none">
                                             {{ __('role') }}
                                             @if(request('sort') === 'role')
@@ -109,12 +109,12 @@
                                         <td onclick="window.location='{{ route('setup.users.edit', $user->id) }}'" style="cursor: pointer;">
                                             <span class="fw-medium">{{ $user->name }}</span>
                                         </td>
-                                        <td onclick="window.location='{{ route('setup.users.edit', $user->id) }}'" style="cursor: pointer;">
+                                        <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('setup.users.edit', $user->id) }}'" style="cursor: pointer;">
                                             <a href="mailto:{{ $user->email }}" class="text-decoration-none" onclick="event.stopPropagation();">
                                                 {{ $user->email }}
                                             </a>
                                         </td>
-                                        <td onclick="window.location='{{ route('setup.users.edit', $user->id) }}'" style="cursor: pointer;">
+                                        <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('setup.users.edit', $user->id) }}'" style="cursor: pointer;">
                                             <span class="badge bg-light text-dark">{{ __($user->role) }}</span>
                                         </td>
                                         <td onclick="window.location='{{ route('setup.users.edit', $user->id) }}'" style="cursor: pointer;">
@@ -126,8 +126,9 @@
                                         </td>
                                         <td class="pe-4 text-end">
                                             <div class="dropdown" onclick="event.stopPropagation();">
-                                                <button class="btn btn-sm btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                                    {{ __('actions') }}
+                                                <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown"
+                                                        aria-label="{{ __('actions') }}" title="{{ __('actions') }}">
+                                                    <i class="bi bi-three-dots"></i>
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-end">
                                                     <li>

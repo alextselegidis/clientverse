@@ -68,13 +68,13 @@
 
             <!-- Table -->
             <div class="table-responsive">
-                <table class="table table-striped table-hover table-light-header align-middle mb-0" id="customers-table">
+                <table class="table table-hover table-light-header align-middle mb-0" id="customers-table">
                     <thead>
                     <tr>
                         <th class="ps-3" style="width: 40px;">
                             <input type="checkbox" class="form-check-input bulk-select-all" data-table="customers">
                         </th>
-                        <th>
+                        <th class="w-100 w-lg-auto">
                             <a href="{{ route('customers', ['sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'status' => $status, 'type' => $type]) }}" class="text-decoration-none">
                                 {{ __('name') }}
                                 @if(request('sort') === 'name')
@@ -82,7 +82,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th>
+                        <th class="d-none d-lg-table-cell">
                             <a href="{{ route('customers', ['sort' => 'company', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'status' => $status, 'type' => $type]) }}" class="text-decoration-none">
                                 {{ __('company') }}
                                 @if(request('sort') === 'company')
@@ -90,7 +90,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th>
+                        <th class="d-none d-lg-table-cell">
                             <a href="{{ route('customers', ['sort' => 'email', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'status' => $status, 'type' => $type]) }}" class="text-decoration-none">
                                 {{ __('email') }}
                                 @if(request('sort') === 'email')
@@ -118,8 +118,8 @@
                             <td onclick="window.location='{{ route('customers.show', $customer->id) }}'" style="cursor: pointer;">
                                 <span class="fw-medium">{{ $customer->name }}</span>
                             </td>
-                            <td onclick="window.location='{{ route('customers.show', $customer->id) }}'" style="cursor: pointer;">{{ $customer->company }}</td>
-                            <td onclick="window.location='{{ route('customers.show', $customer->id) }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('customers.show', $customer->id) }}'" style="cursor: pointer;">{{ $customer->company }}</td>
+                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('customers.show', $customer->id) }}'" style="cursor: pointer;">
                                 @if($customer->email)
                                     <a href="mailto:{{ $customer->email }}" onclick="event.stopPropagation()">{{ $customer->email }}</a>
                                 @endif
@@ -134,8 +134,9 @@
                             </td>
                             <td class="pe-3 text-end">
                                 <div class="dropdown" onclick="event.stopPropagation();">
-                                    <button class="btn btn-sm btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                        {{ __('actions') }}
+                                    <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown"
+                                            aria-label="{{ __('actions') }}" title="{{ __('actions') }}">
+                                        <i class="bi bi-three-dots"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>

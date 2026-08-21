@@ -51,10 +51,10 @@
 
             <!-- Table -->
             <div class="table-responsive">
-                <table class="table table-striped table-hover table-light-header align-middle mb-0">
+                <table class="table table-hover table-light-header align-middle mb-0">
                     <thead>
                     <tr>
-                        <th class="ps-3">
+                        <th class="ps-3 w-100 w-lg-auto">
                             <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'first_name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none">
                                 {{ __('name') }}
                                 @if(request('sort') === 'first_name' || !request('sort'))
@@ -62,7 +62,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th>
+                        <th class="d-none d-lg-table-cell">
                             <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'email', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none">
                                 {{ __('email') }}
                                 @if(request('sort') === 'email')
@@ -70,7 +70,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th>
+                        <th class="d-none d-lg-table-cell">
                             <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'phone', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none">
                                 {{ __('phone') }}
                                 @if(request('sort') === 'phone')
@@ -86,7 +86,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th>
+                        <th class="d-none d-lg-table-cell">
                             <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'is_primary', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none">
                                 {{ __('primary') }}
                                 @if(request('sort') === 'is_primary')
@@ -106,14 +106,14 @@
                                     <small class="text-muted d-block">{{ $contact->position }}</small>
                                 @endif
                             </td>
-                            <td>
+                            <td class="d-none d-lg-table-cell">
                                 @if($contact->email)
                                     <a href="mailto:{{ $contact->email }}" onclick="event.stopPropagation()">{{ $contact->email }}</a>
                                 @else
                                     -
                                 @endif
                             </td>
-                            <td>{{ $contact->phone ?? '-' }}</td>
+                            <td class="d-none d-lg-table-cell">{{ $contact->phone ?? '-' }}</td>
                             <td>
                                 @php
                                     $roleColors = ['decision_maker' => 'primary', 'finance' => 'success', 'technical' => 'info', 'other' => 'secondary'];
@@ -122,15 +122,16 @@
                                     {{ __($contact->role ?? 'other') }}
                                 </span>
                             </td>
-                            <td>
+                            <td class="d-none d-lg-table-cell">
                                 @if($contact->is_primary)
                                     <span class="badge bg-success">{{ __('yes') }}</span>
                                 @endif
                             </td>
                             <td class="pe-3 text-end">
                                 <div class="dropdown" onclick="event.stopPropagation();">
-                                    <button class="btn btn-sm btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                        {{ __('actions') }}
+                                    <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown"
+                                            aria-label="{{ __('actions') }}" title="{{ __('actions') }}">
+                                        <i class="bi bi-three-dots"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>

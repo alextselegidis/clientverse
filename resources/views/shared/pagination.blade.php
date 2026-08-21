@@ -11,7 +11,7 @@
 --}}
 
 @if ($paginator->hasPages())
-    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 p-3">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 gap-sm-3 p-3">
         <div class="text-muted small">
             {{ __('showing') }} {{ $paginator->firstItem() ?? 0 }} {{ __('to') }} {{ $paginator->lastItem() ?? 0 }} {{ __('of') }} {{ $paginator->total() }} {{ __('entries') }}
         </div>

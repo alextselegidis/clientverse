@@ -24,13 +24,13 @@
 @section('content')
     <!-- Overview Widgets -->
     <div class="row mb-4">
-        <div class="col-md-3 mb-3">
+        <div class="col-sm-6 col-lg-3 mb-3">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
                         <div class="flex-shrink-0">
                             <div class="bg-primary bg-opacity-10 rounded-3 p-3">
-                                <i class="bi bi-people text-white fs-4"></i>
+                                <i class="bi bi-people text-primary fs-4"></i>
                             </div>
                         </div>
                         <div class="flex-grow-1 ms-3">
@@ -44,7 +44,7 @@
                 </a>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-sm-6 col-lg-3 mb-3">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
@@ -64,7 +64,7 @@
                 </a>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-sm-6 col-lg-3 mb-3">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
@@ -87,7 +87,7 @@
                 </a>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-sm-6 col-lg-3 mb-3">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
                     <div class="d-flex align-items-center">
@@ -117,18 +117,28 @@
                     <h6 class="mb-0"><i class="bi bi-lightning me-2"></i>{{ __('quick_actions') }}</h6>
                 </div>
                 <div class="card-body">
-                    <a href="{{ route('customers.create') }}" class="btn btn-outline-primary me-2 mb-2">
-                        <i class="bi bi-person-plus me-1"></i> {{ __('add') }} {{ __('customer') }}
-                    </a>
-                    <a href="{{ route('projects.create') }}" class="btn btn-outline-success me-2 mb-2">
-                        <i class="bi bi-folder-plus me-1"></i> {{ __('create') }} {{ __('project') }}
-                    </a>
-                    <a href="{{ route('sales.create') }}" class="btn btn-outline-warning me-2 mb-2">
-                        <i class="bi bi-plus-circle me-1"></i> {{ __('new') }} {{ __('sale') }}
-                    </a>
-                    <a href="{{ route('contracts.create') }}" class="btn btn-outline-info me-2 mb-2">
-                        <i class="bi bi-file-plus me-1"></i> {{ __('new') }} {{ __('contract') }}
-                    </a>
+                    <div class="row row-cols-2 row-cols-sm-auto g-2">
+                        <div class="col d-grid">
+                            <a href="{{ route('customers.create') }}" class="btn btn-outline-primary">
+                                <i class="bi bi-person-plus me-1"></i> {{ __('add') }} {{ __('customer') }}
+                            </a>
+                        </div>
+                        <div class="col d-grid">
+                            <a href="{{ route('projects.create') }}" class="btn btn-outline-success">
+                                <i class="bi bi-folder-plus me-1"></i> {{ __('create') }} {{ __('project') }}
+                            </a>
+                        </div>
+                        <div class="col d-grid">
+                            <a href="{{ route('sales.create') }}" class="btn btn-outline-warning">
+                                <i class="bi bi-plus-circle me-1"></i> {{ __('new') }} {{ __('sale') }}
+                            </a>
+                        </div>
+                        <div class="col d-grid">
+                            <a href="{{ route('contracts.create') }}" class="btn btn-outline-info">
+                                <i class="bi bi-file-plus me-1"></i> {{ __('new') }} {{ __('contract') }}
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -146,13 +156,13 @@
                         @foreach($recentCustomers as $customer)
                             <a href="{{ route('customers.show', $customer->id) }}" class="list-group-item list-group-item-action d-flex align-items-center">
                                 <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
-                                    <i class="bi bi-person-plus text-white"></i>
+                                    <i class="bi bi-person-plus text-primary"></i>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <div class="fw-medium">{{ $customer->name }}</div>
+                                    <div class="fw-medium text-truncate">{{ $customer->name }}</div>
                                     <small class="text-muted">{{ __('new') }} {{ __('customer') }}</small>
                                 </div>
-                                <small class="text-muted">{{ $customer->created_at->diffForHumans() }}</small>
+                                <small class="text-muted text-nowrap flex-shrink-0 ms-3">{{ $customer->created_at->diffForHumans() }}</small>
                             </a>
                         @endforeach
                         @foreach($recentProjects as $project)
@@ -161,10 +171,10 @@
                                     <i class="bi bi-kanban text-success"></i>
                                 </div>
                                 <div class="flex-grow-1">
-                                    <div class="fw-medium">{{ $project->name }}</div>
+                                    <div class="fw-medium text-truncate">{{ $project->name }}</div>
                                     <small class="text-muted">{{ __('project') }} {{ __('updated') }}</small>
                                 </div>
-                                <small class="text-muted">{{ $project->updated_at->diffForHumans() }}</small>
+                                <small class="text-muted text-nowrap flex-shrink-0 ms-3">{{ $project->updated_at->diffForHumans() }}</small>
                             </a>
                         @endforeach
                         @if($recentCustomers->isEmpty() && $recentProjects->isEmpty())
@@ -184,7 +194,7 @@
                     <h6 class="mb-0"><i class="bi bi-bar-chart me-2"></i>{{ __('monthly_sales') }}</h6>
                 </div>
                 <div class="card-body text-center">
-                    <h2 class="text-success mb-0">{{ format_currency($monthlySales) }}</h2>
+                    <h2 class="text-primary mb-0">{{ format_currency($monthlySales) }}</h2>
                     <small class="text-muted">{{ now()->format('F Y') }}</small>
                 </div>
             </div>

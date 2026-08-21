@@ -68,13 +68,13 @@
 
             <!-- Table -->
             <div class="table-responsive">
-                <table class="table table-striped table-hover table-light-header align-middle mb-0" id="contracts-table">
+                <table class="table table-hover table-light-header align-middle mb-0" id="contracts-table">
                     <thead>
                     <tr>
                         <th class="ps-3" style="width: 40px;">
                             <input type="checkbox" class="form-check-input bulk-select-all" data-table="contracts">
                         </th>
-                        <th>
+                        <th class="w-100 w-lg-auto">
                             <a href="{{ route('contracts', ['sort' => 'title', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none">
                                 {{ __('title') }}
                                 @if(request('sort') === 'title')
@@ -82,7 +82,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th>
+                        <th class="d-none d-lg-table-cell">
                             <a href="{{ route('contracts', ['sort' => 'customer', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none">
                                 {{ __('customer') }}
                                 @if(request('sort') === 'customer')
@@ -90,7 +90,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th>
+                        <th class="d-none d-lg-table-cell">
                             <a href="{{ route('contracts', ['sort' => 'type', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none">
                                 {{ __('type') }}
                                 @if(request('sort') === 'type')
@@ -106,7 +106,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th>
+                        <th class="d-none d-lg-table-cell">
                             <a href="{{ route('contracts', ['sort' => 'value', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none">
                                 {{ __('value') }}
                                 @if(request('sort') === 'value')
@@ -114,7 +114,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th>
+                        <th class="d-none d-lg-table-cell">
                             <a href="{{ route('contracts', ['sort' => 'start_date', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none">
                                 {{ __('dates') }}
                                 @if(request('sort') === 'start_date')
@@ -134,14 +134,14 @@
                             <td onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
                                 <span class="fw-medium">{{ $contract->title }}</span>
                             </td>
-                            <td onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
                                 @if($contract->customer)
                                     <a href="{{ route('customers.show', $contract->customer_id) }}" onclick="event.stopPropagation()">
                                         {{ $contract->customer->name }}
                                     </a>
                                 @endif
                             </td>
-                            <td onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
                                 <span class="badge bg-{{ $contract->type == 'recurring' ? 'info' : 'secondary' }}">
                                     {{ __($contract->type) }}
                                 </span>
@@ -154,14 +154,14 @@
                                     {{ __($contract->status) }}
                                 </span>
                             </td>
-                            <td onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
                                 @if($contract->value)
                                     {{ format_currency($contract->value, $contract->customer?->currency) }}
                                 @else
                                     -
                                 @endif
                             </td>
-                            <td onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
                                 {{ $contract->start_date?->format('M d, Y') ?? '-' }}
                                 @if($contract->end_date)
                                     <br>→ {{ $contract->end_date->format('M d, Y') }}
@@ -169,8 +169,9 @@
                             </td>
                             <td class="pe-3 text-end">
                                 <div class="dropdown" onclick="event.stopPropagation();">
-                                    <button class="btn btn-sm btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                        {{ __('actions') }}
+                                    <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown"
+                                            aria-label="{{ __('actions') }}" title="{{ __('actions') }}">
+                                        <i class="bi bi-three-dots"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li>
