@@ -272,7 +272,7 @@
     "records_deleted_message": "Records deleted successfully.",
     "operation_failed_message": "Operation failed with an error.",
     "reset_password_message": "Reset Your Password",
-    "enter_email_message": "Enter the email address associated with your account and we'll send you a link to reset your password.",
+    "enter_email_message": "Enter your email address and we will send you a link to reset your password.",
     "back_to_login_message": "Back To Login",
     "forgot_password": "Forgot Password",
     "delete_record_prompt": "Are you sure that you want to delete this record?",
@@ -360,9 +360,10 @@
     "last_used": "Last used",
     "to": "to",
     "entries": "entries",
-    "search": "Search",
     "found": "Found",
     "results_for": "results for",
     "enter_at_least_2_characters": "Please enter at least 2 characters to search.",
-    "enter_search_term": "Enter a search term to find customers, projects, sales, contracts and more."
+    "enter_search_term": "Enter a search term to find customers, projects, sales, contracts and more.",
+    "view_all": "View all",
+    "cannot_delete_current_user": "You cannot delete your own account."
 }
