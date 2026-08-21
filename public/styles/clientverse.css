@@ -181,6 +181,14 @@ a:hover {
     color: #667085 !important;
 }
 
+/* One secondary column per list table appears at md, so the record name stops
+   claiming the whole row there rather than at lg */
+@media (min-width: 768px) {
+    .w-md-auto {
+        width: auto !important;
+    }
+}
+
 /* Responsive width utilities for lg breakpoint */
 @media (min-width: 992px) {
     .w-lg-auto {
@@ -246,11 +254,23 @@ a:hover {
     border-spacing: 0;
 }
 
+/* Rows are dense on a pointer and roomy on a thumb - see the touch-target block
+   near the end of the file for the phone value */
 .table > :not(caption) > * > * {
     border-bottom-width: 1px;
     border-bottom-color: var(--cv-hairline);
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+}
+
+/* A compound record name wraps to four or five lines and drags every row in the
+   table down with it, so names are clamped and the full text lives on the detail
+   page. The phone value is in the touch-target block near the end of the file. */
+.table td .fw-medium {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
 }
 
 /* Remove last row border */
@@ -355,7 +375,6 @@ a:hover {
 
 @media (min-width: 992px) {
     .navbar-nav .nav-item .nav-link.nav-menu-item {
-        min-width: 120px;
         text-align: center;
         display: flex;
         align-items: center;
@@ -368,6 +387,16 @@ a:hover {
 
     .navbar-nav .nav-item .nav-link.nav-menu-item:hover {
         background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    /* The horizontal navbar appears at lg, but the even 120px item grid plus the
+       brand wordmark and the account dropdown only fit from xl. Below that the
+       items size to their label - otherwise the whole page scrolls sideways on a
+       1024px tablet in landscape. */
+    @media (min-width: 1200px) {
+        .navbar-nav .nav-item .nav-link.nav-menu-item {
+            min-width: 120px;
+        }
     }
 
     .navbar {
@@ -712,25 +741,34 @@ input.form-control,
     /* Sorting is triggered by the whole header cell, not just the label text */
     .table-light-header > thead > tr > th a {
         display: block;
-        padding: 0.5rem 0;
+        padding: 0.7rem 0;
     }
 
     .breadcrumb-item a {
         display: inline-block;
-        padding: 0.35rem 0.5rem;
-        margin: -0.35rem -0.5rem;
+        padding: 0.5rem;
+        margin: -0.5rem;
     }
 
-    /* Links in dense areas need vertical room to be tappable. The mailto: and tel:
-       links on detail pages matter most - on a phone they are the primary action. */
-    .table td a,
-    .card-body p a,
-    footer a,
-    a[href^="mailto:"],
-    a[href^="tel:"] {
+    /* Links in dense areas need vertical room to be tappable. Two exclusions:
+       dropdown items are sized by the .dropdown-item rule below, and mailto:/tel:
+       get the taller target of the next rule - either would otherwise be outweighed
+       by this selector and flattened back to 30px. */
+    .table td a:not(.dropdown-item):not([href^="mailto:"]):not([href^="tel:"]),
+    .card-body p a:not([href^="mailto:"]):not([href^="tel:"]),
+    footer a {
         display: inline-block;
         padding-top: 0.2rem;
         padding-bottom: 0.2rem;
+    }
+
+    /* The mailto: and tel: links on detail pages matter most - on a phone they are
+       the primary action, so they get a full-height target. */
+    a[href^="mailto:"],
+    a[href^="tel:"] {
+        display: inline-block;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
     }
 
     /* Bulk select needs a pointer and a keyboard to be worth anything. On a phone
@@ -744,15 +782,15 @@ input.form-control,
     /* Compound record names would wrap to six lines in a narrow column, so rows
        are clamped. The full name is on the detail page. */
     .table td .fw-medium {
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
         -webkit-line-clamp: 3;
-        overflow: hidden;
     }
 
     /* A file name or URL with no spaces sets the cell's minimum width and pushes
-       the table wider than the phone; let it break mid-token instead */
-    .table td a,
+       the table wider than the phone; let it break mid-token instead. Record names
+       need the same treatment at 320px, where their longest word plus the status
+       badge and the row action no longer fit side by side. */
+    .table td a:not(.dropdown-item),
+    .table td .fw-medium,
     .card-body p a {
         overflow-wrap: anywhere;
     }
@@ -765,6 +803,12 @@ input.form-control,
 
     .dropdown-item {
         padding: 0.625rem 0.75rem;
+    }
+
+    /* A row is a tap target on a phone, so it keeps the taller padding */
+    .table > :not(caption) > * > * {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
     }
 
     /* Stacked checkboxes and switches sit flush; space them so a thumb cannot

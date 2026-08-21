@@ -74,7 +74,7 @@
                         <th class="ps-3" style="width: 40px;">
                             <input type="checkbox" class="form-check-input bulk-select-all" data-table="customers">
                         </th>
-                        <th class="w-100 w-lg-auto">
+                        <th class="w-100 w-md-auto">
                             <a href="{{ route('customers', ['sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'status' => $status, 'type' => $type]) }}" class="text-decoration-none">
                                 {{ __('name') }}
                                 @if(request('sort') === 'name')
@@ -90,7 +90,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th class="d-none d-lg-table-cell">
+                        <th class="d-none d-md-table-cell">
                             <a href="{{ route('customers', ['sort' => 'email', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'status' => $status, 'type' => $type]) }}" class="text-decoration-none">
                                 {{ __('email') }}
                                 @if(request('sort') === 'email')
@@ -119,7 +119,7 @@
                                 <span class="fw-medium">{{ $customer->name }}</span>
                             </td>
                             <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('customers.show', $customer->id) }}'" style="cursor: pointer;">{{ $customer->company }}</td>
-                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('customers.show', $customer->id) }}'" style="cursor: pointer;">
+                            <td class="d-none d-md-table-cell" onclick="window.location='{{ route('customers.show', $customer->id) }}'" style="cursor: pointer;">
                                 @if($customer->email)
                                     <a href="mailto:{{ $customer->email }}" onclick="event.stopPropagation()">{{ $customer->email }}</a>
                                 @endif

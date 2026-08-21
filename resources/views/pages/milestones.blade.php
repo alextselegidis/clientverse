@@ -54,7 +54,7 @@
                 <table class="table table-hover table-light-header align-middle mb-0">
                     <thead>
                     <tr>
-                        <th class="ps-3 w-100 w-lg-auto">
+                        <th class="ps-3 w-100 w-md-auto">
                             <a href="{{ route('projects.milestones', [$project->id, 'sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none">
                                 {{ __('name') }}
                                 @if(request('sort') === 'name')
@@ -62,7 +62,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th class="d-none d-lg-table-cell">
+                        <th class="d-none d-md-table-cell">
                             <a href="{{ route('projects.milestones', [$project->id, 'sort' => 'due_date', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none">
                                 {{ __('due_date') }}
                                 @if(request('sort') === 'due_date')
@@ -89,7 +89,7 @@
                                     {{ $milestone->name }}
                                 </span>
                             </td>
-                            <td class="d-none d-lg-table-cell">{{ $milestone->due_date?->format('M d, Y') ?? '-' }}</td>
+                            <td class="d-none d-md-table-cell text-nowrap">{{ $milestone->due_date?->format('M d, Y') ?? '-' }}</td>
                             <td>
                                 @if($milestone->is_completed)
                                     <span class="badge bg-success">{{ __('completed') }}</span>

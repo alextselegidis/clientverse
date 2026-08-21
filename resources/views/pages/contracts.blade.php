@@ -74,7 +74,7 @@
                         <th class="ps-3" style="width: 40px;">
                             <input type="checkbox" class="form-check-input bulk-select-all" data-table="contracts">
                         </th>
-                        <th class="w-100 w-lg-auto">
+                        <th class="w-100 w-md-auto">
                             <a href="{{ route('contracts', ['sort' => 'title', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none">
                                 {{ __('title') }}
                                 @if(request('sort') === 'title')
@@ -82,7 +82,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th class="d-none d-lg-table-cell">
+                        <th class="d-none d-md-table-cell">
                             <a href="{{ route('contracts', ['sort' => 'customer', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none">
                                 {{ __('customer') }}
                                 @if(request('sort') === 'customer')
@@ -114,7 +114,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th class="d-none d-lg-table-cell">
+                        <th class="d-none d-xl-table-cell">
                             <a href="{{ route('contracts', ['sort' => 'start_date', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'type' => $type, 'status' => $status]) }}" class="text-decoration-none">
                                 {{ __('dates') }}
                                 @if(request('sort') === 'start_date')
@@ -134,7 +134,7 @@
                             <td onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
                                 <span class="fw-medium">{{ $contract->title }}</span>
                             </td>
-                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
+                            <td class="d-none d-md-table-cell" onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
                                 @if($contract->customer)
                                     <a href="{{ route('customers.show', $contract->customer_id) }}" onclick="event.stopPropagation()">
                                         {{ $contract->customer->name }}
@@ -154,17 +154,17 @@
                                     {{ __($contract->status) }}
                                 </span>
                             </td>
-                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell text-nowrap" onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
                                 @if($contract->value)
                                     {{ format_currency($contract->value, $contract->customer?->currency) }}
                                 @else
                                     -
                                 @endif
                             </td>
-                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
+                            <td class="d-none d-xl-table-cell text-nowrap" onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
                                 {{ $contract->start_date?->format('M d, Y') ?? '-' }}
                                 @if($contract->end_date)
-                                    <br>→ {{ $contract->end_date->format('M d, Y') }}
+                                    → {{ $contract->end_date->format('M d, Y') }}
                                 @endif
                             </td>
                             <td class="pe-3 text-end">

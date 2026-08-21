@@ -54,7 +54,7 @@
                 <table class="table table-hover table-light-header align-middle mb-0">
                     <thead>
                     <tr>
-                        <th class="ps-3 w-100 w-lg-auto">
+                        <th class="ps-3 w-100 w-md-auto">
                             <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'first_name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none">
                                 {{ __('name') }}
                                 @if(request('sort') === 'first_name' || !request('sort'))
@@ -62,7 +62,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th class="d-none d-lg-table-cell">
+                        <th class="d-none d-md-table-cell">
                             <a href="{{ route('customers.contacts', [$customer->id, 'sort' => 'email', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q]) }}" class="text-decoration-none">
                                 {{ __('email') }}
                                 @if(request('sort') === 'email')
@@ -106,7 +106,7 @@
                                     <small class="text-muted d-block">{{ $contact->position }}</small>
                                 @endif
                             </td>
-                            <td class="d-none d-lg-table-cell">
+                            <td class="d-none d-md-table-cell">
                                 @if($contact->email)
                                     <a href="mailto:{{ $contact->email }}" onclick="event.stopPropagation()">{{ $contact->email }}</a>
                                 @else

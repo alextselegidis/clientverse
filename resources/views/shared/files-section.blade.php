@@ -48,9 +48,9 @@
                 <table class="table table-hover table-light-header align-middle mb-0">
                     <thead>
                         <tr>
-                            <th class="w-100 w-lg-auto">{{ __('file') }}</th>
+                            <th class="w-100 w-md-auto">{{ __('file') }}</th>
                             <th class="d-none d-lg-table-cell">{{ __('size') }}</th>
-                            <th class="d-none d-lg-table-cell">{{ __('uploaded') }}</th>
+                            <th class="d-none d-md-table-cell">{{ __('uploaded') }}</th>
                             <th class="text-end" style="width: 110px;"></th>
                         </tr>
                     </thead>
@@ -64,7 +64,7 @@
                                     </a>
                                 </td>
                                 <td class="d-none d-lg-table-cell">{{ $file->formatted_size }}</td>
-                                <td class="d-none d-lg-table-cell">{{ $file->created_at->format('M d, Y') }}</td>
+                                <td class="d-none d-md-table-cell">{{ $file->created_at->format('M d, Y') }}</td>
                                 <td class="text-end">
                                     <div class="d-flex flex-nowrap justify-content-end gap-1">
                                     <a href="{{ route($downloadRoute, array_merge($routeParams ?? [], ['file' => $file->id])) }}"

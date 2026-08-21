@@ -66,7 +66,7 @@
                         <th class="ps-3" style="width: 40px;">
                             <input type="checkbox" class="form-check-input bulk-select-all" data-table="sales">
                         </th>
-                        <th class="w-100 w-lg-auto">
+                        <th class="w-100 w-md-auto">
                             <a href="{{ route('sales', ['sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'stage' => $stage]) }}" class="text-decoration-none">
                                 {{ __('name') }}
                                 @if(request('sort') === 'name')
@@ -82,7 +82,7 @@
                                 @endif
                             </a>
                         </th>
-                        <th class="d-none d-lg-table-cell">
+                        <th class="d-none d-md-table-cell text-nowrap">
                             <a href="{{ route('sales', ['sort' => 'value', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc', 'q' => $q, 'stage' => $stage]) }}" class="text-decoration-none">
                                 {{ __('value') }}
                                 @if(request('sort') === 'value')
@@ -125,7 +125,7 @@
                                     </a>
                                 @endif
                             </td>
-                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">
+                            <td class="d-none d-md-table-cell text-nowrap" onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">
                                 @if($sale->value)
                                     {{ format_currency($sale->value, $sale->currency) }}
                                 @endif

@@ -65,7 +65,7 @@
                                     <th class="ps-4" style="width: 40px;">
                                         <input type="checkbox" class="form-check-input bulk-select-all" data-table="users">
                                     </th>
-                                    <th class="w-100 w-lg-auto">
+                                    <th class="w-100 w-md-auto">
                                         <a href="{{ route('setup.users', ['sort' => 'name', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}" class="text-decoration-none">
                                             {{ __('name') }}
                                             @if(request('sort') === 'name')
@@ -73,7 +73,7 @@
                                             @endif
                                         </a>
                                     </th>
-                                    <th class="d-none d-lg-table-cell">
+                                    <th class="d-none d-md-table-cell">
                                         <a href="{{ route('setup.users', ['sort' => 'email', 'direction' => request('direction') === 'asc' ? 'desc' : 'asc']) }}" class="text-decoration-none">
                                             {{ __('email') }}
                                             @if(request('sort') === 'email')
@@ -109,7 +109,7 @@
                                         <td onclick="window.location='{{ route('setup.users.edit', $user->id) }}'" style="cursor: pointer;">
                                             <span class="fw-medium">{{ $user->name }}</span>
                                         </td>
-                                        <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('setup.users.edit', $user->id) }}'" style="cursor: pointer;">
+                                        <td class="d-none d-md-table-cell" onclick="window.location='{{ route('setup.users.edit', $user->id) }}'" style="cursor: pointer;">
                                             <a href="mailto:{{ $user->email }}" class="text-decoration-none" onclick="event.stopPropagation();">
                                                 {{ $user->email }}
                                             </a>

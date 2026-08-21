@@ -23,39 +23,39 @@
                             aria-controls="top-nav" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-                    <div class="collapse navbar-collapse ms-md-4" id="top-nav">
+                    <div class="collapse navbar-collapse ms-md-4 ms-lg-2 ms-xl-4" id="top-nav">
                         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                             <!-- Dashboard -->
                             <li class="nav-item">
-                                <a class="nav-link nav-menu-item text-white py-lg-4 px-lg-4 {{ request()->routeIs('dashboard') ? 'fw-bold' : '' }}" href="{{ route('dashboard') }}">
+                                <a class="nav-link nav-menu-item text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('dashboard') ? 'fw-bold' : '' }}" href="{{ route('dashboard') }}">
                                     <i class="bi bi-house me-2"></i>
                                     {{ __('dashboard') }}
                                 </a>
                             </li>
                             <!-- Customers -->
                             <li class="nav-item">
-                                <a class="nav-link nav-menu-item text-white py-lg-4 px-lg-4 {{ request()->routeIs('customers*') ? 'fw-bold' : '' }}" href="{{ route('customers') }}">
+                                <a class="nav-link nav-menu-item text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('customers*') ? 'fw-bold' : '' }}" href="{{ route('customers') }}">
                                     <i class="bi bi-people me-2"></i>
                                     {{ __('customers') }}
                                 </a>
                             </li>
                             <!-- Projects -->
                             <li class="nav-item">
-                                <a class="nav-link nav-menu-item text-white py-lg-4 px-lg-4 {{ request()->routeIs('projects*') ? 'fw-bold' : '' }}" href="{{ route('projects') }}">
+                                <a class="nav-link nav-menu-item text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('projects*') ? 'fw-bold' : '' }}" href="{{ route('projects') }}">
                                     <i class="bi bi-kanban me-2"></i>
                                     {{ __('projects') }}
                                 </a>
                             </li>
                             <!-- Sales -->
                             <li class="nav-item">
-                                <a class="nav-link nav-menu-item text-white py-lg-4 px-lg-4 {{ request()->routeIs('sales*') ? 'fw-bold' : '' }}" href="{{ route('sales') }}">
+                                <a class="nav-link nav-menu-item text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('sales*') ? 'fw-bold' : '' }}" href="{{ route('sales') }}">
                                     <i class="bi bi-graph-up me-2"></i>
                                     {{ __('sales') }}
                                 </a>
                             </li>
                             <!-- Contracts -->
                             <li class="nav-item">
-                                <a class="nav-link nav-menu-item text-white py-lg-4 px-lg-4 {{ request()->routeIs('contracts*') ? 'fw-bold' : '' }}" href="{{ route('contracts') }}">
+                                <a class="nav-link nav-menu-item text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('contracts*') ? 'fw-bold' : '' }}" href="{{ route('contracts') }}">
                                     <i class="bi bi-file-earmark-text me-2"></i>
                                     {{ __('contracts') }}
                                 </a>
