@@ -138,9 +138,10 @@ Route::middleware('auth')->group(function () {
         Route::put('/localization', [SettingsController::class, 'update'])->name('setup.localization.update');
         // UsersController
         Route::delete('users/bulk-destroy', [UsersController::class, 'bulkDestroy'])->name('setup.users.bulk-destroy');
-        Route::resource('users', UsersController::class)->except(['show'])->names([
+        // Users are created through the modal on the index page, so there is no
+        // create screen and no UsersController::create() to route to.
+        Route::resource('users', UsersController::class)->except(['show', 'create'])->names([
             'index' => 'setup.users',
-            'create' => 'setup.users.create',
             'store' => 'setup.users.store',
             'edit' => 'setup.users.edit',
             'update' => 'setup.users.update',
