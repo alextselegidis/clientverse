@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\ExtendRememberSession;
+use App\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -18,6 +19,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             ExtendRememberSession::class,
         ]);
+
+        // Namespace the CSRF cookie so installs sharing a domain do not clobber
+        // each other's; see cookie_suffix() in helpers.php.
+        $middleware->replaceInGroup('web', \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class, ValidateCsrfToken::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

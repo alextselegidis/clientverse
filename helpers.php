@@ -1,13 +1,13 @@
 <?php
 
 /* ----------------------------------------------------------------------------
- * Clientverse - Simple Bookmark Manager
+ * Clientverse - Self-Hosted CRM
  *
  * @package     Clientverse
  * @author      A.Tselegidis <alextselegidis@gmail.com>
  * @copyright   Copyright (c) Alex Tselegidis
  * @license     https://opensource.org/licenses/GPL-3.0 - GPLv3
- * @link        https://github.com/alextselegidis/clientverse
+ * @link        https://clientverse.org
  * ---------------------------------------------------------------------------- */
 
 use App\Models\Setting;
@@ -70,5 +70,32 @@ if (!function_exists('format_currency')) {
         $currency = $currency ?? default_currency();
         
         return $currency . ' ' . number_format($amount, 2);
+    }
+}
+
+if (!function_exists('cookie_suffix')) {
+    /**
+     * A short fingerprint that is unique to this installation.
+     *
+     * Several Clientverse installs can share one domain. Browsers key cookies by
+     * name, path and domain only, so two installs writing the same cookie name at
+     * path "/" overwrite each other and signing in to one signs you out of the
+     * other. Every cookie name the application controls carries this suffix.
+     *
+     * It is derived from APP_KEY as well as APP_URL because APP_URL is often left
+     * at its default, or is identical for two installs living under different
+     * paths of the same host. APP_KEY is always unique per install. The value is a
+     * truncated hash behind a domain separator, so the cookie name reveals nothing
+     * usable about the key.
+     */
+    function cookie_suffix(): string
+    {
+        static $suffix = null;
+
+        return $suffix ??= substr(
+            sha1('clientverse-cookie|' . env('APP_KEY', '') . '|' . env('APP_URL', '')),
+            0,
+            8
+        );
     }
 }

@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
+use App\Auth\AppSessionGuard;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\ServiceProvider;
-use App\Auth\AppSessionGuard;
+use Laravel\Sanctum\Sanctum;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -46,5 +47,9 @@ class AppServiceProvider extends ServiceProvider
             return $guard;
         });
 
+        // Deactivated users must lose API access too, not just the web session.
+        Sanctum::authenticateAccessTokensUsing(
+            fn ($accessToken, bool $isValid) => $isValid && (bool) $accessToken->tokenable?->is_active
+        );
     }
 }

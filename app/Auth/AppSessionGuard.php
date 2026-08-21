@@ -1,18 +1,19 @@
 <?php
 
 /* ----------------------------------------------------------------------------
- * Timecrack - Time Tracking Application
+ * Clientverse - Self-Hosted CRM
  *
- * @package     Timecrack
+ * @package     Clientverse
  * @author      A.Tselegidis <alextselegidis@gmail.com>
  * @copyright   Copyright (c) Alex Tselegidis
  * @license     https://opensource.org/licenses/GPL-3.0 - GPLv3
- * @link        https://github.com/alextselegidis/timecrack
+ * @link        https://clientverse.org
  * ---------------------------------------------------------------------------- */
 
 namespace App\Auth;
 
 use Illuminate\Auth\SessionGuard;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class AppSessionGuard extends SessionGuard
 {
@@ -21,11 +22,34 @@ class AppSessionGuard extends SessionGuard
      *
      * The default Laravel implementation returns `remember_<guard>_<sha1(SessionGuard::class)>`,
      * which is identical for every Laravel install. When two installs share a domain, the
-     * "remember me" cookie set by one would clobber/log out the other. We suffix the cookie
-     * with a short hash of APP_URL so each install has its own cookie.
+     * "remember me" cookie set by one would clobber the other's and sign that user out.
      */
     public function getRecallerName()
     {
-        return parent::getRecallerName().'_'.substr(sha1((string) config('app.url')), 0, 8);
+        return parent::getRecallerName().'_'.cookie_suffix();
+    }
+
+    /**
+     * Get the currently authenticated user.
+     *
+     * The `is_active` flag is only checked when credentials are verified at login, so a
+     * deactivated user would keep browsing on an existing session or be silently signed
+     * back in by their "remember me" cookie. Both paths funnel through here, so this is
+     * the single place where a deactivated account gets dropped.
+     */
+    public function user(): ?Authenticatable
+    {
+        $user = parent::user();
+
+        if ($user && ! $user->is_active) {
+            $this->clearUserDataFromStorage();
+
+            $this->user = null;
+            $this->loggedOut = true;
+
+            return null;
+        }
+
+        return $user;
     }
 }
