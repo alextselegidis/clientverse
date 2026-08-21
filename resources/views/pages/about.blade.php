@@ -56,6 +56,31 @@
                     <i class="bi bi-star me-2"></i>{{ __('go_premium') }}
                 </a>
             </div>
+
+            @if($posts)
+                <hr class="my-5">
+
+                <div>
+                    <h2 class="fs-4 mb-3">
+                        <i class="bi bi-rss-fill text-primary me-2"></i>{{ __('latest_blog_posts') }}
+                    </h2>
+                    <div class="list-group list-group-flush mb-4 text-start">
+                        @foreach($posts as $post)
+                            <a href="{{ $post['link'] }}" class="list-group-item list-group-item-action py-3"
+                               target="_blank" rel="noopener noreferrer">
+                                <div class="fw-medium">{{ $post['title'] }}</div>
+                                @if($post['date'])
+                                    <small class="text-muted">{{ $post['date']->format('M d, Y') }}</small>
+                                @endif
+                            </a>
+                        @endforeach
+                    </div>
+                    <a href="https://clientverse.org/blog" class="btn btn-light border w-100"
+                       target="_blank" rel="noopener noreferrer">
+                        <i class="bi bi-box-arrow-up-right me-2"></i>{{ __('visit_the_blog') }}
+                    </a>
+                </div>
+            @endif
         </div>
     </div>
 @endsection
