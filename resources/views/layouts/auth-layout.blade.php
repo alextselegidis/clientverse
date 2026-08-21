@@ -1,34 +1,19 @@
 {{--
 /* ----------------------------------------------------------------------------
- * Clientverse - Simple Bookmark Manager
+ * Clientverse - Self-Hosted CRM
  *
  * @package     Clientverse
  * @author      A.Tselegidis <alextselegidis@gmail.com>
  * @copyright   Copyright (c) Alex Tselegidis
  * @license     https://opensource.org/licenses/GPL-3.0 - GPLv3
- * @link        https://github.com/alextselegidis/clientverse
+ * @link        https://clientverse.org
  * ---------------------------------------------------------------------------- */
 --}}
 
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
-    <base href="{{url('')}}/">
-
-    <title>@yield('pageTitle') | Clientverse</title>
-    <meta name="description" content="Clientverse is a bookmark management application designed to help users easily organize your web links in one place.">
-    <meta name="theme-color" content="#e3434c">
-
-    <link rel="icon" href="favicon.ico" type="image/x-icon" />
-
-    <link rel="stylesheet" href="vendor/bootstrap/bootstrap.min.css">
-    <link rel="stylesheet" href="vendor/bootstrap-icons/bootstrap-icons.min.css">
-    <link rel="stylesheet" href="vendor/pace-js/pace-theme-default.min.css">
-    <link rel="stylesheet" href="vendor/pace-js/pace-theme-flat-top.tmpl.css">
-    <link rel="stylesheet" href="styles/clientverse.css?{{config('app.version')}}">
+    @include('shared.head')
 
     @yield('styles')
 </head>
@@ -58,6 +43,7 @@
 <script src="vendor/bootstrap/bootstrap.bundle.min.js"></script>
 <script src="vendor/pace-js/pace.min.js"></script>
 <script src="scripts/clientverse.js?{{config('app.version')}}"></script>
+@include('shared.service-worker')
 
 @yield('scripts')
 </body>

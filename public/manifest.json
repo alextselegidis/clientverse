@@ -1,0 +1,45 @@
+{
+    "name": "Clientverse",
+    "short_name": "Clientverse",
+    "description": "Self-hosted CRM for customers, contacts, projects, sales and contracts.",
+    "start_url": "dashboard",
+    "scope": "./",
+    "display": "standalone",
+    "orientation": "any",
+    "theme_color": "#33507a",
+    "background_color": "#f5f6f9",
+    "icons": [
+        {
+            "src": "images/icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "images/icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "images/icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "shortcuts": [
+        {
+            "name": "Customers",
+            "url": "customers"
+        },
+        {
+            "name": "Projects",
+            "url": "projects"
+        },
+        {
+            "name": "Search",
+            "url": "search"
+        }
+    ]
+}
