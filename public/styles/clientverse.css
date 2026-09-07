@@ -263,14 +263,26 @@ a:hover {
     padding-bottom: 0.5rem;
 }
 
-/* A compound record name wraps to four or five lines and drags every row in the
-   table down with it, so names are clamped and the full text lives on the detail
-   page. The phone value is in the touch-target block near the end of the file. */
-.table td .fw-medium {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+/* A row is exactly one line tall: nothing in a cell wraps, and the wide text
+   columns (the record name and the records it links to) cut off with an ellipsis
+   instead - the full text lives on the detail page. max-width on the cell is what
+   lets the auto table layout shrink it below its content width, which is the only
+   way text-overflow gets to bite; the columns that stay at their natural width
+   then share what is left. */
+.table td,
+.table th {
+    white-space: nowrap;
+}
+
+.table td:has(> .fw-medium),
+.table td:has(> a:not(.dropdown-item)) {
     overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: min(12rem, 40vw);
+}
+
+.table td:has(> .fw-medium) {
+    max-width: min(22rem, 45vw);
 }
 
 /* Remove last row border */
@@ -779,18 +791,9 @@ input.form-control,
         display: none;
     }
 
-    /* Compound record names would wrap to six lines in a narrow column, so rows
-       are clamped. The full name is on the detail page. */
-    .table td .fw-medium {
-        -webkit-line-clamp: 3;
-    }
-
     /* A file name or URL with no spaces sets the cell's minimum width and pushes
-       the table wider than the phone; let it break mid-token instead. Record names
-       need the same treatment at 320px, where their longest word plus the status
-       badge and the row action no longer fit side by side. */
-    .table td a:not(.dropdown-item),
-    .table td .fw-medium,
+       the card wider than the phone; let it break mid-token instead. Table cells
+       do not need this - they truncate rather than wrap at every width. */
     .card-body p a {
         overflow-wrap: anywhere;
     }

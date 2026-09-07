@@ -9,7 +9,8 @@
 ### Changed
 
 - One secondary column in every list table now shows from 768px, so tablets no longer waste half the row width
-- Denser desktop table rows: dates and money no longer wrap, record names clamp to two lines, tighter cell padding
+- Denser table rows: every row is one line tall, long record names and links cut off with an ellipsis instead of
+  wrapping, tighter cell padding
 
 ### Fixed
 

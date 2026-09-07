@@ -111,12 +111,16 @@ public/manifest.json, public/sw.js PWA manifest and service worker
   `*-bg-subtle` / `*-text-emphasis` pair. Do not hand-roll `bg-*-subtle text-*` combos.
 - Tables are hover-only (no `table-striped`) with `table-light-header` for the quiet
   uppercase header row.
-- **Row density.** A row's height is set by whichever cell wraps, so keep them from
-  wrapping rather than shrinking the type: dates and money get `text-nowrap`, record
-  names are clamped (`.table td .fw-medium`, two lines with a pointer and three on a
-  phone), and cell padding is `0.5rem` vertically, going back to `0.75rem` below `lg`
-  where a row is a tap target. A column that cannot fit on one line at `lg` belongs at
-  `xl` - that is where the contracts date range lives. Desktop rows land at ~48px.
+- **Row density.** Every row is one line tall at every width: `.table td`/`th` are
+  `white-space: nowrap`, and the wide text cells - the ones holding a `.fw-medium` record
+  name or a link - get a `max-width` plus `text-overflow: ellipsis` so they truncate.
+  The `max-width` is the load-bearing part: without it the auto table layout never shrinks
+  a cell below its content and nothing truncates. It is `min(rem, vw)` so the name column
+  is generous on a desktop and still leaves room for the status badge and row action on a
+  phone; a percentage does not work here, browsers ignore it on a cell. Cell padding is `0.5rem`
+  vertically, going back to `0.75rem` below `lg` where a row is a tap target. A column
+  that cannot fit at `lg` still belongs at `xl` - that is where the contracts date range
+  lives. Desktop rows land at ~48px.
 - Global search is the navbar icon opening `#search-modal` (in `shared/header.blade.php`) —
   a centred, header-free dialog holding just the input. The navbar is too tight for a
   usable inline input.
@@ -166,8 +170,8 @@ Every screen is checked at 390px and 768px. Two rules carry most of it:
   action back to 30px.
 
 Also below `lg`: bulk-select columns are hidden (touch multi-select is not worth the
-width, and the toolbar never unhides without checkboxes), record names clamp to three
-lines, a lone card-footer button goes full width, and the paginator wraps.
+width, and the toolbar never unhides without checkboxes), a lone card-footer button goes
+full width, and the paginator wraps.
 
 ## Frontend gotchas
 
