@@ -3,6 +3,16 @@
 # Re-run inside the dev container unless we are already in it
 
 if [ ! -f /.dockerenv ]; then
+    stopped=$(comm -23 \
+        <(docker compose config --services | sort) \
+        <(docker compose ps --services --status running | sort))
+
+    if [ -n "$stopped" ]; then
+        echo "These containers are not running: $(echo $stopped | tr '\n' ' ')" >&2
+        echo 'Start them with: docker compose up -d' >&2
+        exit 1
+    fi
+
     exec docker compose exec -T -u "$(id -u):$(id -g)" php-fpm ./build.sh "$@"
 fi
 
