@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Re-run inside the dev container unless we are already in it
+
+if [ ! -f /.dockerenv ]; then
+    exec docker compose exec -T -u "$(id -u):$(id -g)" php-fpm ./build.sh "$@"
+fi
+
 # Dependencies
 
 composer install
