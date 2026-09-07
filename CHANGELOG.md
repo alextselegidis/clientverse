@@ -19,6 +19,7 @@
 - Page scrolled sideways between 992px and 1199px, so the navbar now fits a 1024px tablet in landscape
 - List tables needed horizontal scrolling at 320px
 
+
 ## [1.0.0] - 2026-03-26
 
 ### Added
