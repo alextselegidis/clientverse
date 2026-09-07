@@ -112,15 +112,17 @@ public/manifest.json, public/sw.js PWA manifest and service worker
 - Tables are hover-only (no `table-striped`) with `table-light-header` for the quiet
   uppercase header row.
 - **Row density.** Every row is one line tall at every width: `.table td`/`th` are
-  `white-space: nowrap`, and the wide text cells - the ones holding a `.fw-medium` record
-  name or a link - get a `max-width` plus `text-overflow: ellipsis` so they truncate.
-  The `max-width` is the load-bearing part: without it the auto table layout never shrinks
-  a cell below its content and nothing truncates. It is `min(rem, vw)` so the name column
-  is generous on a desktop and still leaves room for the status badge and row action on a
-  phone; a percentage does not work here, browsers ignore it on a cell. Cell padding is `0.5rem`
-  vertically, going back to `0.75rem` below `lg` where a row is a tap target. A column
-  that cannot fit at `lg` still belongs at `xl` - that is where the contracts date range
-  lives. Desktop rows land at ~48px.
+  `white-space: nowrap`, and the wide text cells - the ones holding a `.fw-medium`
+  record name or a link - hold an inner block with `width: 0; min-width: 100%` plus
+  `text-overflow: ellipsis`, so long text truncates. The `width: 0` is the load-bearing
+  part: a nowrap cell otherwise reports the whole string as its minimum width and the
+  table grows past the edge of its card (`max-width` on the cell does not help - it
+  becomes the minimum instead). The percentage `min-width` is ignored while the browser
+  sizes columns and then fills whatever column the cell gets. The name and link cells
+  also carry a `width` preference (32% / 22%) purely so the leftover width lands on them
+  rather than on a date column that does not need it. Cell padding is `0.5rem` vertically,
+  going back to `0.75rem` below `lg` where a row is a tap target. Desktop rows land at
+  ~48px.
 - Global search is the navbar icon opening `#search-modal` (in `shared/header.blade.php`) —
   a centred, header-free dialog holding just the input. The navbar is too tight for a
   usable inline input.

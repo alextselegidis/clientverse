@@ -263,26 +263,36 @@ a:hover {
     padding-bottom: 0.5rem;
 }
 
-/* A row is exactly one line tall: nothing in a cell wraps, and the wide text
-   columns (the record name and the records it links to) cut off with an ellipsis
-   instead - the full text lives on the detail page. max-width on the cell is what
-   lets the auto table layout shrink it below its content width, which is the only
-   way text-overflow gets to bite; the columns that stay at their natural width
-   then share what is left. */
+/* A row is exactly one line tall. Cells do not wrap, and the wide text cells - a
+   record name or a link - cut off with an ellipsis; the full text is on the detail
+   page. `width: 0` on the inner block is what makes it work: a cell whose content
+   is nowrap has the whole string as its minimum width, which would push the table
+   out of its card, and a percentage `min-width` is ignored while the browser sizes
+   the columns - so the cell asks for nothing and then fills the column it gets. */
 .table td,
 .table th {
     white-space: nowrap;
 }
 
-.table td:has(> .fw-medium),
-.table td:has(> a:not(.dropdown-item)) {
+.table td .fw-medium,
+.table td a:not(.dropdown-item) {
+    display: block;
+    width: 0;
+    min-width: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: min(12rem, 40vw);
 }
 
+/* Auto layout hands leftover width to whichever column happens to be widest, which
+   is usually a date range that does not need it. These two preferences aim it at the
+   two columns that do; they are preferences, so a column still keeps its content
+   width when the table is tight. */
 .table td:has(> .fw-medium) {
-    max-width: min(22rem, 45vw);
+    width: 32%;
+}
+
+.table td:has(> a:not(.dropdown-item)) {
+    width: 22%;
 }
 
 /* Remove last row border */
@@ -312,6 +322,12 @@ a:hover {
     text-transform: uppercase;
     border-bottom: 1px solid var(--cv-hairline);
     transition: background-color 0.15s ease-in-out;
+}
+
+/* A checkbox is sized in em, so the 0.75rem header type would leave the select-all
+   box smaller than the ones in the rows below it */
+.table-light-header > thead > tr > th .form-check-input {
+    font-size: 1rem;
 }
 
 .table-light-header > thead > tr > th:has(a):hover {
