@@ -14,11 +14,13 @@ These are deliberate product decisions, not gaps to fill:
 - **No new dependencies** unless there is no reasonable way to do it with what is here.
 - **Keep the current app structure.** Controllers stay thin, models hold the query scopes,
   shared markup lives in `resources/views/shared/`.
-- **Never create a branch** unless the developer explicitly asks. Work on the current one.
+- **Never create or switch branches** unless the developer explicitly asks. Work on the current one.
 - **Never commit or push** unless the developer explicitly asks.
 - **Commit messages are a single line.** Subject only - no body, and no trailing
   attribution lines: no `Co-Authored-By:` trailer and no "Generated with Claude Code"
   line, in commit messages or in pull request descriptions.
+- **`CHANGELOG.md` entries wrap at 120 columns.** Same limit as the code; wrap the line
+  rather than letting an entry run long.
 
 ## Stack
 
