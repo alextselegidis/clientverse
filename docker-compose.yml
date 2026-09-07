@@ -2,6 +2,11 @@ services:
     php-fpm:
         build: docker/php-fpm
         working_dir: /var/www/html
+        user: '${DOCKER_UID:-1000}:${DOCKER_GID:-1000}'
+        environment:
+            - HOME=/tmp
+            - XDEBUG_TRIGGER=1
+            - PHP_IDE_CONFIG=serverName=host.docker.internal
         extra_hosts:
             - host.docker.internal:host-gateway
         volumes:

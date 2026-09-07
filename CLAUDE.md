@@ -34,6 +34,10 @@ These are deliberate product decisions, not gaps to fill:
 
 Everything runs in Docker; host ports are randomised by Compose, so look them up:
 
+The `php-fpm` container runs as `DOCKER_UID`/`DOCKER_GID` from `.env` (default 1000:1000) so composer,
+npm and artisan write files owned by the developer, not root. Set them to `id -u` / `id -g` if those differ,
+and `chown` anything left over from before.
+
 ```bash
 docker compose up -d
 docker compose ps                     # find the nginx host port
