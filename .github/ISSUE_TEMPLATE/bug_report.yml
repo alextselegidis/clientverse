@@ -1,0 +1,64 @@
+name: Bug report
+description: Something in Clientverse does not work as expected
+labels: ['bug']
+body:
+    - type: markdown
+      attributes:
+          value: |
+              Please do not use this form for security problems — follow the
+              [security policy](https://github.com/alextselegidis/clientverse/blob/main/SECURITY.md) instead.
+
+    - type: textarea
+      id: what-happened
+      attributes:
+          label: What happened
+          description: What went wrong, and what you expected instead.
+      validations:
+          required: true
+
+    - type: textarea
+      id: steps
+      attributes:
+          label: Steps to reproduce
+          placeholder: |
+              1. Sign in as an admin
+              2. Open Customers → New
+              3. ...
+      validations:
+          required: true
+
+    - type: input
+      id: version
+      attributes:
+          label: Clientverse version
+          placeholder: 1.0.1-beta.1
+      validations:
+          required: true
+
+    - type: input
+      id: environment
+      attributes:
+          label: PHP version, database and web server
+          placeholder: PHP 8.3, MySQL 8.0, nginx
+      validations:
+          required: true
+
+    - type: input
+      id: browser
+      attributes:
+          label: Browser and screen width
+          description: Only needed for a problem in the interface.
+          placeholder: Firefox 128, 390px
+
+    - type: textarea
+      id: logs
+      attributes:
+          label: Log output
+          description: Relevant lines from `storage/logs/laravel.log`, with credentials and customer data removed.
+          render: text
+
+    - type: textarea
+      id: screenshots
+      attributes:
+          label: Screenshots
+          description: Drag any images in here.

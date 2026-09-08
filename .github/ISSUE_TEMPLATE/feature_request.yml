@@ -1,0 +1,39 @@
+name: Feature request
+description: Suggest an improvement to Clientverse
+labels: ['enhancement']
+body:
+    - type: markdown
+      attributes:
+          value: |
+              Clientverse deliberately stays small and ships no SPA layer, JavaScript framework or new
+              runtime dependencies. See
+              [CONTRIBUTING.md](https://github.com/alextselegidis/clientverse/blob/main/CONTRIBUTING.md).
+
+    - type: textarea
+      id: problem
+      attributes:
+          label: The problem
+          description: What are you trying to do that Clientverse makes hard today?
+      validations:
+          required: true
+
+    - type: textarea
+      id: proposal
+      attributes:
+          label: What you would like instead
+          description: Which screens or modules it would touch, and how it would behave.
+      validations:
+          required: true
+
+    - type: textarea
+      id: alternatives
+      attributes:
+          label: Alternatives you considered
+          description: Including anything you tried with the current features.
+
+    - type: checkboxes
+      id: contribute
+      attributes:
+          label: Contribution
+          options:
+              - label: I am willing to open a pull request for this

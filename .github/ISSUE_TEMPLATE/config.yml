@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+    - name: Installation and usage help
+      url: https://github.com/alextselegidis/clientverse#installation
+      about: Setup, installation and demo data are covered in the README.
+    - name: Security vulnerability
+      url: https://github.com/alextselegidis/clientverse/security/advisories/new
+      about: Report a security problem privately, never as a public issue.
