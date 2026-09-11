@@ -35,6 +35,8 @@ class CustomerNotesController extends Controller
 
     public function update(Request $request, Customer $customer, CustomerNote $note)
     {
+        $this->assertNoteBelongsToCustomer($note, $customer);
+
         $request->validate([
             'content' => 'required|min:1',
         ]);
@@ -48,8 +50,21 @@ class CustomerNotesController extends Controller
 
     public function destroy(Request $request, Customer $customer, CustomerNote $note)
     {
+        $this->assertNoteBelongsToCustomer($note, $customer);
+
         $note->delete();
 
         return redirect(route('customers.show', $customer->id))->with('success', __('record_deleted_message'));
+    }
+
+    /**
+     * Both route parameters are resolved on their own, so a note of one customer
+     * reaches the route of another unless they are checked against each other.
+     */
+    private function assertNoteBelongsToCustomer(CustomerNote $note, Customer $customer): void
+    {
+        if ($note->customer_id !== $customer->id) {
+            abort(404);
+        }
     }
 }
