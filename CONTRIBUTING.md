@@ -30,6 +30,7 @@ Everything runs in Docker. Host ports are randomised by Compose, so look them up
 git clone https://github.com/alextselegidis/clientverse.git
 cd clientverse
 cp .env.example .env
+# The example ships production defaults; for development set APP_ENV=local and APP_DEBUG=true.
 docker compose up -d
 docker compose exec php-fpm bash    # composer, artisan and pint live in here
 ```
