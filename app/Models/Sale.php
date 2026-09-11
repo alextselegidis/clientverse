@@ -52,6 +52,23 @@ class Sale extends Model
         return $this->value * ($this->probability / 100);
     }
 
+    /**
+     * Sum the deal values of the current query, one total per currency.
+     *
+     * Every sale carries its own currency, so a single SUM() over mixed
+     * currencies is a meaningless number. Returns currency => total, largest
+     * first.
+     */
+    public function scopeTotalsByCurrency($query)
+    {
+        return $query
+            ->selectRaw('currency, SUM(value) AS total')
+            ->groupBy('currency')
+            ->orderByDesc('total')
+            ->pluck('total', 'currency')
+            ->map(fn ($total) => (float) $total);
+    }
+
     public static function stages(): array
     {
         return [

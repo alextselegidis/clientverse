@@ -26,7 +26,7 @@ class DashboardController extends Controller
         $totalCustomers = Customer::count();
         $activeProjects = Project::where('status', 'active')->count();
         $openDeals = Sale::whereNotIn('stage', ['won', 'lost'])->count();
-        $openDealsValue = Sale::whereNotIn('stage', ['won', 'lost'])->sum('value');
+        $openDealsValue = Sale::whereNotIn('stage', ['won', 'lost'])->totalsByCurrency();
         $activeContracts = Contract::where('status', 'active')->count();
 
         // Recent activity
@@ -36,9 +36,9 @@ class DashboardController extends Controller
 
         // Performance metrics
         $monthlySales = Sale::where('stage', 'won')
-            ->whereMonth('updated_at', now()->month)
-            ->whereYear('updated_at', now()->year)
-            ->sum('value');
+            ->whereMonth('expected_close_date', now()->month)
+            ->whereYear('expected_close_date', now()->year)
+            ->totalsByCurrency();
 
         $completedProjects = Project::where('status', 'completed')->count();
         $totalProjects = Project::count();

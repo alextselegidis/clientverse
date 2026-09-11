@@ -76,9 +76,9 @@
                         <div class="flex-grow-1 ms-3">
                             <h3 class="mb-0">{{ $openDeals }}</h3>
                             <small class="text-muted">{{ __('open_deals') }}</small>
-                            @if($openDealsValue > 0)
-                                <div><small class="text-success">{{ format_currency($openDealsValue) }}</small></div>
-                            @endif
+                            @foreach($openDealsValue as $currency => $total)
+                                <div><small class="text-success">{{ format_currency($total, $currency) }}</small></div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -194,7 +194,11 @@
                     <h6 class="mb-0"><i class="bi bi-bar-chart me-2"></i>{{ __('monthly_sales') }}</h6>
                 </div>
                 <div class="card-body text-center">
-                    <h2 class="text-primary mb-0">{{ format_currency($monthlySales) }}</h2>
+                    @forelse($monthlySales as $currency => $total)
+                        <div class="text-primary mb-0 {{ $monthlySales->count() > 1 ? 'h4' : 'h2' }}">{{ format_currency($total, $currency) }}</div>
+                    @empty
+                        <div class="text-primary mb-0 h2">{{ format_currency(0) }}</div>
+                    @endforelse
                     <small class="text-muted">{{ now()->format('F Y') }}</small>
                 </div>
             </div>
