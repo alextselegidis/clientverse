@@ -27,6 +27,12 @@
             <img src="images/logo.png" alt="logo" class="public-logo-image" style="width: 128px"/>
         </div>
 
+        @if (session('status'))
+            <div class="alert alert-success mx-2 mx-lg-5 text-center">
+                {{ session('status') }}
+            </div>
+        @endif
+
         @yield('content')
 
         <div class="text-center small my-5">

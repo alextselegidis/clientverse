@@ -367,5 +367,7 @@
     "enter_at_least_2_characters": "Please enter at least 2 characters to search.",
     "enter_search_term": "Enter a search term to find customers, projects, sales, contracts and more.",
     "view_all": "View all",
-    "cannot_delete_current_user": "You cannot delete your own account."
+    "cannot_delete_current_user": "You cannot delete your own account.",
+    "confirm_password": "Confirm Password",
+    "enter_new_password_message": "Choose a new password for your account."
 }

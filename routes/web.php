@@ -41,6 +41,10 @@ Route::middleware(RedirectIfAuthenticated::class)->group(function () {
     // RecoveryController
     Route::get('/recovery', [RecoveryController::class, 'index'])->name('recovery');
     Route::post('/recovery', [RecoveryController::class, 'perform'])->name('recovery.perform');
+
+    // The name is fixed: it is the route Laravel's reset notification links to.
+    Route::get('/recovery/{token}', [RecoveryController::class, 'reset'])->name('password.reset');
+    Route::post('/recovery/reset', [RecoveryController::class, 'update'])->name('password.update');
 });
 
 // Auth
