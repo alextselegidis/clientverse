@@ -35,9 +35,7 @@ class ContactsController extends Controller
 
         $sort = $request->query('sort', 'first_name');
         $direction = $request->query('direction', 'asc');
-        if ($sort && $direction) {
-            $query->orderBy($sort, $direction);
-        }
+        sort_query($query, $sort, $direction);
 
         $contacts = $query->paginate(25);
 

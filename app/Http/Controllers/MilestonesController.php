@@ -29,9 +29,7 @@ class MilestonesController extends Controller
 
         $sort = $request->query('sort', 'due_date');
         $direction = $request->query('direction', 'asc');
-        if ($sort && $direction) {
-            $query->orderBy($sort, $direction);
-        }
+        sort_query($query, $sort, $direction);
 
         $milestones = $query->paginate(25);
 

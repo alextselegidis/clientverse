@@ -47,9 +47,7 @@ class ProjectsController extends Controller
 
         $sort = $request->query('sort', 'created_at');
         $direction = $request->query('direction', 'desc');
-        if ($sort && $direction) {
-            $query->orderBy($sort, $direction);
-        }
+        sort_query($query, $sort, $direction);
 
         $projects = $query->paginate(25)->withQueryString();
 

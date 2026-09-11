@@ -11,6 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 use App\Models\Setting;
+use Illuminate\Support\Facades\Schema;
 
 if (!function_exists('sort_link')) {
     function sort_link($column, $label): string
@@ -19,6 +20,35 @@ if (!function_exists('sort_link')) {
         $url = request()->fullUrlWithQuery(['sort' => $column, 'direction' => $direction]);
         $icon = '<i class="bi ' . ($direction === 'asc' ? 'bi-caret-up' : 'bi-caret-down') . ' ms-2"></i>';
         return '<a href="' . $url . '">' . $label . $icon . '</a>';
+    }
+}
+
+if (!function_exists('sort_query')) {
+    /**
+     * Apply a ?sort=&direction= pair from the query string to a list query.
+     *
+     * Both values arrive straight from the URL, so they are checked here rather
+     * than in every list controller: an unknown column is ignored and the query
+     * keeps its own order, and so is a direction that is not asc or desc, which
+     * Eloquent would otherwise reject with an exception. Columns the model hides
+     * - the password hash, the remember token - are not sortable either, since
+     * ordering by one of them leaks its content a comparison at a time.
+     */
+    function sort_query($query, ?string $sort, ?string $direction)
+    {
+        if (empty($sort)) {
+            return $query;
+        }
+
+        $model = $query->getModel();
+
+        $sortable = array_diff(Schema::getColumnListing($model->getTable()), $model->getHidden());
+
+        if (!in_array($sort, $sortable, true)) {
+            return $query;
+        }
+
+        return $query->orderBy($sort, strtolower((string) $direction) === 'asc' ? 'asc' : 'desc');
     }
 }
 
