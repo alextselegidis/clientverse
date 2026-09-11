@@ -15,6 +15,6 @@
         {{$label}}
     </h6>
     <strong>
-        {!! $value ? nl2br($value) : '-' !!}
+        {!! $value ? nl2br(e($value)) : '-' !!}
     </strong>
 </div>
