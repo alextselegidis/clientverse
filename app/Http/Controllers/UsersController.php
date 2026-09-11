@@ -15,9 +15,11 @@ namespace App\Http\Controllers;
 use App\Enums\RoleEnum;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class UsersController extends Controller
 {
@@ -36,9 +38,7 @@ class UsersController extends Controller
         $sort = $request->query('sort');
         $direction = $request->query('direction');
 
-        if ($sort && $direction) {
-            $query->orderBy($sort, $direction);
-        }
+        sort_query($query, $sort, $direction);
 
         $users = $query->paginate(25)->withQueryString();
 
@@ -52,14 +52,12 @@ class UsersController extends Controller
     {
         Gate::authorize('create', User::class);
 
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required',
         ]);
 
-        $payload = $request->all();
-
         $user = User::create([
-            'name' => $payload['name'],
+            'name' => $validated['name'],
             'email' => 'new-user-' . strtolower(Str::random(5)) . '@example.org',
             'password' => Hash::make(Str::random(8)),
         ]);
@@ -81,18 +79,21 @@ class UsersController extends Controller
     {
         Gate::authorize('update', $user);
 
-        $request->validate([
+        $validated = $request->validate([
             'name' => 'required|min:2',
-            'email' => 'required|min:2',
+            'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
+            'role' => ['required', Rule::enum(RoleEnum::class)],
             'password' => 'nullable|min:8|required_with:password_confirmation|same:password_confirmation',
             'password_confirmation' => 'nullable|min:8',
         ]);
 
-        $payload = $request->input();
+        // Only the validated fields are written: the request body otherwise reaches
+        // fill() as it arrives, and every fillable column of the model with it.
+        $payload = Arr::only($validated, ['name', 'email', 'role', 'password']);
         $payload['is_active'] = $request->has('is_active');
 
         if (empty($payload['password'])) {
-            unset($payload['password'], $payload['password_confirmation']);
+            unset($payload['password']);
         }
 
         if (
