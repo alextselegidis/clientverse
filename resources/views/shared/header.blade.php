@@ -75,9 +75,9 @@
                         <ul class="navbar-nav">
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown"
-                                   aria-expanded="false">
+                                   aria-expanded="false" title="{{ Auth::user()->name }}">
                                     <i class="bi bi-person me-1"></i>
-                                    {{ Auth::user()->name }}
+                                    <span class="nav-user-name">{{ Auth::user()->name }}</span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     @if(Auth::user()->isAdmin())

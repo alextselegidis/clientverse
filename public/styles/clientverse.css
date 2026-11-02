@@ -427,6 +427,26 @@ a:hover {
         }
     }
 
+    /* User names have no length limit: icon-only below xxl (the name stays for
+       screen readers), truncated from xxl, so the navbar never outgrows the page. */
+    .nav-user-name {
+        display: inline-block;
+        max-width: 12rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        vertical-align: bottom;
+    }
+
+    @media (max-width: 1399.98px) {
+        .nav-user-name {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            clip: rect(0, 0, 0, 0);
+        }
+    }
+
     .navbar {
         padding-top: 0;
         padding-bottom: 0;
