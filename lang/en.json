@@ -463,5 +463,12 @@
     "remove_from_invoice": "Remove from invoice",
     "credit_note_must_match_message": "The invoice must belong to the same customer and use the same currency.",
     "credit_note_draft_hint": "Counts toward the invoice once issued.",
-    "no_open_invoices_message": "This customer has no open invoices in this currency."
+    "no_open_invoices_message": "This customer has no open invoices in this currency.",
+    "signature": "Signature",
+    "signing_link_hint": "Send this link to the customer to read and sign:",
+    "signed_by_on": "Signed by :name on :date.",
+    "type_your_full_name": "Type your full name to sign",
+    "agree_to_sign": "I have read this contract and agree to sign it electronically.",
+    "sign_contract": "Sign contract",
+    "contract_signed_message": "Thank you, the contract is signed."
 }

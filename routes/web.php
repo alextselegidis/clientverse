@@ -27,6 +27,7 @@ use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\MilestonesController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\ProjectsController;
+use App\Http\Controllers\Public\PublicContractsController;
 use App\Http\Controllers\RecoveryController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\SalesController;
@@ -57,6 +58,12 @@ Route::middleware(RedirectIfAuthenticated::class)->group(function () {
     // The name is fixed: it is the route Laravel's reset notification links to.
     Route::get('/recovery/{token}', [RecoveryController::class, 'reset'])->name('password.reset');
     Route::post('/recovery/reset', [RecoveryController::class, 'update'])->name('password.update');
+});
+
+// Public documents: no login, the signed URL is the credential.
+Route::middleware(['signed', 'throttle:30,1'])->prefix('p')->name('public.')->group(function () {
+    Route::get('/contracts/{contract}', [PublicContractsController::class, 'show'])->name('contracts.show');
+    Route::post('/contracts/{contract}', [PublicContractsController::class, 'sign'])->name('contracts.sign');
 });
 
 // Auth

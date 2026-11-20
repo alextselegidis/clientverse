@@ -115,6 +115,23 @@
         </div>
 
         <div class="col-lg-4">
+            <!-- Signature -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white">
+                    <h6 class="mb-0">{{ __('signature') }}</h6>
+                </div>
+                <div class="card-body">
+                    @if($contract->signed_at)
+                        <p class="mb-1"><i class="bi bi-check-circle text-success me-2"></i>{{ $contract->signer_name }}</p>
+                        <p class="small text-muted mb-0">{{ $contract->signed_at->format('M d, Y H:i') }} · {{ $contract->signer_ip }}</p>
+                    @else
+                        <label for="signing-url" class="form-label small text-muted">{{ __('signing_link_hint') }}</label>
+                        <input type="text" id="signing-url" class="form-control form-control-sm" readonly
+                               value="{{ $contract->signingUrl() }}" onclick="this.select()">
+                    @endif
+                </div>
+            </div>
+
             <!-- Details -->
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-white">

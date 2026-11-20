@@ -13,6 +13,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Contract extends Model
@@ -40,6 +41,7 @@ class Contract extends Model
         'start_date' => 'date',
         'end_date' => 'date',
         'signed_date' => 'date',
+        'signed_at' => 'datetime',
     ];
 
     public function customer()
@@ -68,6 +70,31 @@ class Contract extends Model
             'fixed' => __('fixed'),
             'recurring' => __('recurring'),
         ];
+    }
+
+    /**
+     * A permanent link the customer can open without an account to read and sign.
+     */
+    public function signingUrl(): string
+    {
+        return URL::signedRoute('public.contracts.show', ['contract' => $this->id]);
+    }
+
+    /**
+     * Record an electronic signature: who typed their name, from where, and when.
+     */
+    public function sign(string $name, ?string $ip): void
+    {
+        $this->signer_name = $name;
+        $this->signer_ip = $ip;
+        $this->signed_at = now();
+        $this->signed_date = today();
+
+        if ($this->status === 'draft') {
+            $this->status = 'active';
+        }
+
+        $this->save();
     }
 
     public static function statuses(): array
