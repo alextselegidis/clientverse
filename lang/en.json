@@ -405,5 +405,6 @@
     "accepted": "Accepted",
     "declined": "Declined",
     "expiry_date": "Expiry Date",
-    "convert_to_invoice": "Convert to Invoice"
+    "convert_to_invoice": "Convert to Invoice",
+    "billing": "Billing"
 }

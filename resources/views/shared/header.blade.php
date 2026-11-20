@@ -60,12 +60,25 @@
                                     {{ __('contracts') }}
                                 </a>
                             </li>
-                            <!-- Invoices -->
-                            <li class="nav-item">
-                                <a class="nav-link nav-menu-item text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('invoices*') ? 'fw-bold' : '' }}" href="{{ route('invoices') }}">
+                            <!-- Billing -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link nav-menu-item dropdown-toggle text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('invoices*', 'estimates*') ? 'fw-bold' : '' }}"
+                                   href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-receipt me-2"></i>
-                                    {{ __('invoices') }}
+                                    {{ __('billing') }}
                                 </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item {{ request()->routeIs('invoices*') ? 'active' : '' }}" href="{{ route('invoices') }}">
+                                            <i class="bi bi-receipt me-2"></i>{{ __('invoices') }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item {{ request()->routeIs('estimates*') ? 'active' : '' }}" href="{{ route('estimates') }}">
+                                            <i class="bi bi-file-earmark-ruled me-2"></i>{{ __('estimates') }}
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
                         <!-- Global Search -->

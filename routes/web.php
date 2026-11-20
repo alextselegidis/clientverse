@@ -17,6 +17,7 @@ use App\Http\Controllers\ContractsController;
 use App\Http\Controllers\CustomerNotesController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EstimatesController;
 use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
@@ -150,6 +151,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/invoices/{invoice}/payments', [PaymentsController::class, 'store'])->name('invoices.payments.store');
         Route::delete('/invoices/{invoice}/payments/{payment}', [PaymentsController::class, 'destroy'])->name('invoices.payments.destroy');
     });
+
+    // EstimatesController
+    Route::delete('estimates/bulk-destroy', [EstimatesController::class, 'bulkDestroy'])->name('estimates.bulk-destroy');
+    Route::resource('estimates', EstimatesController::class)->names([
+        'index' => 'estimates',
+    ]);
+    Route::get('/estimates/{estimate}/print', [EstimatesController::class, 'print'])->name('estimates.print');
+    Route::post('/estimates/{estimate}/convert-to-invoice', [EstimatesController::class, 'convertToInvoice'])->name('estimates.convert-to-invoice');
 
     // Setup routes (Admin only)
     Route::middleware(AdminMiddleware::class)->prefix('setup')->group(function () {
