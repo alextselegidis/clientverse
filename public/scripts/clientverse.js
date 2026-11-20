@@ -188,3 +188,57 @@ document.querySelectorAll('.sales-board').forEach(function (board) {
         });
     });
 });
+
+// A form posts once: a second click while the first request is on its way is ignored.
+// Search forms (GET) and forms opening a new tab are left alone.
+document.addEventListener('submit', function (event) {
+    const form = event.target;
+
+    if (event.defaultPrevented || form.method !== 'post' || form.target) {
+        return;
+    }
+
+    if (form.classList.contains('is-submitting')) {
+        event.preventDefault();
+        return;
+    }
+
+    form.classList.add('is-submitting');
+    sessionStorage.setItem('cv-scroll', JSON.stringify({path: location.pathname, y: scrollY, at: Date.now()}));
+});
+
+// Coming back with the browser's back button restores the page as it was, submit lock included.
+window.addEventListener('pageshow', function () {
+    document.querySelectorAll('form.is-submitting').forEach((form) => form.classList.remove('is-submitting'));
+});
+
+// After a save that lands back on the same page, return to where the user was instead of the top.
+(function () {
+    const saved = JSON.parse(sessionStorage.getItem('cv-scroll') || 'null');
+    sessionStorage.removeItem('cv-scroll');
+
+    if (saved && saved.path === location.pathname && Date.now() - saved.at < 10000) {
+        scrollTo(0, saved.y);
+    }
+})();
+
+// List search runs as you type: the filter form submits after a short pause and the
+// reloaded page puts the cursor back at the end of the search box.
+document.querySelectorAll('.table-filters input[name="q"]').forEach(function (input) {
+    let timer;
+
+    if (sessionStorage.getItem('cv-search') === location.pathname) {
+        input.focus();
+        input.setSelectionRange(input.value.length, input.value.length);
+    }
+
+    sessionStorage.removeItem('cv-search');
+
+    input.addEventListener('input', function () {
+        clearTimeout(timer);
+        timer = setTimeout(function () {
+            sessionStorage.setItem('cv-search', location.pathname);
+            input.form.requestSubmit();
+        }, 400);
+    });
+});

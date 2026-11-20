@@ -19,6 +19,7 @@
 - Reports for invoiced and collected amounts, outstanding balances, time logged and tickets, with a CSV export
 - Goals that track invoicing, collections, new customers and won deals
 - Pages crossfade instead of flashing white, and a link starts loading while the pointer rests on it
+- List search filters as you type, a form posts only once per click, and saving keeps the scroll position
 - Month calendar of due dates across tasks, milestones, invoices, contracts and deals
 - Knowledge base with a public page for published articles
 - Surveys with choice, rating and text questions and a results page

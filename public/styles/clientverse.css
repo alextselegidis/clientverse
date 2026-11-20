@@ -951,3 +951,20 @@ input.form-control,
     border-radius: var(--bs-border-radius);
     overflow-x: auto;
 }
+
+/* A field the user has touched and left invalid is marked the same way as a server-side error */
+.form-control:user-invalid,
+.form-select:user-invalid {
+    border-color: var(--bs-form-invalid-border-color);
+}
+
+.form-control:user-invalid:focus,
+.form-select:user-invalid:focus {
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-danger-rgb), 0.25);
+}
+
+/* A form on its way to the server shows its buttons as busy */
+form.is-submitting [type="submit"] {
+    cursor: progress;
+    opacity: 0.65;
+}
