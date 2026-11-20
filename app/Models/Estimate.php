@@ -12,6 +12,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasDocumentNumber;
 use App\Models\Concerns\HasLineItems;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -19,8 +20,11 @@ use Illuminate\Support\Facades\URL;
 
 class Estimate extends Model
 {
+    use HasDocumentNumber;
     use HasLineItems;
     use SoftDeletes;
+
+    public const NUMBER_PREFIX = 'EST';
 
     protected $fillable = [
         'customer_id',
@@ -38,16 +42,6 @@ class Estimate extends Model
         'expiry_date' => 'date',
         'total' => 'decimal:2',
     ];
-
-    protected static function booted(): void
-    {
-        static::created(function (Estimate $estimate) {
-            if (empty($estimate->number)) {
-                $estimate->number = sprintf('EST-%06d', $estimate->id);
-                $estimate->saveQuietly();
-            }
-        });
-    }
 
     /**
      * A permanent link the customer can open without an account.

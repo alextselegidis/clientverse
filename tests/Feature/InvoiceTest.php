@@ -84,4 +84,14 @@ class InvoiceTest extends TestCase
             }
         }
     }
+
+    public function test_an_automatic_number_steps_around_one_typed_by_hand(): void
+    {
+        $next = Invoice::max('id') + 1;
+        Invoice::create(['number' => sprintf('INV-%06d', $next + 1)]);
+
+        $invoice = Invoice::create([]);
+
+        $this->assertSame(sprintf('INV-%06d-2', $next + 1), $invoice->number);
+    }
 }

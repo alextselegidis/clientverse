@@ -12,6 +12,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasDocumentNumber;
 use App\Models\Concerns\HasLineItems;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -19,8 +20,11 @@ use Illuminate\Support\Facades\URL;
 
 class Invoice extends Model
 {
+    use HasDocumentNumber;
     use HasLineItems;
     use SoftDeletes;
+
+    public const NUMBER_PREFIX = 'INV';
 
     protected $fillable = [
         'customer_id',
@@ -39,17 +43,6 @@ class Invoice extends Model
         'total' => 'decimal:2',
         'amount_paid' => 'decimal:2',
     ];
-
-    protected static function booted(): void
-    {
-        // The id is only known after the insert, so a blank number is filled in afterwards.
-        static::created(function (Invoice $invoice) {
-            if (empty($invoice->number)) {
-                $invoice->number = sprintf('INV-%06d', $invoice->id);
-                $invoice->saveQuietly();
-            }
-        });
-    }
 
     /**
      * A permanent link the customer can open without an account.

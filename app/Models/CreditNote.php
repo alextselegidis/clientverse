@@ -12,14 +12,18 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasDocumentNumber;
 use App\Models\Concerns\HasLineItems;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class CreditNote extends Model
 {
+    use HasDocumentNumber;
     use HasLineItems;
     use SoftDeletes;
+
+    public const NUMBER_PREFIX = 'CN';
 
     protected $fillable = ['customer_id', 'number', 'status', 'issue_date', 'currency', 'notes'];
 
@@ -30,13 +34,6 @@ class CreditNote extends Model
 
     protected static function booted(): void
     {
-        static::created(function (CreditNote $creditNote) {
-            if (empty($creditNote->number)) {
-                $creditNote->number = sprintf('CN-%06d', $creditNote->id);
-                $creditNote->saveQuietly();
-            }
-        });
-
         // A credit's total or status feeds its invoice's balance.
         static::saved(fn (CreditNote $creditNote) => $creditNote->refreshInvoices());
         static::deleted(fn (CreditNote $creditNote) => $creditNote->refreshInvoices());
