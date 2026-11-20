@@ -399,5 +399,11 @@
     "record_payment": "Record payment",
     "print": "Print",
     "print_or_save_pdf": "Print / Save as PDF",
-    "bill_to": "Bill To"
+    "bill_to": "Bill To",
+    "estimate": "Estimate",
+    "estimates": "Estimates",
+    "accepted": "Accepted",
+    "declined": "Declined",
+    "expiry_date": "Expiry Date",
+    "convert_to_invoice": "Convert to Invoice"
 }
