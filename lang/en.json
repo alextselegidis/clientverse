@@ -433,5 +433,8 @@
     "reply": "Reply",
     "replies": "Replies",
     "email_the_customer": "Email the customer",
-    "no_email_on_file": "no email on file"
+    "no_email_on_file": "no email on file",
+    "module": "Module",
+    "restrict_access": "Restrict access to the modules ticked below",
+    "restrict_access_hint": "Admins always have full access. Creating a record counts as editing."
 }

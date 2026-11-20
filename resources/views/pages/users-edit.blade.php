@@ -124,6 +124,43 @@
                                 </div>
                             </div>
                         </div>
+
+                        @php($granted = old('permissions', $user?->permissions ?? []))
+                        <hr class="my-4">
+                        <h6 class="mb-2">{{ __('permissions') }}</h6>
+                        <div class="form-check mb-3">
+                            <input type="hidden" name="restrict_permissions" value="0">
+                            <input type="checkbox" id="restrict-permissions" name="restrict_permissions" value="1" class="form-check-input"
+                                   @checked(old('restrict_permissions', $user?->permissions !== null))>
+                            <label for="restrict-permissions" class="form-check-label">{{ __('restrict_access') }}</label>
+                            <div class="form-text">{{ __('restrict_access_hint') }}</div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-light-header align-middle mb-0">
+                                <thead>
+                                <tr>
+                                    <th class="w-100">{{ __('module') }}</th>
+                                    @foreach(\App\Models\User::PERMISSION_ACTIONS as $action)
+                                        <th class="text-center">{{ __($action) }}</th>
+                                    @endforeach
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach(\App\Models\User::PERMISSION_MODULES as $module)
+                                    <tr>
+                                        <td>{{ __($module) }}</td>
+                                        @foreach(\App\Models\User::PERMISSION_ACTIONS as $action)
+                                            <td class="text-center">
+                                                <input type="checkbox" name="permissions[]" value="{{ $module }}.{{ $action }}"
+                                                       class="form-check-input" aria-label="{{ __($module) }}: {{ __($action) }}"
+                                                       @checked(in_array("{$module}.{$action}", $granted, true))>
+                                            </td>
+                                        @endforeach
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </form>
                 </div>
                 <!-- Card Footer with Save Button -->

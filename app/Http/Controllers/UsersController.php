@@ -85,12 +85,20 @@ class UsersController extends Controller
             'role' => ['required', Rule::enum(RoleEnum::class)],
             'password' => 'nullable|min:8|required_with:password_confirmation|same:password_confirmation',
             'password_confirmation' => 'nullable|min:8',
+            'permissions' => 'array',
+            'permissions.*' => Rule::in(
+                collect(User::PERMISSION_MODULES)->crossJoin(User::PERMISSION_ACTIONS)->map(fn ($pair) => implode('.', $pair))->all()
+            ),
         ]);
 
         // Only the validated fields are written: the request body otherwise reaches
         // fill() as it arrives, and every fillable column of the model with it.
         $payload = Arr::only($validated, ['name', 'email', 'role', 'password']);
         $payload['is_active'] = $request->has('is_active');
+        // An unrestricted user has no list at all, which is different from an empty one.
+        $payload['permissions'] = $request->boolean('restrict_permissions')
+            ? array_values($validated['permissions'] ?? [])
+            : null;
 
         if (empty($payload['password'])) {
             unset($payload['password']);

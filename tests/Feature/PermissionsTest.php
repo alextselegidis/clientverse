@@ -58,4 +58,25 @@ class PermissionsTest extends TestCase
         Sanctum::actingAs($user);
         $this->getJson('/api/v1/customers')->assertForbidden();
     }
+
+    public function test_an_admin_sets_and_clears_a_users_permissions(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $user = User::factory()->create(['role' => 'user']);
+        $form = ['name' => $user->name, 'email' => $user->email, 'role' => 'user', 'is_active' => '1'];
+
+        $this->actingAs($admin)->get(route('setup.users.edit', $user))->assertOk();
+
+        $this->actingAs($admin)
+            ->put(route('setup.users.update', $user), $form + ['restrict_permissions' => '1', 'permissions' => ['tasks.view', 'tasks.edit']])
+            ->assertSessionHasNoErrors();
+        $this->assertSame(['tasks.view', 'tasks.edit'], $user->fresh()->permissions);
+
+        $this->actingAs($admin)
+            ->put(route('setup.users.update', $user), $form + ['restrict_permissions' => '1', 'permissions' => ['users.view']])
+            ->assertSessionHasErrors('permissions.0');
+
+        $this->actingAs($admin)->put(route('setup.users.update', $user), $form + ['restrict_permissions' => '0']);
+        $this->assertNull($user->fresh()->permissions);
+    }
 }
