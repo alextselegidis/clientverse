@@ -98,18 +98,7 @@
                         </table>
                     </div>
 
-                    <dl class="row mt-3 mb-0 ms-auto" style="max-width: 320px;">
-                        <dt class="col-6 fw-normal text-muted">{{ __('subtotal') }}</dt>
-                        <dd class="col-6 text-end mb-1">{{ format_currency($invoice->subtotal, $invoice->currency) }}</dd>
-                        <dt class="col-6 fw-normal text-muted">{{ __('tax') }}</dt>
-                        <dd class="col-6 text-end mb-1">{{ format_currency($invoice->tax, $invoice->currency) }}</dd>
-                        <dt class="col-6">{{ __('total') }}</dt>
-                        <dd class="col-6 text-end fw-bold mb-1">{{ format_currency($invoice->total, $invoice->currency) }}</dd>
-                        <dt class="col-6 fw-normal text-muted">{{ __('amount_paid') }}</dt>
-                        <dd class="col-6 text-end mb-1">{{ format_currency($invoice->amount_paid, $invoice->currency) }}</dd>
-                        <dt class="col-6">{{ __('balance_due') }}</dt>
-                        <dd class="col-6 text-end fw-bold mb-0">{{ format_currency($invoice->balance, $invoice->currency) }}</dd>
-                    </dl>
+                    @include('shared.document-totals', ['document' => $invoice, 'class' => 'mt-3 mb-0', 'payments' => true])
 
                     @if($invoice->notes)
                         <hr>

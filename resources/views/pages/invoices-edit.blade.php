@@ -43,7 +43,7 @@
 
 @php
     // Old input wins after a failed save; otherwise the stored lines plus one blank row.
-    $lines = old('items', $invoice->items->map->only(['description', 'quantity', 'unit_price', 'tax_rate'])->all());
+    $lines = old('items', $invoice->itemRows());
     $lines = array_values($lines);
     $lines[] = ['description' => '', 'quantity' => 1, 'unit_price' => '', 'tax_rate' => 0];
 @endphp
@@ -136,14 +136,14 @@
                         </thead>
                         <tbody id="invoice-lines">
                         @foreach($lines as $i => $line)
-                            @include('shared.invoice-line', ['index' => $i, 'line' => $line])
+                            @include('shared.line-item', ['index' => $i, 'line' => $line])
                         @endforeach
                         </tbody>
                     </table>
                 </div>
 
                 <template id="invoice-line-template">
-                    @include('shared.invoice-line', ['index' => '__INDEX__', 'line' => ['quantity' => 1, 'tax_rate' => 0]])
+                    @include('shared.line-item', ['index' => '__INDEX__', 'line' => ['quantity' => 1, 'tax_rate' => 0]])
                 </template>
 
                 <button type="button" class="btn btn-sm btn-light border mb-4"
@@ -152,14 +152,7 @@
                 </button>
 
                 @if($invoice->exists)
-                    <dl class="row mb-4 ms-auto" style="max-width: 320px;">
-                        <dt class="col-6 fw-normal text-muted">{{ __('subtotal') }}</dt>
-                        <dd class="col-6 text-end mb-1">{{ format_currency($invoice->subtotal, $invoice->currency) }}</dd>
-                        <dt class="col-6 fw-normal text-muted">{{ __('tax') }}</dt>
-                        <dd class="col-6 text-end mb-1">{{ format_currency($invoice->tax, $invoice->currency) }}</dd>
-                        <dt class="col-6">{{ __('total') }}</dt>
-                        <dd class="col-6 text-end fw-bold mb-0">{{ format_currency($invoice->total, $invoice->currency) }}</dd>
-                    </dl>
+                    @include('shared.document-totals', ['document' => $invoice, 'class' => 'mb-4'])
                 @endif
 
                 <div class="row">

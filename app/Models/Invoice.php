@@ -12,11 +12,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasLineItems;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Invoice extends Model
 {
+    use HasLineItems;
     use SoftDeletes;
 
     protected $fillable = [
@@ -63,46 +65,9 @@ class Invoice extends Model
         return $this->hasMany(Payment::class)->orderBy('paid_on');
     }
 
-    public function getSubtotalAttribute(): float
-    {
-        return $this->items->sum(fn (InvoiceItem $item) => $item->subtotal);
-    }
-
-    public function getTaxAttribute(): float
-    {
-        return $this->items->sum(fn (InvoiceItem $item) => $item->tax);
-    }
-
     public function getBalanceAttribute(): float
     {
         return round((float) $this->total - (float) $this->amount_paid, 2);
-    }
-
-    /**
-     * Replace every line with the given rows. Rows without a description are
-     * dropped, which is how a line is removed from the form.
-     */
-    public function syncItems(array $rows): void
-    {
-        $this->items()->delete();
-
-        $position = 0;
-
-        foreach ($rows as $row) {
-            if (blank($row['description'] ?? null)) {
-                continue;
-            }
-
-            $this->items()->create([
-                'description' => $row['description'],
-                'quantity' => $row['quantity'] ?? 1,
-                'unit_price' => $row['unit_price'] ?? 0,
-                'tax_rate' => $row['tax_rate'] ?? 0,
-                'position' => $position++,
-            ]);
-        }
-
-        $this->recalculate();
     }
 
     /**
