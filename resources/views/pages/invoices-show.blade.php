@@ -118,6 +118,15 @@
         </div>
 
         <div class="col-lg-4">
+            @if($invoice->status !== 'draft')
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-body">
+                        <label for="public-url" class="form-label small text-muted">{{ __('customer_link_hint') }}</label>
+                        <input type="text" id="public-url" class="form-control form-control-sm" readonly
+                               value="{{ $invoice->publicUrl() }}" onclick="this.select()">
+                    </div>
+                </div>
+            @endif
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-transparent">
                     <h5 class="mb-0">{{ __('payments') }}</h5>

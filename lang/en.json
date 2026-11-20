@@ -470,5 +470,11 @@
     "type_your_full_name": "Type your full name to sign",
     "agree_to_sign": "I have read this contract and agree to sign it electronically.",
     "sign_contract": "Sign contract",
-    "contract_signed_message": "Thank you, the contract is signed."
+    "contract_signed_message": "Thank you, the contract is signed.",
+    "decline": "Decline",
+    "accept_estimate": "Accept estimate",
+    "estimate_accepted_message": "Thank you, the estimate is accepted.",
+    "estimate_declined_message": "The estimate has been declined.",
+    "customer_link_hint": "Customer link (no login needed):",
+    "customer_link_draft_hint": "Set the status to sent to get a link for the customer."
 }

@@ -15,6 +15,7 @@ namespace App\Models;
 use App\Models\Concerns\HasLineItems;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\URL;
 
 class Invoice extends Model
 {
@@ -48,6 +49,14 @@ class Invoice extends Model
                 $invoice->saveQuietly();
             }
         });
+    }
+
+    /**
+     * A permanent link the customer can open without an account.
+     */
+    public function publicUrl(): string
+    {
+        return URL::signedRoute('public.invoices.show', ['invoice' => $this->id]);
     }
 
     public function customer()

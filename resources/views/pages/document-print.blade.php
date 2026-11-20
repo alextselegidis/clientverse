@@ -10,11 +10,15 @@
  * ---------------------------------------------------------------------------- */
 --}}
 {{-- Print view of an invoice or estimate: $document, $title, $backUrl, $dates (label => date). --}}
+{{-- Public links pass $backUrl = null, and $respondUrl when an estimate can be accepted or declined. --}}
 {{-- A standalone page; the browser's "Save as PDF" turns it into the PDF, so no PDF library is needed. --}}
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     @include('shared.head')
+    @if(!$backUrl)
+        <meta name="robots" content="noindex">
+    @endif
     <style>
         @page { margin: 16mm; }
         @media print { body { background: #fff !important; } .document-sheet { box-shadow: none !important; padding: 0 !important; } }
@@ -23,11 +27,25 @@
 <body class="bg-light">
 <div class="container py-4" style="max-width: 860px;">
     <div class="d-flex justify-content-end gap-2 mb-3 d-print-none">
-        <a href="{{ $backUrl }}" class="btn btn-light border">{{ __('back') }}</a>
+        @if($backUrl)
+            <a href="{{ $backUrl }}" class="btn btn-light border">{{ __('back') }}</a>
+        @endif
         <button type="button" class="btn btn-primary" onclick="window.print()">
             <i class="bi bi-printer me-2"></i>{{ __('print_or_save_pdf') }}
         </button>
     </div>
+
+    @if(session('success'))
+        <div class="alert alert-success d-print-none">{{ session('success') }}</div>
+    @endif
+
+    @if($respondUrl ?? null)
+        <form action="{{ $respondUrl }}" method="POST" class="d-flex justify-content-end gap-2 mb-3 d-print-none">
+            @csrf
+            <button type="submit" name="decision" value="declined" class="btn btn-light border">{{ __('decline') }}</button>
+            <button type="submit" name="decision" value="accepted" class="btn btn-primary">{{ __('accept_estimate') }}</button>
+        </form>
+    @endif
 
     <div class="document-sheet bg-white shadow-sm rounded-3 p-5">
         <div class="d-flex justify-content-between align-items-start mb-5">

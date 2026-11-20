@@ -15,6 +15,7 @@ namespace App\Models;
 use App\Models\Concerns\HasLineItems;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\URL;
 
 class Estimate extends Model
 {
@@ -46,6 +47,14 @@ class Estimate extends Model
                 $estimate->saveQuietly();
             }
         });
+    }
+
+    /**
+     * A permanent link the customer can open without an account.
+     */
+    public function publicUrl(): string
+    {
+        return URL::signedRoute('public.estimates.show', ['estimate' => $this->id]);
     }
 
     public function customer()

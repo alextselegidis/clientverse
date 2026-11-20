@@ -130,5 +130,19 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-lg-4">
+            @if($estimate->status === 'draft')
+                <p class="text-muted small">{{ __('customer_link_draft_hint') }}</p>
+            @else
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body">
+                    <label for="public-url" class="form-label small text-muted">{{ __('customer_link_hint') }}</label>
+                    <input type="text" id="public-url" class="form-control form-control-sm" readonly
+                           value="{{ $estimate->publicUrl() }}" onclick="this.select()">
+                </div>
+            </div>
+            @endif
+        </div>
     </div>
 @endsection
