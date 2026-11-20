@@ -865,3 +865,55 @@ input.form-control,
 .sales-board .card[draggable='true'] {
     cursor: grab;
 }
+
+/* Month calendar: seven equal columns, each day a fixed-height cell whose events truncate. */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    border-top: 1px solid var(--cv-hairline);
+}
+
+.calendar-weekday {
+    padding: 0.5rem;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--bs-secondary-color);
+    border-bottom: 1px solid var(--cv-hairline);
+}
+
+.calendar-day {
+    min-height: 110px;
+    padding: 0.25rem 0.5rem 0.5rem;
+    border-right: 1px solid var(--cv-hairline);
+    border-bottom: 1px solid var(--cv-hairline);
+}
+
+.calendar-day:nth-child(7n) {
+    border-right: 0;
+}
+
+.calendar-day.is-outside {
+    background: var(--cv-surface-muted);
+    color: var(--bs-secondary-color);
+}
+
+.calendar-day.is-today .calendar-date {
+    color: var(--bs-primary);
+    font-weight: 700;
+}
+
+.calendar-date {
+    font-size: 0.8125rem;
+    margin-bottom: 0.25rem;
+}
+
+.calendar-event {
+    display: block;
+    font-size: 0.8125rem;
+    padding: 0.125rem 0.375rem;
+    margin-bottom: 0.125rem;
+    border-radius: var(--bs-border-radius-sm);
+    background: var(--bs-primary-bg-subtle);
+    color: var(--bs-primary-text-emphasis);
+    text-decoration: none;
+}

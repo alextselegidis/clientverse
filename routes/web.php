@@ -12,6 +12,7 @@
 
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\ContractsController;
 use App\Http\Controllers\CreditNotesController;
@@ -77,6 +78,9 @@ Route::middleware('auth')->group(function () {
 
     // DashboardController
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    // CalendarController (filters its own events by permission)
+    Route::get('/calendar', [CalendarController::class, 'index'])->name('calendar');
 
     // SearchController
     Route::get('/search', [SearchController::class, 'index'])->name('search');

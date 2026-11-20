@@ -161,6 +161,13 @@
                         <!-- Global Search -->
                         <ul class="navbar-nav me-lg-2">
                             <li class="nav-item">
+                                <a class="nav-link text-white {{ request()->routeIs('calendar') ? 'fw-bold' : '' }}" href="{{ route('calendar') }}"
+                                   aria-label="{{ __('calendar') }}" title="{{ __('calendar') }}">
+                                    <i class="bi bi-calendar3"></i>
+                                    <span class="d-lg-none ms-2">{{ __('calendar') }}</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
                                 <button type="button" class="nav-link text-white" data-bs-toggle="modal"
                                         data-bs-target="#search-modal" aria-label="{{ __('search') }}">
                                     <i class="bi bi-search"></i>

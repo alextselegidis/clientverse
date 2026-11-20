@@ -476,5 +476,8 @@
     "estimate_accepted_message": "Thank you, the estimate is accepted.",
     "estimate_declined_message": "The estimate has been declined.",
     "customer_link_hint": "Customer link (no login needed):",
-    "customer_link_draft_hint": "Set the status to sent to get a link for the customer."
+    "customer_link_draft_hint": "Set the status to sent to get a link for the customer.",
+    "calendar": "Calendar",
+    "previous_month": "Previous month",
+    "next_month": "Next month"
 }
