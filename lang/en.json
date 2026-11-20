@@ -406,5 +406,14 @@
     "declined": "Declined",
     "expiry_date": "Expiry Date",
     "convert_to_invoice": "Convert to Invoice",
-    "billing": "Billing"
+    "billing": "Billing",
+    "task": "Task",
+    "tasks": "Tasks",
+    "todo": "To Do",
+    "in_progress": "In Progress",
+    "done": "Done",
+    "priority": "Priority",
+    "low": "Low",
+    "normal": "Normal",
+    "high": "High"
 }

@@ -129,3 +129,13 @@ if (!function_exists('cookie_suffix')) {
         );
     }
 }
+
+if (!function_exists('format_minutes')) {
+    /**
+     * 135 => "2h 15m". Used for logged time.
+     */
+    function format_minutes(int $minutes): string
+    {
+        return intdiv($minutes, 60) . 'h ' . str_pad((string) ($minutes % 60), 2, '0', STR_PAD_LEFT) . 'm';
+    }
+}
