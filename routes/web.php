@@ -30,6 +30,8 @@ use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TasksController;
+use App\Http\Controllers\TicketRepliesController;
+use App\Http\Controllers\TicketsController;
 use App\Http\Controllers\TimeEntriesController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\WelcomeController;
@@ -183,6 +185,13 @@ Route::middleware('auth')->group(function () {
         Route::post('/tasks/{task}/time-entries', [TimeEntriesController::class, 'store'])->name('tasks.time-entries.store');
         Route::delete('/tasks/{task}/time-entries/{timeEntry}', [TimeEntriesController::class, 'destroy'])->name('tasks.time-entries.destroy');
     });
+
+    // TicketsController
+    Route::delete('tickets/bulk-destroy', [TicketsController::class, 'bulkDestroy'])->name('tickets.bulk-destroy');
+    Route::resource('tickets', TicketsController::class)->except('edit')->names([
+        'index' => 'tickets',
+    ]);
+    Route::post('/tickets/{ticket}/replies', [TicketRepliesController::class, 'store'])->name('tickets.replies.store');
 
     // Setup routes (Admin only)
     Route::middleware(AdminMiddleware::class)->prefix('setup')->group(function () {

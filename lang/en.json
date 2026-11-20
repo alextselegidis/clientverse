@@ -431,5 +431,7 @@
     "closed": "Closed",
     "subject": "Subject",
     "reply": "Reply",
-    "replies": "Replies"
+    "replies": "Replies",
+    "email_the_customer": "Email the customer",
+    "no_email_on_file": "no email on file"
 }

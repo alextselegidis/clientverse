@@ -33,11 +33,24 @@
                                 </a>
                             </li>
                             <!-- Customers -->
-                            <li class="nav-item">
-                                <a class="nav-link nav-menu-item text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('customers*') ? 'fw-bold' : '' }}" href="{{ route('customers') }}">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link nav-menu-item dropdown-toggle text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('customers*', 'tickets*') ? 'fw-bold' : '' }}"
+                                   href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-people me-2"></i>
                                     {{ __('customers') }}
                                 </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item {{ request()->routeIs('customers*') ? 'active' : '' }}" href="{{ route('customers') }}">
+                                            <i class="bi bi-people me-2"></i>{{ __('customers') }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item {{ request()->routeIs('tickets*') ? 'active' : '' }}" href="{{ route('tickets') }}">
+                                            <i class="bi bi-life-preserver me-2"></i>{{ __('tickets') }}
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                             <!-- Projects -->
                             <li class="nav-item dropdown">
