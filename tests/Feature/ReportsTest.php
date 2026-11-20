@@ -41,4 +41,18 @@ class ReportsTest extends TestCase
 
         $this->actingAs($user)->get(route('reports', ['from' => '2026-06-30', 'to' => '2026-01-01']))->assertSessionHasErrors('to');
     }
+
+    public function test_the_csv_neutralises_formulas(): void
+    {
+        $invoice = Invoice::create(['customer_id' => Customer::create(['name' => '=HYPERLINK("http://x")'])->id, 'status' => 'sent', 'currency' => 'EUR']);
+        $invoice->payments()->create(['amount' => 5, 'paid_on' => '2026-04-02', 'reference' => '@SUM(1)']);
+
+        $csv = $this->actingAs(User::factory()->create())
+            ->get(route('reports.payments-csv', ['from' => '2026-01-01', 'to' => '2026-12-31']))
+            ->streamedContent();
+
+        $this->assertStringContainsString("'=HYPERLINK", $csv);
+        $this->assertStringContainsString("'@SUM(1)", $csv);
+        $this->assertStringContainsString(',5.00,', $csv);
+    }
 }

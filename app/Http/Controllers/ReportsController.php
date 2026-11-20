@@ -95,7 +95,7 @@ class ReportsController extends Controller
             fputcsv($out, ['date', 'invoice', 'customer', 'amount', 'currency', 'method', 'reference']);
 
             foreach ($payments as $payment) {
-                fputcsv($out, [
+                fputcsv($out, array_map([$this, 'csvCell'], [
                     $payment->paid_on->format('Y-m-d'),
                     $payment->invoice?->number,
                     $payment->invoice?->customer?->name,
@@ -103,11 +103,21 @@ class ReportsController extends Controller
                     $payment->invoice?->currency,
                     $payment->method,
                     $payment->reference,
-                ]);
+                ]));
             }
 
             fclose($out);
         }, 'payments-' . $from->format('Ymd') . '-' . $to->format('Ymd') . '.csv', ['Content-Type' => 'text/csv']);
+    }
+
+    /**
+     * A spreadsheet runs a cell that starts with =, +, - or @ as a formula, so a
+     * customer named "=HYPERLINK(...)" would execute on open. A leading quote
+     * keeps such text as text.
+     */
+    private function csvCell(mixed $value): mixed
+    {
+        return is_string($value) && preg_match('/^[=+\-@\t\r]/', $value) ? "'" . $value : $value;
     }
 
     /**
