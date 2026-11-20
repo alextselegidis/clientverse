@@ -65,20 +65,34 @@ class Invoice extends Model
         return $this->hasMany(Payment::class)->orderBy('paid_on');
     }
 
+    public function creditNotes()
+    {
+        return $this->hasMany(CreditNote::class)->where('status', 'issued');
+    }
+
+    /**
+     * The part of amount_paid that came from credit notes rather than payments.
+     */
+    public function getCreditedAttribute(): float
+    {
+        return round((float) $this->creditNotes->sum('total'), 2);
+    }
+
     public function getBalanceAttribute(): float
     {
         return round((float) $this->total - (float) $this->amount_paid, 2);
     }
 
     /**
-     * Refresh the cached total and amount paid from the lines and payments.
+     * Refresh the cached total and amount settled. amount_paid counts payments
+     * and issued credit notes alike, since both reduce what the customer owes.
      */
     public function recalculate(): void
     {
         $this->load('items');
 
         $this->total = round($this->subtotal + $this->tax, 2);
-        $this->amount_paid = (float) $this->payments()->sum('amount');
+        $this->amount_paid = round((float) $this->payments()->sum('amount') + (float) $this->creditNotes()->sum('total'), 2);
         $this->save();
     }
 

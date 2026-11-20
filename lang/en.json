@@ -454,5 +454,12 @@
     "billable": "Billable",
     "billable_to_customer": "Billable to the customer",
     "bill_to_customer": "Bill to customer",
-    "expense_not_billable_message": "Mark the expense billable and pick a customer first."
+    "expense_not_billable_message": "Mark the expense billable and pick a customer first.",
+    "credit_note": "Credit Note",
+    "credit_notes": "Credit Notes",
+    "issued": "Issued",
+    "credited": "Credited",
+    "apply_to_invoice": "Apply to invoice",
+    "remove_from_invoice": "Remove from invoice",
+    "credit_note_must_match_message": "The invoice must belong to the same customer and use the same currency."
 }

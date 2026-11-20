@@ -19,7 +19,11 @@
     <dd class="col-6 text-end fw-bold mb-1">{{ format_currency($document->total, $document->currency) }}</dd>
     @if($payments ?? false)
         <dt class="col-6 fw-normal text-muted">{{ __('amount_paid') }}</dt>
-        <dd class="col-6 text-end mb-1">{{ format_currency($document->amount_paid, $document->currency) }}</dd>
+        <dd class="col-6 text-end mb-1">{{ format_currency($document->amount_paid - $document->credited, $document->currency) }}</dd>
+        @if($document->credited > 0)
+            <dt class="col-6 fw-normal text-muted">{{ __('credited') }}</dt>
+            <dd class="col-6 text-end mb-1">{{ format_currency($document->credited, $document->currency) }}</dd>
+        @endif
         <dt class="col-6">{{ __('balance_due') }}</dt>
         <dd class="col-6 text-end fw-bold mb-0">{{ format_currency($document->balance, $document->currency) }}</dd>
     @endif
