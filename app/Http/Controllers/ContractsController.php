@@ -122,6 +122,12 @@ class ContractsController extends Controller
         ]);
 
         $contract->fill($request->all());
+
+        // The customer agreed to these terms; changing them would put new words under an old signature.
+        if ($contract->signed_at && $contract->isDirty(Contract::SIGNED_TERMS)) {
+            return back()->withInput()->with('error', __('contract_signed_locked_message'));
+        }
+
         $contract->save();
 
         $this->handleFileUploads($request, $contract);

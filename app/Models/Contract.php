@@ -20,6 +20,11 @@ class Contract extends Model
 {
     use SoftDeletes;
 
+    /**
+     * The fields a signature covers; they cannot change once the contract is signed.
+     */
+    public const SIGNED_TERMS = ['customer_id', 'title', 'description', 'value', 'currency', 'start_date', 'end_date'];
+
     protected $fillable = [
         'customer_id',
         'project_id',
@@ -83,6 +88,11 @@ class Contract extends Model
     /**
      * Record an electronic signature: who typed their name, from where, and when.
      */
+    public function canBeSigned(): bool
+    {
+        return !$this->signed_at && in_array($this->status, ['draft', 'active'], true);
+    }
+
     public function sign(string $name, ?string $ip): void
     {
         $this->signer_name = $name;

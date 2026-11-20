@@ -29,7 +29,7 @@ class PublicContractsController extends Controller
 
     public function sign(Request $request, Contract $contract)
     {
-        if ($contract->signed_at) {
+        if (!$contract->canBeSigned()) {
             return back();
         }
 

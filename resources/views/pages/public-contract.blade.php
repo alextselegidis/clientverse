@@ -55,6 +55,8 @@
                 <i class="bi bi-check-circle text-success me-2"></i>
                 {{ __('signed_by_on', ['name' => $contract->signer_name, 'date' => $contract->signed_at->format('M d, Y H:i')]) }}
             </p>
+        @elseif(!$contract->canBeSigned())
+            <p class="text-muted mb-0">{{ __('contract_not_signable_message') }}</p>
         @else
             <form action="{{ request()->fullUrl() }}" method="POST" style="max-width: 420px;">
                 @csrf
