@@ -15,6 +15,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class InvoicesController extends Controller
@@ -65,8 +66,13 @@ class InvoicesController extends Controller
     {
         $data = $this->validateInvoice($request);
 
-        $invoice = Invoice::create($data);
-        $invoice->syncItems($data['items'] ?? []);
+        // The header and its lines are saved together or not at all.
+        $invoice = DB::transaction(function () use ($data) {
+            $invoice = Invoice::create($data);
+            $invoice->syncItems($data['items'] ?? []);
+
+            return $invoice;
+        });
 
         return redirect(route('invoices.edit', $invoice->id))->with('success', __('record_saved_message'));
     }
@@ -100,8 +106,10 @@ class InvoicesController extends Controller
     {
         $data = $this->validateInvoice($request, $invoice);
 
-        $invoice->update($data);
-        $invoice->syncItems($data['items'] ?? []);
+        DB::transaction(function () use ($invoice, $data) {
+            $invoice->update($data);
+            $invoice->syncItems($data['items'] ?? []);
+        });
 
         return redirect(route('invoices.edit', $invoice->id))->with('success', __('record_saved_message'));
     }
@@ -139,8 +147,8 @@ class InvoicesController extends Controller
             'terms' => 'nullable|string',
             'items' => 'array',
             'items.*.description' => 'nullable|string|max:255',
-            'items.*.quantity' => 'nullable|numeric|min:0',
-            'items.*.unit_price' => 'nullable|numeric',
+            'items.*.quantity' => 'nullable|numeric|min:0|max:99999999',
+            'items.*.unit_price' => 'nullable|numeric|between:-9999999999.99,9999999999.99',
             'items.*.tax_rate' => 'nullable|numeric|min:0|max:100',
         ]);
     }

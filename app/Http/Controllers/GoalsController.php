@@ -65,7 +65,7 @@ class GoalsController extends Controller
             'name' => 'required|string|max:255',
             'metric' => ['required', Rule::in(array_keys(Goal::metrics()))],
             'currency' => 'nullable|required_if:metric,invoiced,collected|string|size:3',
-            'target' => 'required|numeric|gt:0',
+            'target' => 'required|numeric|gt:0|max:9999999999.99',
             'start_date' => 'required|date',
             'end_date' => 'required|date|after_or_equal:start_date',
         ]);

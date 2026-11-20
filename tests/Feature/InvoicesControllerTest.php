@@ -115,4 +115,24 @@ class InvoicesControllerTest extends TestCase
             ->assertOk()
             ->assertSee(['Acme Ltd', 'EL123', 'Support plan', $invoice->number]);
     }
+
+    public function test_an_amount_too_large_for_the_database_is_refused_and_nothing_changes(): void
+    {
+        $user = User::factory()->create();
+        $invoice = Invoice::create(['customer_id' => Customer::create(['name' => 'Acme'])->id, 'status' => 'draft', 'currency' => 'EUR']);
+        $invoice->syncItems([['description' => 'Keep me', 'quantity' => 1, 'unit_price' => 10]]);
+        $form = ['customer_id' => $invoice->customer_id, 'status' => 'draft', 'currency' => 'EUR', 'number' => 'CHANGED'];
+
+        $this->actingAs($user)
+            ->put(route('invoices.update', $invoice), $form + ['items' => [['description' => 'Huge', 'quantity' => 99999999, 'unit_price' => 9999999999]]])
+            ->assertSessionHasErrors('items');
+
+        $this->actingAs($user)
+            ->put(route('invoices.update', $invoice), $form + ['items' => [['description' => 'Huge', 'quantity' => 1, 'unit_price' => 1e13]]])
+            ->assertSessionHasErrors('items.0.unit_price');
+
+        $invoice->refresh();
+        $this->assertSame('Keep me', $invoice->items()->sole()->description);
+        $this->assertNotSame('CHANGED', $invoice->number);
+    }
 }

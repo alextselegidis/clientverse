@@ -527,5 +527,6 @@
     "survey_closed_message": "This survey is no longer accepting responses.",
     "response_count": ":count response|:count responses",
     "email_failed_message": "The email could not be sent. Check the mail settings and try again.",
-    "reply_saved_email_failed_message": "The reply is saved, but the email to the customer could not be sent."
+    "reply_saved_email_failed_message": "The reply is saved, but the email to the customer could not be sent.",
+    "amount_too_large_message": "The total is too large."
 }

@@ -67,7 +67,7 @@ class SurveysController extends Controller
     {
         $data = $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|max:60000',
             'is_open' => 'boolean',
             'questions' => 'array',
             'questions.*.text' => 'nullable|string|max:500',

@@ -12,12 +12,20 @@
 
 namespace App\Models\Concerns;
 
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
+
 /**
  * Shared by invoices and estimates: an ordered list of priced, taxed lines and a
  * cached `total` column. The using model defines the items() relation.
  */
 trait HasLineItems
 {
+    /**
+     * The largest amount a decimal(12,2) column holds.
+     */
+    public const MAX_AMOUNT = 9999999999.99;
+
     public function getSubtotalAttribute(): float
     {
         return round($this->items->sum(fn ($item) => $item->subtotal), 2);
@@ -34,25 +42,32 @@ trait HasLineItems
      */
     public function syncItems(array $rows): void
     {
-        $this->items()->delete();
+        $rows = array_values(array_filter($rows, fn ($row) => filled($row['description'] ?? null)));
 
-        $position = 0;
+        // The total column holds 12 digits; refuse rather than let MySQL throw halfway.
+        $total = collect($rows)->sum(fn ($row) => (float) ($row['quantity'] ?? 1) * (float) ($row['unit_price'] ?? 0)
+            * (1 + (float) ($row['tax_rate'] ?? 0) / 100));
 
-        foreach ($rows as $row) {
-            if (blank($row['description'] ?? null)) {
-                continue;
-            }
-
-            $this->items()->create([
-                'description' => $row['description'],
-                'quantity' => $row['quantity'] ?? 1,
-                'unit_price' => $row['unit_price'] ?? 0,
-                'tax_rate' => $row['tax_rate'] ?? 0,
-                'position' => $position++,
-            ]);
+        if (abs($total) > self::MAX_AMOUNT) {
+            throw ValidationException::withMessages(['items' => __('amount_too_large_message')]);
         }
 
-        $this->recalculate();
+        // All lines or none: a failure part way must not leave the document half empty.
+        DB::transaction(function () use ($rows) {
+            $this->items()->delete();
+
+            foreach ($rows as $position => $row) {
+                $this->items()->create([
+                    'description' => $row['description'],
+                    'quantity' => $row['quantity'] ?? 1,
+                    'unit_price' => $row['unit_price'] ?? 0,
+                    'tax_rate' => $row['tax_rate'] ?? 0,
+                    'position' => $position,
+                ]);
+            }
+
+            $this->recalculate();
+        });
     }
 
     /**

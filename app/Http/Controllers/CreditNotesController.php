@@ -16,6 +16,7 @@ use App\Models\CreditNote;
 use App\Models\Customer;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class CreditNotesController extends Controller
@@ -67,8 +68,13 @@ class CreditNotesController extends Controller
     {
         $data = $this->validateCreditNote($request);
 
-        $creditNote = CreditNote::create($data);
-        $creditNote->syncItems($data['items'] ?? []);
+        // The header and its lines are saved together or not at all.
+        $creditNote = DB::transaction(function () use ($data) {
+            $creditNote = CreditNote::create($data);
+            $creditNote->syncItems($data['items'] ?? []);
+
+            return $creditNote;
+        });
 
         return redirect(route('credit-notes.edit', $creditNote->id))->with('success', __('record_saved_message'));
     }
@@ -107,8 +113,10 @@ class CreditNotesController extends Controller
     {
         $data = $this->validateCreditNote($request, $creditNote);
 
-        $creditNote->update($data);
-        $creditNote->syncItems($data['items'] ?? []);
+        DB::transaction(function () use ($creditNote, $data) {
+            $creditNote->update($data);
+            $creditNote->syncItems($data['items'] ?? []);
+        });
 
         return redirect(route('credit-notes.edit', $creditNote->id))->with('success', __('record_saved_message'));
     }
@@ -166,8 +174,8 @@ class CreditNotesController extends Controller
             'notes' => 'nullable|string',
             'items' => 'array',
             'items.*.description' => 'nullable|string|max:255',
-            'items.*.quantity' => 'nullable|numeric|min:0',
-            'items.*.unit_price' => 'nullable|numeric',
+            'items.*.quantity' => 'nullable|numeric|min:0|max:99999999',
+            'items.*.unit_price' => 'nullable|numeric|between:-9999999999.99,9999999999.99',
             'items.*.tax_rate' => 'nullable|numeric|min:0|max:100',
         ]);
     }

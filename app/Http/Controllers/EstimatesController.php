@@ -15,6 +15,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\Estimate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 
 class EstimatesController extends Controller
@@ -67,8 +68,13 @@ class EstimatesController extends Controller
     {
         $data = $this->validateEstimate($request);
 
-        $estimate = Estimate::create($data);
-        $estimate->syncItems($data['items'] ?? []);
+        // The header and its lines are saved together or not at all.
+        $estimate = DB::transaction(function () use ($data) {
+            $estimate = Estimate::create($data);
+            $estimate->syncItems($data['items'] ?? []);
+
+            return $estimate;
+        });
 
         return redirect(route('estimates.edit', $estimate->id))->with('success', __('record_saved_message'));
     }
@@ -102,8 +108,10 @@ class EstimatesController extends Controller
     {
         $data = $this->validateEstimate($request, $estimate);
 
-        $estimate->update($data);
-        $estimate->syncItems($data['items'] ?? []);
+        DB::transaction(function () use ($estimate, $data) {
+            $estimate->update($data);
+            $estimate->syncItems($data['items'] ?? []);
+        });
 
         return redirect(route('estimates.edit', $estimate->id))->with('success', __('record_saved_message'));
     }
@@ -147,8 +155,8 @@ class EstimatesController extends Controller
             'terms' => 'nullable|string',
             'items' => 'array',
             'items.*.description' => 'nullable|string|max:255',
-            'items.*.quantity' => 'nullable|numeric|min:0',
-            'items.*.unit_price' => 'nullable|numeric',
+            'items.*.quantity' => 'nullable|numeric|min:0|max:99999999',
+            'items.*.unit_price' => 'nullable|numeric|between:-9999999999.99,9999999999.99',
             'items.*.tax_rate' => 'nullable|numeric|min:0|max:100',
         ]);
     }

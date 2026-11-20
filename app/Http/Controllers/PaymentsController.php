@@ -21,7 +21,7 @@ class PaymentsController extends Controller
     public function store(Request $request, Invoice $invoice)
     {
         $data = $request->validate([
-            'amount' => 'required|numeric|gt:0',
+            'amount' => 'required|numeric|gt:0|max:9999999999.99',
             'paid_on' => 'required|date',
             'method' => 'nullable|string|max:100',
             'reference' => 'nullable|string|max:255',

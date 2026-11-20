@@ -120,7 +120,7 @@ class ExpensesController extends Controller
             'expense_date' => 'required|date',
             'category' => 'nullable|string|max:100',
             'description' => 'required|string|max:255',
-            'amount' => 'required|numeric|min:0',
+            'amount' => 'required|numeric|min:0|max:9999999999.99',
             'currency' => 'required|string|size:3',
             'billable' => 'boolean',
             'customer_id' => 'nullable|required_if_accepted:billable|exists:customers,id',
