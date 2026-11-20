@@ -27,6 +27,13 @@
         <i class="bi bi-plus-square me-2"></i>
         {{ __('add') }}
     </a>
+    <form action="{{ route('contracts.email', $contract->id) }}" method="POST" class="d-inline me-lg-3">
+        @csrf
+        <button type="submit" class="nav-link">
+            <i class="bi bi-envelope me-2"></i>
+            {{ __('send_by_email') }}
+        </button>
+    </form>
     <a href="{{ route('contracts.edit', $contract->id) }}" class="nav-link me-lg-3">
         <i class="bi bi-pencil me-2"></i>{{ __('edit') }}
     </a>

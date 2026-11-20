@@ -1,0 +1,86 @@
+<?php
+
+/* ----------------------------------------------------------------------------
+ * Clientverse - Self-Hosted CRM
+ *
+ * @package     Clientverse
+ * @author      A.Tselegidis <alextselegidis@gmail.com>
+ * @copyright   Copyright (c) Alex Tselegidis
+ * @license     https://opensource.org/licenses/GPL-3.0 - GPLv3
+ * @link        https://clientverse.org
+ * ---------------------------------------------------------------------------- */
+
+namespace App\Http\Controllers;
+
+use App\Models\Contract;
+use App\Models\Customer;
+use App\Models\Estimate;
+use App\Models\Invoice;
+use App\Notifications\DocumentEmail;
+use Illuminate\Support\Facades\Notification;
+
+/**
+ * Emails a document's customer link to the customer. A draft becomes "sent"
+ * first, since drafts have no public page.
+ */
+class DocumentEmailsController extends Controller
+{
+    public function invoice(Invoice $invoice)
+    {
+        return $this->send($invoice->customer, 'invoice', function () use ($invoice) {
+            if ($invoice->status === 'draft') {
+                $invoice->update(['status' => 'sent']);
+            }
+
+            return [
+                'number' => $invoice->number,
+                'total' => format_currency($invoice->total, $invoice->currency),
+                'due_date' => $invoice->due_date?->format('M d, Y') ?? '-',
+                'link' => $invoice->publicUrl(),
+            ];
+        });
+    }
+
+    public function estimate(Estimate $estimate)
+    {
+        return $this->send($estimate->customer, 'estimate', function () use ($estimate) {
+            if ($estimate->status === 'draft') {
+                $estimate->update(['status' => 'sent']);
+            }
+
+            return [
+                'number' => $estimate->number,
+                'total' => format_currency($estimate->total, $estimate->currency),
+                'link' => $estimate->publicUrl(),
+            ];
+        });
+    }
+
+    public function contract(Contract $contract)
+    {
+        return $this->send($contract->customer, 'contract', fn () => [
+            'title' => $contract->title,
+            'link' => $contract->signingUrl(),
+        ]);
+    }
+
+    /**
+     * $values runs only once the customer is known to have an email address,
+     * so a draft is not marked sent when nothing goes out.
+     */
+    private function send(?Customer $customer, string $type, callable $values)
+    {
+        if (blank($customer?->email)) {
+            return back()->with('error', __('customer_has_no_email_message'));
+        }
+
+        $template = email_template($type, $values() + [
+            'customer' => $customer->name,
+            'company' => setting('company_name') ?: config('app.name'),
+        ]);
+
+        Notification::route('mail', $customer->email)->notify(new DocumentEmail($template['subject'], $template['body']));
+
+        return back()->with('success', __('document_emailed_message', ['email' => $customer->email]));
+    }
+}

@@ -18,6 +18,13 @@
         </a>
     </li>
     <li class="nav-item">
+        <a class="nav-link px-3 px-lg-0 py-2 d-flex align-items-center {{ request()->routeIs('setup.billing*') ? 'text-primary fw-medium' : 'text-body' }}"
+           href="{{ route('setup.billing') }}">
+            <i class="bi bi-envelope me-3 text-muted"></i>
+            {{ __('billing_settings') }}
+        </a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link px-3 px-lg-0 py-2 d-flex align-items-center {{ request()->routeIs('setup.users*') ? 'text-primary fw-medium' : 'text-body' }}"
            href="{{ route('setup.users') }}">
             <i class="bi bi-people me-3 text-muted"></i>

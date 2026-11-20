@@ -22,7 +22,7 @@
         <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
             <div>
                 <h1 class="h3 mb-1">{{ $contract->title }}</h1>
-                <div class="text-muted">{{ setting('company_name', config('app.name')) }}</div>
+                <div class="text-muted">{{ setting('company_name') ?: config('app.name') }}</div>
             </div>
             @if($contract->value)
                 <div class="fw-bold text-nowrap">{{ format_currency($contract->value, $contract->currency) }}</div>

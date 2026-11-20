@@ -51,4 +51,39 @@ class SettingsController extends Controller
 
         return redirect(route('setup.localization'))->with('success', __('record_saved_message'));
     }
+
+    /**
+     * Company details printed on documents, and the email templates.
+     */
+    private const BILLING_SETTINGS = [
+        'company_name', 'company_address',
+        'invoice_email_subject', 'invoice_email_body',
+        'estimate_email_subject', 'estimate_email_body',
+        'contract_email_subject', 'contract_email_body',
+    ];
+
+    public function billing(Request $request)
+    {
+        Gate::authorize('viewAny', Setting::class);
+
+        return view('pages.settings-billing', [
+            'values' => collect(self::BILLING_SETTINGS)->mapWithKeys(fn ($name) => [$name => setting($name)])->all(),
+        ]);
+    }
+
+    public function updateBilling(Request $request)
+    {
+        Gate::authorize('update', Setting::class);
+
+        $validated = $request->validate([
+            'company_name' => 'nullable|string|max:255',
+            'company_address' => 'nullable|string|max:1000',
+            '*_email_subject' => 'nullable|string|max:255',
+            '*_email_body' => 'nullable|string|max:5000',
+        ]);
+
+        setting(collect(self::BILLING_SETTINGS)->mapWithKeys(fn ($name) => [$name => $validated[$name] ?? ''])->all());
+
+        return redirect(route('setup.billing'))->with('success', __('record_saved_message'));
+    }
 }

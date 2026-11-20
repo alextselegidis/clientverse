@@ -54,7 +54,7 @@
                 <div class="text-muted">{{ $document->number }}</div>
             </div>
             <div class="text-end">
-                <div class="fw-bold">{{ setting('company_name', config('app.name')) }}</div>
+                <div class="fw-bold">{{ setting('company_name') ?: config('app.name') }}</div>
                 @if($address = setting('company_address'))
                     <div class="small text-muted">{!! nl2br(e($address)) !!}</div>
                 @endif

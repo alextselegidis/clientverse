@@ -479,5 +479,20 @@
     "customer_link_draft_hint": "Set the status to sent to get a link for the customer.",
     "calendar": "Calendar",
     "previous_month": "Previous month",
-    "next_month": "Next month"
+    "next_month": "Next month",
+    "email_template_invoice_subject": "Invoice {number} from {company}",
+    "email_template_invoice_body": "Hello {customer},\n\nPlease find invoice {number} for {total}, due on {due_date}:\n{link}\n\nThank you,\n{company}",
+    "email_template_estimate_subject": "Estimate {number} from {company}",
+    "email_template_estimate_body": "Hello {customer},\n\nHere is estimate {number} for {total}. You can accept or decline it here:\n{link}\n\nKind regards,\n{company}",
+    "email_template_contract_subject": "Contract to sign: {title}",
+    "email_template_contract_body": "Hello {customer},\n\nPlease read and sign the contract \"{title}\" here:\n{link}\n\nKind regards,\n{company}",
+    "billing_settings": "Company & Emails",
+    "company_name": "Company Name",
+    "company_address": "Company Address",
+    "email_templates": "Email Templates",
+    "email_templates_hint": "Placeholders: {customer}, {company}, {number}, {title}, {total}, {due_date}, {link}.",
+    "body": "Body",
+    "send_by_email": "Send by email",
+    "document_emailed_message": "Emailed to :email.",
+    "customer_has_no_email_message": "The customer has no email address on file."
 }

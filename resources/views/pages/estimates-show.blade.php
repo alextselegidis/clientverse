@@ -37,6 +37,13 @@
             </button>
         </form>
     @endif
+    <form action="{{ route('estimates.email', $estimate->id) }}" method="POST" class="d-inline me-lg-3">
+        @csrf
+        <button type="submit" class="nav-link">
+            <i class="bi bi-envelope me-2"></i>
+            {{ __('send_by_email') }}
+        </button>
+    </form>
     <a href="{{ route('estimates.print', $estimate->id) }}" class="nav-link me-lg-3" target="_blank">
         <i class="bi bi-printer me-2"></i>
         {{ __('print') }}

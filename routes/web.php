@@ -19,6 +19,7 @@ use App\Http\Controllers\CreditNotesController;
 use App\Http\Controllers\CustomerNotesController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DocumentEmailsController;
 use App\Http\Controllers\EstimatesController;
 use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\InvoicesController;
@@ -168,6 +169,7 @@ Route::middleware('auth')->group(function () {
 
         // Contract file routes
         Route::post('/contracts/{contract}/files', [ContractsController::class, 'uploadFiles'])->name('contracts.files.upload');
+        Route::post('/contracts/{contract}/email', [DocumentEmailsController::class, 'contract'])->name('contracts.email');
         Route::get('/contracts/{contract}/files/{file}/download', [ContractsController::class, 'downloadFile'])->name('contracts.files.download');
         Route::delete('/contracts/{contract}/files/{file}', [ContractsController::class, 'deleteFile'])->name('contracts.files.delete');
     });
@@ -180,6 +182,7 @@ Route::middleware('auth')->group(function () {
         ]);
 
         Route::get('/invoices/{invoice}/print', [InvoicesController::class, 'print'])->name('invoices.print');
+        Route::post('/invoices/{invoice}/email', [DocumentEmailsController::class, 'invoice'])->name('invoices.email');
 
         // PaymentsController (nested under invoices)
         Route::scopeBindings()->group(function () {
@@ -195,6 +198,7 @@ Route::middleware('auth')->group(function () {
             'index' => 'estimates',
         ]);
         Route::get('/estimates/{estimate}/print', [EstimatesController::class, 'print'])->name('estimates.print');
+        Route::post('/estimates/{estimate}/email', [DocumentEmailsController::class, 'estimate'])->name('estimates.email');
         Route::post('/estimates/{estimate}/convert-to-invoice', [EstimatesController::class, 'convertToInvoice'])->name('estimates.convert-to-invoice');
     });
 
@@ -261,6 +265,8 @@ Route::middleware('auth')->group(function () {
         // SettingsController (Localization)
         Route::get('/localization', [SettingsController::class, 'index'])->name('setup.localization');
         Route::put('/localization', [SettingsController::class, 'update'])->name('setup.localization.update');
+        Route::get('/billing', [SettingsController::class, 'billing'])->name('setup.billing');
+        Route::put('/billing', [SettingsController::class, 'updateBilling'])->name('setup.billing.update');
         // UsersController
         Route::delete('users/bulk-destroy', [UsersController::class, 'bulkDestroy'])->name('setup.users.bulk-destroy');
         // Users are created through the modal on the index page, so there is no

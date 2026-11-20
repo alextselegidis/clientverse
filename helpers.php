@@ -139,3 +139,25 @@ if (!function_exists('format_minutes')) {
         return intdiv($minutes, 60) . 'h ' . str_pad((string) ($minutes % 60), 2, '0', STR_PAD_LEFT) . 'm';
     }
 }
+
+if (!function_exists('email_template')) {
+    /**
+     * The subject and body for emailing a document ("invoice", "estimate" or
+     * "contract"), with {placeholders} filled in. Admins edit the templates under
+     * Setup; the defaults below apply until they do.
+     */
+    function email_template(string $type, array $values): array
+    {
+        $defaults = [
+            'subject' => __('email_template_' . $type . '_subject'),
+            'body' => __('email_template_' . $type . '_body'),
+        ];
+
+        $replace = collect($values)->mapWithKeys(fn ($value, $key) => ['{' . $key . '}' => (string) $value])->all();
+
+        return [
+            'subject' => strtr(setting($type . '_email_subject') ?: $defaults['subject'], $replace),
+            'body' => strtr(setting($type . '_email_body') ?: $defaults['body'], $replace),
+        ];
+    }
+}
