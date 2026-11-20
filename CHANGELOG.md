@@ -18,6 +18,7 @@
 - Per-user view, edit and delete permissions for each module, enforced on the web and API routes
 - Reports for invoiced and collected amounts, outstanding balances, time logged and tickets, with a CSV export
 - Goals that track invoicing, collections, new customers and won deals
+- Pages crossfade instead of flashing white, and a link starts loading while the pointer rests on it
 - Month calendar of due dates across tasks, milestones, invoices, contracts and deals
 - Knowledge base with a public page for published articles
 - Surveys with choice, rating and text questions and a results page

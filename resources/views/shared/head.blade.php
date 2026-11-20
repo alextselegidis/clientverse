@@ -31,3 +31,20 @@
 <link rel="stylesheet" href="vendor/bootstrap-icons/bootstrap-icons.min.css">
 <link rel="stylesheet" href="vendor/pace-js/pace-theme-flat-top.tmpl.css">
 <link rel="stylesheet" href="styles/clientverse.css?{{config('app.version')}}">
+
+{{-- Load a page while the pointer rests on its link, so the click feels instant. Laravel ignores
+     prefetch requests when tracking the previous URL, so redirect()->back() is unaffected. --}}
+<script type="speculationrules">
+    {
+        "prefetch": [{
+            "where": {
+                "and": [
+                    {"href_matches": "/*"},
+                    {"not": {"href_matches": ["/*/download", "/*/print", "/*.csv", "/logout"]}},
+                    {"not": {"selector_matches": "[download], [target=_blank], [data-no-prefetch]"}}
+                ]
+            },
+            "eagerness": "moderate"
+        }]
+    }
+</script>

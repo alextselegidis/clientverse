@@ -7,6 +7,27 @@
  * @license     https://opensource.org/licenses/GPL-3.0 - GPLv3
  * @link        https://clientverse.org
  * ---------------------------------------------------------------------------- */
+
+/* Page-to-page navigation crossfades instead of flashing white; the navbar stays put */
+@view-transition {
+    navigation: auto;
+}
+
+#header {
+    view-transition-name: header;
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation-duration: 0.15s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    @view-transition {
+        navigation: none;
+    }
+}
+
 /* Smooth transitions on interactive elements only */
 a,
 .btn,
