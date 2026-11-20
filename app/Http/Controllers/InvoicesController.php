@@ -80,8 +80,11 @@ class InvoicesController extends Controller
 
     public function print(Request $request, Invoice $invoice)
     {
-        return view('pages.invoices-print', [
-            'invoice' => $invoice->load('customer', 'items'),
+        return view('pages.document-print', [
+            'document' => $invoice->load('customer', 'items'),
+            'title' => __('invoice'),
+            'backUrl' => route('invoices.show', $invoice->id),
+            'dates' => [__('issue_date') => $invoice->issue_date, __('due_date') => $invoice->due_date],
         ]);
     }
 

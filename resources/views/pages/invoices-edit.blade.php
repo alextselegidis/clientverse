@@ -41,13 +41,6 @@
     @endif
 @endsection
 
-@php
-    // Old input wins after a failed save; otherwise the stored lines plus one blank row.
-    $lines = old('items', $invoice->itemRows());
-    $lines = array_values($lines);
-    $lines[] = ['description' => '', 'quantity' => 1, 'unit_price' => '', 'tax_rate' => 0];
-@endphp
-
 @section('content')
     <div class="card border-0 shadow-sm">
         <div class="card-body p-4">
@@ -121,35 +114,7 @@
                     </div>
                 </div>
 
-                <h6 class="mt-3 mb-2">{{ __('line_items') }}</h6>
-                <p class="form-text mt-0">{{ __('line_items_hint') }}</p>
-
-                <div class="table-responsive mb-2">
-                    <table class="table table-light-header align-middle mb-0">
-                        <thead>
-                        <tr>
-                            <th style="min-width: 220px;">{{ __('description') }}</th>
-                            <th style="width: 110px;">{{ __('quantity') }}</th>
-                            <th style="width: 140px;">{{ __('unit_price') }}</th>
-                            <th style="width: 110px;">{{ __('tax') }} %</th>
-                        </tr>
-                        </thead>
-                        <tbody id="invoice-lines">
-                        @foreach($lines as $i => $line)
-                            @include('shared.line-item', ['index' => $i, 'line' => $line])
-                        @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-                <template id="invoice-line-template">
-                    @include('shared.line-item', ['index' => '__INDEX__', 'line' => ['quantity' => 1, 'tax_rate' => 0]])
-                </template>
-
-                <button type="button" class="btn btn-sm btn-light border mb-4"
-                        data-add-row="invoice-line-template" data-target="invoice-lines">
-                    <i class="bi bi-plus me-1"></i>{{ __('add_line') }}
-                </button>
+                @include('shared.line-items-editor', ['document' => $invoice])
 
                 @if($invoice->exists)
                     @include('shared.document-totals', ['document' => $invoice, 'class' => 'mb-4'])
