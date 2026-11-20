@@ -122,6 +122,8 @@ Route::middleware('auth')->group(function () {
 
     // SalesController
     Route::delete('sales/bulk-destroy', [SalesController::class, 'bulkDestroy'])->name('sales.bulk-destroy');
+    Route::get('sales/board', [SalesController::class, 'board'])->name('sales.board');
+    Route::patch('sales/{sale}/stage', [SalesController::class, 'updateStage'])->name('sales.stage');
     Route::resource('sales', SalesController::class)->names([
         'index' => 'sales',
     ]);

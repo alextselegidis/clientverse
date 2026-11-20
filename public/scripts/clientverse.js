@@ -156,3 +156,35 @@ document.querySelectorAll('[data-catalog]').forEach(function (tbody) {
         }
     });
 });
+
+// Sales board: dropping a card on a column submits that card's stage form.
+document.querySelectorAll('.sales-board').forEach(function (board) {
+    let dragged = null;
+
+    board.addEventListener('dragstart', function (event) {
+        dragged = event.target.closest('[data-sale]');
+    });
+
+    board.querySelectorAll('[data-stage]').forEach(function (column) {
+        column.addEventListener('dragover', function (event) {
+            event.preventDefault();
+            column.classList.add('is-drop-target');
+        });
+
+        column.addEventListener('dragleave', function () {
+            column.classList.remove('is-drop-target');
+        });
+
+        column.addEventListener('drop', function (event) {
+            event.preventDefault();
+            column.classList.remove('is-drop-target');
+
+            const select = dragged?.querySelector('select[name="stage"]');
+
+            if (select && select.value !== column.dataset.stage) {
+                select.value = column.dataset.stage;
+                select.form.submit();
+            }
+        });
+    });
+});

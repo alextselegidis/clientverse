@@ -56,14 +56,37 @@ class SalesController extends Controller
         ]);
     }
 
+    public function board(Request $request)
+    {
+        $sales = Sale::with('customer')->orderByDesc('updated_at')->get()->groupBy('stage');
+
+        return view('pages.sales-board', [
+            'columns' => collect(Sale::stages())->map(fn ($label, $stage) => [
+                'label' => $label,
+                'sales' => $sales->get($stage, collect()),
+            ]),
+        ]);
+    }
+
+    public function updateStage(Request $request, Sale $sale)
+    {
+        $data = $request->validate([
+            'stage' => 'required|in:'.implode(',', array_keys(Sale::stages())),
+        ]);
+
+        $sale->update($data);
+
+        return redirect(route('sales.board'))->with('success', __('record_saved_message'));
+    }
+
     public function create(Request $request)
     {
-        $sale = new Sale();
-        
+        $sale = new Sale;
+
         if ($request->has('customer_id')) {
             $sale->customer_id = $request->query('customer_id');
         }
-        
+
         return view('pages.sales-edit', [
             'sale' => $sale,
             'customers' => Customer::toOptions(),

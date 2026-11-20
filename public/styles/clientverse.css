@@ -846,3 +846,22 @@ input.form-control,
         height: 2.5rem;
     }
 }
+
+/* Sales pipeline board: fixed-width columns that scroll sideways inside the page. */
+.sales-board {
+    overflow-x: auto;
+}
+
+.sales-board-column {
+    width: 260px;
+    min-height: 200px;
+    background: var(--cv-surface-muted);
+}
+
+.sales-board-column.is-drop-target {
+    outline: 2px dashed var(--bs-primary);
+}
+
+.sales-board .card[draggable='true'] {
+    cursor: grab;
+}

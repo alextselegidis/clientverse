@@ -22,6 +22,10 @@
 @endsection
 
 @section('navActions')
+    <a href="{{ route('sales.board') }}" class="nav-link me-lg-3">
+        <i class="bi bi-kanban me-2"></i>
+        {{ __('pipeline') }}
+    </a>
     <a href="{{ route('sales.create') }}" class="nav-link">
         <i class="bi bi-plus-square me-2"></i>
         {{ __('create') }}
