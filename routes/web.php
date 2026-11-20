@@ -34,11 +34,13 @@ use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\Public\PublicContractsController;
 use App\Http\Controllers\Public\KnowledgeBaseController;
 use App\Http\Controllers\Public\PublicDocumentsController;
+use App\Http\Controllers\Public\PublicSurveysController;
 use App\Http\Controllers\RecoveryController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\SurveysController;
 use App\Http\Controllers\TasksController;
 use App\Http\Controllers\TicketRepliesController;
 use App\Http\Controllers\TicketsController;
@@ -73,6 +75,8 @@ Route::middleware(['signed', 'throttle:30,1'])->prefix('p')->name('public.')->gr
     Route::get('/invoices/{invoice}', [PublicDocumentsController::class, 'invoice'])->name('invoices.show');
     Route::get('/estimates/{estimate}', [PublicDocumentsController::class, 'estimate'])->name('estimates.show');
     Route::post('/estimates/{estimate}', [PublicDocumentsController::class, 'respondToEstimate'])->name('estimates.respond');
+    Route::get('/surveys/{survey}', [PublicSurveysController::class, 'show'])->name('surveys.show');
+    Route::post('/surveys/{survey}', [PublicSurveysController::class, 'respond'])->name('surveys.respond');
 });
 
 // Public knowledge base: public articles only.
@@ -267,6 +271,13 @@ Route::middleware('auth')->group(function () {
         // ArticlesController
         Route::resource('articles', ArticlesController::class)->names([
             'index' => 'articles',
+        ]);
+    });
+
+    Route::middleware(CheckPermission::class . ':surveys')->group(function () {
+        // SurveysController
+        Route::resource('surveys', SurveysController::class)->names([
+            'index' => 'surveys',
         ]);
     });
 

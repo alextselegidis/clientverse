@@ -510,5 +510,20 @@
     "amount_collected": "Amount collected",
     "new_customers": "New customers",
     "won_deals": "Won deals",
-    "goal_currency_hint": "For invoiced and collected goals."
+    "goal_currency_hint": "For invoiced and collected goals.",
+    "survey": "Survey",
+    "surveys": "Surveys",
+    "responses": "Responses",
+    "question": "Question",
+    "questions": "Questions",
+    "add_question": "Add question",
+    "questions_hint": "For a choice question, type one option per line. Clear a question to remove it.",
+    "question_type_text": "Text",
+    "question_type_choice": "Choice",
+    "question_type_rating": "Rating 1-5",
+    "accepting_responses": "Accepting responses",
+    "survey_link_hint": "Share this link to collect responses:",
+    "survey_thanks_message": "Thank you for your answers.",
+    "survey_closed_message": "This survey is no longer accepting responses.",
+    "response_count": ":count response|:count responses"
 }

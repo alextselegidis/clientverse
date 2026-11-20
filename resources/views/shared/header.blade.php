@@ -33,9 +33,9 @@
                                 </a>
                             </li>
                             <!-- Customers -->
-                            @if(Auth::user()->hasPermission('customers') || Auth::user()->hasPermission('tickets') || Auth::user()->hasPermission('articles'))
+                            @if(Auth::user()->hasPermission('customers') || Auth::user()->hasPermission('tickets') || Auth::user()->hasPermission('articles') || Auth::user()->hasPermission('surveys'))
                             <li class="nav-item dropdown">
-                                <a class="nav-link nav-menu-item dropdown-toggle text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('customers*', 'tickets*', 'articles*') ? 'fw-bold' : '' }}"
+                                <a class="nav-link nav-menu-item dropdown-toggle text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('customers*', 'tickets*', 'articles*', 'surveys*') ? 'fw-bold' : '' }}"
                                    href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-people me-2"></i>
                                     {{ __('customers') }}
@@ -59,6 +59,13 @@
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('articles*') ? 'active' : '' }}" href="{{ route('articles') }}">
                                             <i class="bi bi-journal-text me-2"></i>{{ __('knowledge_base') }}
+                                        </a>
+                                    </li>
+                                    @endif
+                                    @if(Auth::user()->hasPermission('surveys'))
+                                    <li>
+                                        <a class="dropdown-item {{ request()->routeIs('surveys*') ? 'active' : '' }}" href="{{ route('surveys') }}">
+                                            <i class="bi bi-ui-checks me-2"></i>{{ __('surveys') }}
                                         </a>
                                     </li>
                                     @endif
