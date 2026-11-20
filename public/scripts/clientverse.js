@@ -123,3 +123,17 @@ document.addEventListener('show.bs.dropdown', function (event) {
         }
     });
 })();
+
+// Repeatable form rows: <button data-add-row="template-id" data-target="tbody-id">.
+// Every "__INDEX__" in the template becomes a fresh index so input names stay unique.
+document.querySelectorAll('[data-add-row]').forEach(function (button) {
+    const template = document.getElementById(button.dataset.addRow);
+    const target = document.getElementById(button.dataset.target);
+    let index = target.children.length;
+
+    button.addEventListener('click', function () {
+        const html = template.innerHTML.replaceAll('__INDEX__', String(index++));
+        target.insertAdjacentHTML('beforeend', html);
+        target.lastElementChild.querySelector('input')?.focus();
+    });
+});

@@ -17,6 +17,7 @@ use App\Http\Controllers\ContractsController;
 use App\Http\Controllers\CustomerNotesController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\MilestonesController;
@@ -134,6 +135,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/contracts/{contract}/files', [ContractsController::class, 'uploadFiles'])->name('contracts.files.upload');
     Route::get('/contracts/{contract}/files/{file}/download', [ContractsController::class, 'downloadFile'])->name('contracts.files.download');
     Route::delete('/contracts/{contract}/files/{file}', [ContractsController::class, 'deleteFile'])->name('contracts.files.delete');
+
+    // InvoicesController
+    Route::delete('invoices/bulk-destroy', [InvoicesController::class, 'bulkDestroy'])->name('invoices.bulk-destroy');
+    Route::resource('invoices', InvoicesController::class)->names([
+        'index' => 'invoices',
+    ]);
 
     // Setup routes (Admin only)
     Route::middleware(AdminMiddleware::class)->prefix('setup')->group(function () {

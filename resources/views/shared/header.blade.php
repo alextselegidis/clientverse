@@ -60,6 +60,13 @@
                                     {{ __('contracts') }}
                                 </a>
                             </li>
+                            <!-- Invoices -->
+                            <li class="nav-item">
+                                <a class="nav-link nav-menu-item text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('invoices*') ? 'fw-bold' : '' }}" href="{{ route('invoices') }}">
+                                    <i class="bi bi-receipt me-2"></i>
+                                    {{ __('invoices') }}
+                                </a>
+                            </li>
                         </ul>
                         <!-- Global Search -->
                         <ul class="navbar-nav me-lg-2">

@@ -375,5 +375,20 @@
     "unpaid": "Unpaid",
     "paid": "Paid",
     "partially_paid": "Partially Paid",
-    "overdue": "Overdue"
+    "overdue": "Overdue",
+    "total": "Total",
+    "sent": "Sent",
+    "assigned_automatically": "Assigned automatically",
+    "issue_date": "Issue Date",
+    "line_items": "Line Items",
+    "line_items_hint": "Clear a line's description to remove it.",
+    "quantity": "Quantity",
+    "unit_price": "Unit Price",
+    "tax": "Tax",
+    "add_line": "Add line",
+    "subtotal": "Subtotal",
+    "terms": "Terms",
+    "amount": "Amount",
+    "amount_paid": "Amount Paid",
+    "balance_due": "Balance Due"
 }
