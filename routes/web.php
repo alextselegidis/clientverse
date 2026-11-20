@@ -12,6 +12,7 @@
 
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\ArticlesController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\ContractsController;
@@ -30,6 +31,7 @@ use App\Http\Controllers\MilestonesController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\Public\PublicContractsController;
+use App\Http\Controllers\Public\KnowledgeBaseController;
 use App\Http\Controllers\Public\PublicDocumentsController;
 use App\Http\Controllers\RecoveryController;
 use App\Http\Controllers\ReportsController;
@@ -70,6 +72,12 @@ Route::middleware(['signed', 'throttle:30,1'])->prefix('p')->name('public.')->gr
     Route::get('/invoices/{invoice}', [PublicDocumentsController::class, 'invoice'])->name('invoices.show');
     Route::get('/estimates/{estimate}', [PublicDocumentsController::class, 'estimate'])->name('estimates.show');
     Route::post('/estimates/{estimate}', [PublicDocumentsController::class, 'respondToEstimate'])->name('estimates.respond');
+});
+
+// Public knowledge base: public articles only.
+Route::middleware('throttle:60,1')->group(function () {
+    Route::get('/kb', [KnowledgeBaseController::class, 'index'])->name('kb');
+    Route::get('/kb/{slug}', [KnowledgeBaseController::class, 'show'])->name('kb.show');
 });
 
 // Auth
@@ -252,6 +260,13 @@ Route::middleware('auth')->group(function () {
             'index' => 'expenses',
         ]);
         Route::post('/expenses/{expense}/bill', [ExpensesController::class, 'bill'])->name('expenses.bill');
+    });
+
+    Route::middleware(CheckPermission::class . ':articles')->group(function () {
+        // ArticlesController
+        Route::resource('articles', ArticlesController::class)->names([
+            'index' => 'articles',
+        ]);
     });
 
     // ReportsController

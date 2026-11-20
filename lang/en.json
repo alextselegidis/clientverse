@@ -494,5 +494,11 @@
     "body": "Body",
     "send_by_email": "Send by email",
     "document_emailed_message": "Emailed to :email.",
-    "customer_has_no_email_message": "The customer has no email address on file."
+    "customer_has_no_email_message": "The customer has no email address on file.",
+    "knowledge_base": "Knowledge Base",
+    "article": "Article",
+    "articles": "Articles",
+    "public": "Public",
+    "markdown_hint": "Markdown: **bold**, # headings, - lists, [links](https://example.com).",
+    "publish_in_public_kb": "Publish in the public knowledge base"
 }

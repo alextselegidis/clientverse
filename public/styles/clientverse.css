@@ -917,3 +917,16 @@ input.form-control,
     color: var(--bs-primary-text-emphasis);
     text-decoration: none;
 }
+
+/* Knowledge base articles render Markdown; keep images and code inside the column. */
+.kb-article img {
+    max-width: 100%;
+    height: auto;
+}
+
+.kb-article pre {
+    padding: 1rem;
+    background: var(--cv-surface-muted);
+    border-radius: var(--bs-border-radius);
+    overflow-x: auto;
+}
