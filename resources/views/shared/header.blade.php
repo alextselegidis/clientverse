@@ -103,9 +103,9 @@
                             </li>
                             @endif
                             <!-- Billing -->
-                            @if(Auth::user()->hasPermission('invoices') || Auth::user()->hasPermission('estimates') || Auth::user()->hasPermission('items'))
+                            @if(Auth::user()->hasPermission('invoices') || Auth::user()->hasPermission('estimates') || Auth::user()->hasPermission('items') || Auth::user()->hasPermission('reports'))
                             <li class="nav-item dropdown">
-                                <a class="nav-link nav-menu-item dropdown-toggle text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('invoices*', 'estimates*', 'items*') ? 'fw-bold' : '' }}"
+                                <a class="nav-link nav-menu-item dropdown-toggle text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('invoices*', 'estimates*', 'items*', 'reports*') ? 'fw-bold' : '' }}"
                                    href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-receipt me-2"></i>
                                     {{ __('billing') }}
@@ -129,6 +129,14 @@
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('items*') ? 'active' : '' }}" href="{{ route('items') }}">
                                             <i class="bi bi-box me-2"></i>{{ __('items') }}
+                                        </a>
+                                    </li>
+                                    @endif
+                                    @if(Auth::user()->hasPermission('reports'))
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <a class="dropdown-item {{ request()->routeIs('reports*') ? 'active' : '' }}" href="{{ route('reports') }}">
+                                            <i class="bi bi-bar-chart me-2"></i>{{ __('reports') }}
                                         </a>
                                     </li>
                                     @endif

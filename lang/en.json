@@ -436,5 +436,16 @@
     "no_email_on_file": "no email on file",
     "module": "Module",
     "restrict_access": "Restrict access to the modules ticked below",
-    "restrict_access_hint": "Admins always have full access. Creating a record counts as editing."
+    "restrict_access_hint": "Admins always have full access. Creating a record counts as editing.",
+    "reports": "Reports",
+    "export_payments": "Export payments",
+    "from": "From",
+    "invoiced_and_collected": "Invoiced and collected",
+    "month": "Month",
+    "invoiced": "Invoiced",
+    "collected": "Collected",
+    "outstanding_by_customer": "Outstanding by customer",
+    "invoice_count": ":count invoice|:count invoices",
+    "opened": "Opened",
+    "open_now": "Open now"
 }

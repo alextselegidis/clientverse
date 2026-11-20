@@ -26,6 +26,7 @@ use App\Http\Controllers\MilestonesController;
 use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\RecoveryController;
+use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SettingsController;
@@ -210,6 +211,12 @@ Route::middleware('auth')->group(function () {
             'index' => 'tickets',
         ]);
         Route::post('/tickets/{ticket}/replies', [TicketRepliesController::class, 'store'])->name('tickets.replies.store');
+    });
+
+    // ReportsController
+    Route::middleware(CheckPermission::class . ':reports')->group(function () {
+        Route::get('/reports', [ReportsController::class, 'index'])->name('reports');
+        Route::get('/reports/payments.csv', [ReportsController::class, 'paymentsCsv'])->name('reports.payments-csv');
     });
 
     // Setup routes (Admin only)
