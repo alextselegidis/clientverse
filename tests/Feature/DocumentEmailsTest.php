@@ -63,4 +63,17 @@ class DocumentEmailsTest extends TestCase
         $this->assertSame('draft', $invoice->fresh()->status);
         Notification::assertNothingSent();
     }
+
+    public function test_a_failed_send_leaves_the_draft_alone_and_says_so(): void
+    {
+        Notification::shouldReceive('route->notify')->andThrow(new \RuntimeException('SMTP down'));
+
+        $invoice = Invoice::create(['customer_id' => Customer::create(['name' => 'Jane', 'email' => 'jane@acme.test'])->id, 'status' => 'draft']);
+
+        $this->actingAs(User::factory()->create())
+            ->post(route('invoices.email', $invoice))
+            ->assertSessionHas('error', __('email_failed_message'));
+
+        $this->assertSame('draft', $invoice->fresh()->status);
+    }
 }

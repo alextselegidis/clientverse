@@ -18,68 +18,63 @@ use App\Models\Estimate;
 use App\Models\Invoice;
 use App\Notifications\DocumentEmail;
 use Illuminate\Support\Facades\Notification;
+use Throwable;
 
 /**
  * Emails a document's customer link to the customer. A draft becomes "sent"
- * first, since drafts have no public page.
+ * once the email has gone out, since drafts have no public page.
  */
 class DocumentEmailsController extends Controller
 {
     public function invoice(Invoice $invoice)
     {
-        return $this->send($invoice->customer, 'invoice', function () use ($invoice) {
-            if ($invoice->status === 'draft') {
-                $invoice->update(['status' => 'sent']);
-            }
-
-            return [
-                'number' => $invoice->number,
-                'total' => format_currency($invoice->total, $invoice->currency),
-                'due_date' => $invoice->due_date?->format('M d, Y') ?? '-',
-                'link' => $invoice->publicUrl(),
-            ];
-        });
+        return $this->send($invoice->customer, 'invoice', [
+            'number' => $invoice->number,
+            'total' => format_currency($invoice->total, $invoice->currency),
+            'due_date' => $invoice->due_date?->format('M d, Y') ?? '-',
+            'link' => $invoice->publicUrl(),
+        ], fn () => $invoice->status === 'draft' && $invoice->update(['status' => 'sent']));
     }
 
     public function estimate(Estimate $estimate)
     {
-        return $this->send($estimate->customer, 'estimate', function () use ($estimate) {
-            if ($estimate->status === 'draft') {
-                $estimate->update(['status' => 'sent']);
-            }
-
-            return [
-                'number' => $estimate->number,
-                'total' => format_currency($estimate->total, $estimate->currency),
-                'link' => $estimate->publicUrl(),
-            ];
-        });
+        return $this->send($estimate->customer, 'estimate', [
+            'number' => $estimate->number,
+            'total' => format_currency($estimate->total, $estimate->currency),
+            'link' => $estimate->publicUrl(),
+        ], fn () => $estimate->status === 'draft' && $estimate->update(['status' => 'sent']));
     }
 
     public function contract(Contract $contract)
     {
-        return $this->send($contract->customer, 'contract', fn () => [
+        return $this->send($contract->customer, 'contract', [
             'title' => $contract->title,
             'link' => $contract->signingUrl(),
         ]);
     }
 
-    /**
-     * $values runs only once the customer is known to have an email address,
-     * so a draft is not marked sent when nothing goes out.
-     */
-    private function send(?Customer $customer, string $type, callable $values)
+    private function send(?Customer $customer, string $type, array $values, ?callable $afterSending = null)
     {
         if (blank($customer?->email)) {
             return back()->with('error', __('customer_has_no_email_message'));
         }
 
-        $template = email_template($type, $values() + [
+        $template = email_template($type, $values + [
             'customer' => $customer->name,
             'company' => setting('company_name') ?: config('app.name'),
         ]);
 
-        Notification::route('mail', $customer->email)->notify(new DocumentEmail($template['subject'], $template['body']));
+        try {
+            Notification::route('mail', $customer->email)->notify(new DocumentEmail($template['subject'], $template['body']));
+        } catch (Throwable $exception) {
+            report($exception);
+
+            return back()->with('error', __('email_failed_message'));
+        }
+
+        if ($afterSending) {
+            $afterSending();
+        }
 
         return back()->with('success', __('document_emailed_message', ['email' => $customer->email]));
     }
