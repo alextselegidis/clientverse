@@ -25,7 +25,7 @@ class SurveysController extends Controller
 
     public function create()
     {
-        return view('pages.surveys-edit', ['survey' => new Survey(['is_open' => true, 'questions' => []])]);
+        return view('pages.surveys-edit', ['survey' => new Survey(['is_open' => true, 'questions' => []]), 'locked' => false]);
     }
 
     public function store(Request $request)
@@ -42,12 +42,20 @@ class SurveysController extends Controller
 
     public function edit(Survey $survey)
     {
-        return view('pages.surveys-edit', ['survey' => $survey]);
+        return view('pages.surveys-edit', ['survey' => $survey, 'locked' => $survey->responses()->exists()]);
     }
 
     public function update(Request $request, Survey $survey)
     {
-        $survey->update($this->validateSurvey($request));
+        $data = $this->validateSurvey($request);
+
+        // Answers are stored by question position, so once anyone has answered,
+        // the questions stay as they are and only the title and status change.
+        if ($survey->responses()->exists()) {
+            unset($data['questions']);
+        }
+
+        $survey->update($data);
 
         return redirect(route('surveys.show', $survey->id))->with('success', __('record_saved_message'));
     }

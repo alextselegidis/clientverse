@@ -63,4 +63,21 @@ class SurveysTest extends TestCase
         auth()->logout();
         $this->post($url, ['answers' => [1]])->assertNotFound();
     }
+
+    public function test_questions_lock_once_answered_and_odd_answers_do_not_break_results(): void
+    {
+        $survey = Survey::create(['title' => 'S', 'questions' => [['text' => 'Rate', 'type' => 'rating', 'options' => []]]]);
+        $survey->responses()->create(['answers' => [4]]);
+        $survey->responses()->create(['answers' => ['not a number']]);
+
+        $this->actingAs(User::factory()->create())
+            ->put(route('surveys.update', $survey), ['title' => 'Renamed', 'questions' => [['text' => 'Other', 'type' => 'text']]])
+            ->assertSessionHasNoErrors();
+
+        $survey->refresh();
+        $this->assertSame('Renamed', $survey->title);
+        $this->assertSame('Rate', $survey->questions[0]['text']);
+        $this->assertSame(4.0, $survey->results()[0]['average']);
+        $this->actingAs(User::factory()->create())->get(route('surveys.edit', $survey))->assertOk()->assertSee(__('questions_locked_hint'));
+    }
 }

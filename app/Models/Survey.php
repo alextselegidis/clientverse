@@ -57,7 +57,11 @@ class Survey extends Model
 
             return $question + match ($question['type']) {
                 'choice' => ['counts' => collect($question['options'])->mapWithKeys(fn ($option) => [$option => $given->filter(fn ($answer) => $answer === $option)->count()])->all()],
-                'rating' => ['average' => $given->isEmpty() ? null : round($given->avg(), 1), 'count' => $given->count()],
+                'rating' => (function () use ($given) {
+                    $numbers = $given->filter(fn ($answer) => is_numeric($answer));
+
+                    return ['average' => $numbers->isEmpty() ? null : round($numbers->avg(), 1), 'count' => $numbers->count()];
+                })(),
                 default => ['texts' => $given->values()->all()],
             };
         })->all();

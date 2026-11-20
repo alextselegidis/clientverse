@@ -528,5 +528,6 @@
     "response_count": ":count response|:count responses",
     "email_failed_message": "The email could not be sent. Check the mail settings and try again.",
     "reply_saved_email_failed_message": "The reply is saved, but the email to the customer could not be sent.",
-    "amount_too_large_message": "The total is too large."
+    "amount_too_large_message": "The total is too large.",
+    "questions_locked_hint": "This survey has responses, so its questions can no longer change. Create a new survey to ask different questions."
 }

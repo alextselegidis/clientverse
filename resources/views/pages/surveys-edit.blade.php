@@ -51,30 +51,40 @@
                     <label for="is_open" class="form-check-label">{{ __('accepting_responses') }}</label>
                 </div>
 
-                <h6 class="mb-1">{{ __('questions') }}</h6>
-                <p class="form-text mt-0">{{ __('questions_hint') }}</p>
-                <div class="table-responsive mb-2">
-                    <table class="table table-light-header align-middle mb-0">
-                        <thead>
-                        <tr>
-                            <th style="min-width: 240px;">{{ __('question') }}</th>
-                            <th style="width: 150px;">{{ __('type') }}</th>
-                            <th style="min-width: 200px;">{{ __('options') }}</th>
-                        </tr>
-                        </thead>
-                        <tbody id="survey-questions">
-                        @foreach($questions as $i => $question)
-                            @include('shared.survey-question', ['index' => $i, 'question' => $question])
+                @if($locked)
+                    <h6 class="mb-1">{{ __('questions') }}</h6>
+                    <p class="form-text mt-0">{{ __('questions_locked_hint') }}</p>
+                    <ol class="mb-0">
+                        @foreach($survey->questions as $question)
+                            <li>{{ $question['text'] }} <span class="text-muted small">({{ __('question_type_' . $question['type']) }})</span></li>
                         @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <template id="survey-question-template">
-                    @include('shared.survey-question', ['index' => '__INDEX__', 'question' => []])
-                </template>
-                <button type="button" class="btn btn-sm btn-light border" data-add-row="survey-question-template" data-target="survey-questions">
-                    <i class="bi bi-plus me-1"></i>{{ __('add_question') }}
-                </button>
+                    </ol>
+                @else
+                    <h6 class="mb-1">{{ __('questions') }}</h6>
+                    <p class="form-text mt-0">{{ __('questions_hint') }}</p>
+                    <div class="table-responsive mb-2">
+                        <table class="table table-light-header align-middle mb-0">
+                            <thead>
+                            <tr>
+                                <th style="min-width: 240px;">{{ __('question') }}</th>
+                                <th style="width: 150px;">{{ __('type') }}</th>
+                                <th style="min-width: 200px;">{{ __('options') }}</th>
+                            </tr>
+                            </thead>
+                            <tbody id="survey-questions">
+                            @foreach($questions as $i => $question)
+                                @include('shared.survey-question', ['index' => $i, 'question' => $question])
+                            @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                    <template id="survey-question-template">
+                        @include('shared.survey-question', ['index' => '__INDEX__', 'question' => []])
+                    </template>
+                    <button type="button" class="btn btn-sm btn-light border" data-add-row="survey-question-template" data-target="survey-questions">
+                        <i class="bi bi-plus me-1"></i>{{ __('add_question') }}
+                    </button>
+                @endif
 
                 @include('shared.errors', ['class' => 'mt-3 mb-0'])
             </form>
