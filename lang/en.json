@@ -369,5 +369,11 @@
     "view_all": "View all",
     "cannot_delete_current_user": "You cannot delete your own account.",
     "confirm_password": "Confirm Password",
-    "enter_new_password_message": "Choose a new password for your account."
+    "enter_new_password_message": "Choose a new password for your account.",
+    "invoice": "Invoice",
+    "invoices": "Invoices",
+    "unpaid": "Unpaid",
+    "paid": "Paid",
+    "partially_paid": "Partially Paid",
+    "overdue": "Overdue"
 }
