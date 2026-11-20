@@ -416,5 +416,13 @@
     "low": "Low",
     "normal": "Normal",
     "high": "High",
-    "assigned_to_me": "Assigned to me"
+    "assigned_to_me": "Assigned to me",
+    "time_logged": "Time Logged",
+    "start_timer": "Start timer",
+    "stop_timer": "Stop timer",
+    "since": "since",
+    "running": "Running",
+    "start": "Start",
+    "end": "End",
+    "log_time": "Log time"
 }

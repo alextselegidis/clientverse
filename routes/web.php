@@ -30,6 +30,7 @@ use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\TasksController;
+use App\Http\Controllers\TimeEntriesController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Middleware\AdminMiddleware;
@@ -174,6 +175,14 @@ Route::middleware('auth')->group(function () {
     Route::resource('tasks', TasksController::class)->names([
         'index' => 'tasks',
     ]);
+
+    // TimeEntriesController (nested under tasks)
+    Route::scopeBindings()->group(function () {
+        Route::post('/tasks/{task}/timer', [TimeEntriesController::class, 'start'])->name('tasks.timer.start');
+        Route::post('/tasks/{task}/timer/stop', [TimeEntriesController::class, 'stop'])->name('tasks.timer.stop');
+        Route::post('/tasks/{task}/time-entries', [TimeEntriesController::class, 'store'])->name('tasks.time-entries.store');
+        Route::delete('/tasks/{task}/time-entries/{timeEntry}', [TimeEntriesController::class, 'destroy'])->name('tasks.time-entries.destroy');
+    });
 
     // Setup routes (Admin only)
     Route::middleware(AdminMiddleware::class)->prefix('setup')->group(function () {

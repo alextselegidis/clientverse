@@ -15,6 +15,7 @@ namespace Tests\Feature;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Carbon;
 use Tests\TestCase;
 
 class TasksControllerTest extends TestCase
@@ -48,5 +49,39 @@ class TasksControllerTest extends TestCase
         $this->actingAs($user)
             ->post(route('tasks.store'), ['title' => 'Bad', 'status' => 'nope', 'priority' => 'normal'])
             ->assertSessionHasErrors('status');
+    }
+
+    public function test_one_timer_runs_per_person_and_entries_stay_on_their_task(): void
+    {
+        Carbon::setTestNow('2026-11-21 12:00:00');
+
+        $user = User::factory()->create();
+        $first = Task::create(['title' => 'First']);
+        $second = Task::create(['title' => 'Second']);
+
+        $this->actingAs($user)->post(route('tasks.timer.start', $first));
+        $this->actingAs($user)->post(route('tasks.timer.start', $second));
+
+        $this->assertSame(0, $first->timeEntries()->running()->count());
+        $this->assertSame(1, $second->timeEntries()->running()->count());
+        $this->actingAs($user)->get(route('tasks.show', $second))->assertOk()->assertSee(__('stop_timer'));
+
+        $this->actingAs($user)->post(route('tasks.timer.stop', $second));
+        $this->assertSame(0, $second->timeEntries()->running()->count());
+
+        $this->actingAs($user)
+            ->post(route('tasks.time-entries.store', $first), ['started_at' => '2026-11-20T09:00', 'ended_at' => '2026-11-20T08:00'])
+            ->assertSessionHasErrors('ended_at');
+
+        $this->actingAs($user)
+            ->post(route('tasks.time-entries.store', $first), ['started_at' => '2026-11-20T09:00', 'ended_at' => '2026-11-20T11:00'])
+            ->assertSessionHasNoErrors();
+
+        $entry = $first->timeEntries()->whereDate('started_at', '2026-11-20')->sole();
+        $this->assertSame(120, $entry->minutes);
+
+        $this->actingAs($user)->delete(route('tasks.time-entries.destroy', [$second, $entry]))->assertNotFound();
+        $this->actingAs($user)->delete(route('tasks.time-entries.destroy', [$first, $entry]));
+        $this->assertNull($entry->fresh());
     }
 }
