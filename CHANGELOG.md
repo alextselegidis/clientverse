@@ -5,6 +5,22 @@
 ### Added
 
 - Latest blog posts from clientverse.org on the About page, read once a day and cached
+- Invoices with line items, tax, payments and a derived status (unpaid, partially paid, paid, overdue)
+- Estimates that convert into a draft invoice, and credit notes that reduce the balance of an invoice
+- Items catalog that fills the price and tax of invoice and estimate lines
+- Printable invoices, estimates and credit notes that save to PDF from the browser
+- Signed customer links: view an invoice, accept or decline an estimate, sign a contract, answer a survey
+- Emailing invoices, estimates and contracts to the customer from templates edited under Setup
+- Expenses, optionally billed to a customer on a new draft invoice
+- Pipeline board that moves deals between stages by dragging or with a stage menu
+- Tasks with priorities, assignees and time tracking by timer or manual entry
+- Support tickets with a reply thread and an optional email to the customer
+- Per-user view, edit and delete permissions for each module, enforced on the web and API routes
+- Reports for invoiced and collected amounts, outstanding balances, time logged and tickets, with a CSV export
+- Goals that track invoicing, collections, new customers and won deals
+- Month calendar of due dates across tasks, milestones, invoices, contracts and deals
+- Knowledge base with a public page for published articles
+- Surveys with choice, rating and text questions and a results page
 
 ### Changed
 
@@ -14,6 +30,7 @@
 
 ### Fixed
 
+- Customer dropdowns failed on SQLite because their labels were built with MySQL-only `IF()`
 - Incorrect `http://` URLs when deployed behind a reverse proxy; proxies are now trusted via the `TRUSTED_PROXIES` env var (#19)
 - Row action dropdown items were 30px tall on a phone instead of the intended 40px
 - `mailto:`/`tel:`, sort and breadcrumb links now reach the intended 40px touch target below 992px
