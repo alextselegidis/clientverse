@@ -396,5 +396,8 @@
     "method": "Method",
     "reference": "Reference",
     "bank_transfer": "Bank transfer",
-    "record_payment": "Record payment"
+    "record_payment": "Record payment",
+    "print": "Print",
+    "print_or_save_pdf": "Print / Save as PDF",
+    "bill_to": "Bill To"
 }

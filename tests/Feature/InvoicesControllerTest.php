@@ -103,4 +103,16 @@ class InvoicesControllerTest extends TestCase
             ->post(route('invoices.payments.store', $invoice), ['amount' => -5, 'paid_on' => '2026-11-20'])
             ->assertSessionHasErrors('amount');
     }
+
+    public function test_the_printable_invoice_shows_the_customer_and_lines(): void
+    {
+        $customer = Customer::create(['name' => 'Jane', 'company' => 'Acme Ltd', 'vat_id' => 'EL123']);
+        $invoice = Invoice::create(['customer_id' => $customer->id, 'status' => 'sent', 'currency' => 'EUR']);
+        $invoice->syncItems([['description' => 'Support plan', 'quantity' => 2, 'unit_price' => 75]]);
+
+        $this->actingAs(User::factory()->create())
+            ->get(route('invoices.print', $invoice))
+            ->assertOk()
+            ->assertSee(['Acme Ltd', 'EL123', 'Support plan', $invoice->number]);
+    }
 }

@@ -23,6 +23,10 @@
 @endsection
 
 @section('navActions')
+    <a href="{{ route('invoices.print', $invoice->id) }}" class="nav-link me-lg-3" target="_blank">
+        <i class="bi bi-printer me-2"></i>
+        {{ __('print') }}
+    </a>
     <a href="{{ route('invoices.edit', $invoice->id) }}" class="nav-link me-lg-3">
         <i class="bi bi-pencil me-2"></i>
         {{ __('edit') }}

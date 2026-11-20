@@ -143,6 +143,8 @@ Route::middleware('auth')->group(function () {
         'index' => 'invoices',
     ]);
 
+    Route::get('/invoices/{invoice}/print', [InvoicesController::class, 'print'])->name('invoices.print');
+
     // PaymentsController (nested under invoices)
     Route::scopeBindings()->group(function () {
         Route::post('/invoices/{invoice}/payments', [PaymentsController::class, 'store'])->name('invoices.payments.store');

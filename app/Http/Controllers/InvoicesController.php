@@ -78,6 +78,13 @@ class InvoicesController extends Controller
         ]);
     }
 
+    public function print(Request $request, Invoice $invoice)
+    {
+        return view('pages.invoices-print', [
+            'invoice' => $invoice->load('customer', 'items'),
+        ]);
+    }
+
     public function edit(Request $request, Invoice $invoice)
     {
         return view('pages.invoices-edit', [
