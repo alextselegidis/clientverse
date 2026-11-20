@@ -415,5 +415,6 @@
     "priority": "Priority",
     "low": "Low",
     "normal": "Normal",
-    "high": "High"
+    "high": "High",
+    "assigned_to_me": "Assigned to me"
 }

@@ -40,11 +40,24 @@
                                 </a>
                             </li>
                             <!-- Projects -->
-                            <li class="nav-item">
-                                <a class="nav-link nav-menu-item text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('projects*') ? 'fw-bold' : '' }}" href="{{ route('projects') }}">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link nav-menu-item dropdown-toggle text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('projects*', 'tasks*') ? 'fw-bold' : '' }}"
+                                   href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-kanban me-2"></i>
                                     {{ __('projects') }}
                                 </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <a class="dropdown-item {{ request()->routeIs('projects*') ? 'active' : '' }}" href="{{ route('projects') }}">
+                                            <i class="bi bi-kanban me-2"></i>{{ __('projects') }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item {{ request()->routeIs('tasks*') ? 'active' : '' }}" href="{{ route('tasks') }}">
+                                            <i class="bi bi-check2-square me-2"></i>{{ __('tasks') }}
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                             <!-- Sales -->
                             <li class="nav-item">

@@ -29,6 +29,7 @@ use App\Http\Controllers\RecoveryController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\TasksController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Middleware\AdminMiddleware;
@@ -166,6 +167,12 @@ Route::middleware('auth')->group(function () {
     // ItemsController
     Route::resource('items', ItemsController::class)->except('show')->names([
         'index' => 'items',
+    ]);
+
+    // TasksController
+    Route::delete('tasks/bulk-destroy', [TasksController::class, 'bulkDestroy'])->name('tasks.bulk-destroy');
+    Route::resource('tasks', TasksController::class)->names([
+        'index' => 'tasks',
     ]);
 
     // Setup routes (Admin only)
