@@ -62,7 +62,7 @@
                             </li>
                             <!-- Billing -->
                             <li class="nav-item dropdown">
-                                <a class="nav-link nav-menu-item dropdown-toggle text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('invoices*', 'estimates*') ? 'fw-bold' : '' }}"
+                                <a class="nav-link nav-menu-item dropdown-toggle text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('invoices*', 'estimates*', 'items*') ? 'fw-bold' : '' }}"
                                    href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-receipt me-2"></i>
                                     {{ __('billing') }}
@@ -76,6 +76,11 @@
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('estimates*') ? 'active' : '' }}" href="{{ route('estimates') }}">
                                             <i class="bi bi-file-earmark-ruled me-2"></i>{{ __('estimates') }}
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item {{ request()->routeIs('items*') ? 'active' : '' }}" href="{{ route('items') }}">
+                                            <i class="bi bi-box me-2"></i>{{ __('items') }}
                                         </a>
                                     </li>
                                 </ul>

@@ -14,6 +14,8 @@
     // Old input wins after a failed save; otherwise the stored lines plus one blank row.
     $lines = array_values(old('items', $document->itemRows()));
     $lines[] = ['description' => '', 'quantity' => 1, 'unit_price' => '', 'tax_rate' => 0];
+    // ponytail: the whole catalog goes into a <datalist>; switch to a search endpoint past a few thousand items.
+    $catalog = \App\Models\Item::orderBy('description')->get();
 @endphp
 <h6 class="mt-3 mb-2">{{ __('line_items') }}</h6>
 <p class="form-text mt-0">{{ __('line_items_hint') }}</p>
@@ -28,7 +30,7 @@
             <th style="width: 110px;">{{ __('tax') }} %</th>
         </tr>
         </thead>
-        <tbody id="line-items">
+        <tbody id="line-items" data-catalog="item-catalog">
         @foreach($lines as $i => $line)
             @include('shared.line-item', ['index' => $i, 'line' => $line])
         @endforeach
@@ -44,3 +46,9 @@
         data-add-row="line-item-template" data-target="line-items">
     <i class="bi bi-plus me-1"></i>{{ __('add_line') }}
 </button>
+
+<datalist id="item-catalog">
+    @foreach($catalog as $item)
+        <option value="{{ $item->description }}" data-unit-price="{{ $item->unit_price }}" data-tax-rate="{{ $item->tax_rate }}"></option>
+    @endforeach
+</datalist>

@@ -19,6 +19,7 @@ use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EstimatesController;
 use App\Http\Controllers\InvoicesController;
+use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\MilestonesController;
@@ -159,6 +160,11 @@ Route::middleware('auth')->group(function () {
     ]);
     Route::get('/estimates/{estimate}/print', [EstimatesController::class, 'print'])->name('estimates.print');
     Route::post('/estimates/{estimate}/convert-to-invoice', [EstimatesController::class, 'convertToInvoice'])->name('estimates.convert-to-invoice');
+
+    // ItemsController
+    Route::resource('items', ItemsController::class)->except('show')->names([
+        'index' => 'items',
+    ]);
 
     // Setup routes (Admin only)
     Route::middleware(AdminMiddleware::class)->prefix('setup')->group(function () {

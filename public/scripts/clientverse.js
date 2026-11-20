@@ -137,3 +137,22 @@ document.querySelectorAll('[data-add-row]').forEach(function (button) {
         target.lastElementChild.querySelector('input')?.focus();
     });
 });
+
+// Picking a catalog item in a line's description fills its price and tax.
+document.querySelectorAll('[data-catalog]').forEach(function (tbody) {
+    const catalog = document.getElementById(tbody.dataset.catalog);
+
+    tbody.addEventListener('change', function (event) {
+        if (!event.target.name?.endsWith('[description]')) {
+            return;
+        }
+
+        const option = Array.from(catalog.options).find((option) => option.value === event.target.value);
+        const row = event.target.closest('tr');
+
+        if (option) {
+            row.querySelector('[name$="[unit_price]"]').value = option.dataset.unitPrice;
+            row.querySelector('[name$="[tax_rate]"]').value = option.dataset.taxRate;
+        }
+    });
+});

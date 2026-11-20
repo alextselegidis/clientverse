@@ -11,7 +11,7 @@
 --}}
 <tr>
     <td>
-        <input type="text" name="items[{{ $index }}][description]" class="form-control" maxlength="255"
+        <input type="text" name="items[{{ $index }}][description]" class="form-control" maxlength="255" list="item-catalog"
                value="{{ $line['description'] ?? '' }}" aria-label="{{ __('description') }}">
     </td>
     <td>
