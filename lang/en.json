@@ -424,5 +424,12 @@
     "running": "Running",
     "start": "Start",
     "end": "End",
-    "log_time": "Log time"
+    "log_time": "Log time",
+    "ticket": "Ticket",
+    "tickets": "Tickets",
+    "answered": "Answered",
+    "closed": "Closed",
+    "subject": "Subject",
+    "reply": "Reply",
+    "replies": "Replies"
 }
