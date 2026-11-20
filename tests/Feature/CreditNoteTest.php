@@ -48,4 +48,23 @@ class CreditNoteTest extends TestCase
         $this->assertEquals(500.00, $invoice->fresh()->balance);
         $this->assertStringStartsWith('CN-', $credit->number);
     }
+
+    public function test_bulk_deleting_credits_and_deleting_invoices_keep_balances_right(): void
+    {
+        $invoice = Invoice::create(['status' => 'sent', 'currency' => 'EUR']);
+        $invoice->syncItems([['description' => 'Work', 'quantity' => 1, 'unit_price' => 100]]);
+        $credit = CreditNote::create(['status' => 'issued', 'currency' => 'EUR']);
+        $credit->syncItems([['description' => 'Refund', 'quantity' => 1, 'unit_price' => 100]]);
+        $credit->invoice()->associate($invoice)->save();
+        $this->assertSame('paid', $invoice->fresh()->display_status);
+
+        $this->actingAs(\App\Models\User::factory()->create())
+            ->delete(route('credit-notes.bulk-destroy'), ['ids' => [$credit->id]]);
+        $this->assertSame('unpaid', $invoice->fresh()->display_status);
+
+        $other = CreditNote::create(['status' => 'issued', 'currency' => 'EUR']);
+        $other->invoice()->associate($invoice)->save();
+        $invoice->delete();
+        $this->assertNull($other->fresh()->invoice_id);
+    }
 }

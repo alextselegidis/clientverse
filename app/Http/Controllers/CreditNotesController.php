@@ -149,7 +149,8 @@ class CreditNotesController extends Controller
             'ids.*' => 'exists:credit_notes,id',
         ]);
 
-        CreditNote::whereIn('id', $request->input('ids'))->delete();
+        // One by one, so each credit's invoice gets its balance back.
+        CreditNote::whereIn('id', $request->input('ids'))->get()->each->delete();
 
         return redirect(route('credit-notes'))->with('success', __('records_deleted_message'));
     }

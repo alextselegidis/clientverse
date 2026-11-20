@@ -120,7 +120,8 @@ class InvoicesController extends Controller
             'ids.*' => 'exists:invoices,id',
         ]);
 
-        Invoice::whereIn('id', $request->input('ids'))->delete();
+        // One by one, so model events release applied credit notes.
+        Invoice::whereIn('id', $request->input('ids'))->get()->each->delete();
 
         return redirect(route('invoices'))->with('success', __('records_deleted_message'));
     }

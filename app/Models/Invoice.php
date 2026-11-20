@@ -26,6 +26,14 @@ class Invoice extends Model
 
     public const NUMBER_PREFIX = 'INV';
 
+    protected static function booted(): void
+    {
+        // A deleted invoice releases its credit notes so they can be applied elsewhere.
+        static::deleted(fn (Invoice $invoice) => CreditNote::where('invoice_id', $invoice->id)
+            ->get()
+            ->each(fn (CreditNote $creditNote) => $creditNote->invoice()->dissociate()->saveQuietly()));
+    }
+
     protected $fillable = [
         'customer_id',
         'number',
