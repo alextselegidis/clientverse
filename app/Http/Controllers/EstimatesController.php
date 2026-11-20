@@ -108,6 +108,11 @@ class EstimatesController extends Controller
     {
         $data = $this->validateEstimate($request, $estimate);
 
+        // A number cleared on edit keeps the one it had; only new documents get one assigned.
+        if (blank($data['number'] ?? null)) {
+            unset($data['number']);
+        }
+
         DB::transaction(function () use ($estimate, $data) {
             $estimate->update($data);
             $estimate->syncItems($data['items'] ?? []);

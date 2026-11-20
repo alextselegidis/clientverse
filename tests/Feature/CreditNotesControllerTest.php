@@ -57,4 +57,26 @@ class CreditNotesControllerTest extends TestCase
         $this->actingAs($user)->delete(route('credit-notes.unapply', $credit));
         $this->assertEquals(300.00, $invoice->fresh()->balance);
     }
+
+    public function test_editing_keeps_the_number_and_a_mismatched_credit_leaves_its_invoice(): void
+    {
+        $user = User::factory()->create();
+        $customer = Customer::create(['name' => 'Acme']);
+        $invoice = Invoice::create(['customer_id' => $customer->id, 'status' => 'sent', 'currency' => 'EUR']);
+        $invoice->syncItems([['description' => 'Work', 'quantity' => 1, 'unit_price' => 300]]);
+        $credit = CreditNote::create(['customer_id' => $customer->id, 'status' => 'issued', 'currency' => 'EUR']);
+        $credit->syncItems([['description' => 'Refund', 'quantity' => 1, 'unit_price' => 50]]);
+        $credit->invoice()->associate($invoice)->save();
+        $number = $credit->number;
+
+        $this->actingAs($user)->put(route('credit-notes.update', $credit), [
+            'customer_id' => $customer->id, 'status' => 'issued', 'currency' => 'USD', 'number' => '',
+            'items' => [['description' => 'Refund', 'quantity' => 1, 'unit_price' => 50]],
+        ])->assertSessionHasNoErrors();
+
+        $credit->refresh();
+        $this->assertSame($number, $credit->number);
+        $this->assertNull($credit->invoice_id);
+        $this->assertEquals(300.00, $invoice->fresh()->balance);
+    }
 }

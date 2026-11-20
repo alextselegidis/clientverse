@@ -106,6 +106,11 @@ class InvoicesController extends Controller
     {
         $data = $this->validateInvoice($request, $invoice);
 
+        // A number cleared on edit keeps the one it had; only new documents get one assigned.
+        if (blank($data['number'] ?? null)) {
+            unset($data['number']);
+        }
+
         DB::transaction(function () use ($invoice, $data) {
             $invoice->update($data);
             $invoice->syncItems($data['items'] ?? []);

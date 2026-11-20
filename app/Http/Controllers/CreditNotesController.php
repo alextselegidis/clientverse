@@ -113,9 +113,21 @@ class CreditNotesController extends Controller
     {
         $data = $this->validateCreditNote($request, $creditNote);
 
+        // A number cleared on edit keeps the one it had; only new documents get one assigned.
+        if (blank($data['number'] ?? null)) {
+            unset($data['number']);
+        }
+
         DB::transaction(function () use ($creditNote, $data) {
             $creditNote->update($data);
             $creditNote->syncItems($data['items'] ?? []);
+
+            // A credit moved to another customer or currency no longer fits its invoice.
+            $invoice = $creditNote->invoice;
+
+            if ($invoice && ($invoice->customer_id !== $creditNote->customer_id || $invoice->currency !== $creditNote->currency)) {
+                $creditNote->invoice()->dissociate()->save();
+            }
         });
 
         return redirect(route('credit-notes.edit', $creditNote->id))->with('success', __('record_saved_message'));
