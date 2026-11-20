@@ -82,8 +82,9 @@ class Customer extends Model
     public function getDisplayNameAttribute(): string
     {
         if ($this->company) {
-            return $this->name . ' @ ' . $this->company;
+            return $this->name.' @ '.$this->company;
         }
+
         return $this->name;
     }
 
@@ -112,15 +113,10 @@ class Customer extends Model
             $query->where($where);
         }
 
-        return $query
-            ->selectRaw(
-                "
-                CONCAT(name,
-                    IF(company IS NOT NULL AND company != '', CONCAT(' @ ', company), '')
-                ) AS label,
-                id AS value
-            ",
-            )
-            ->get();
+        // Built in PHP rather than SQL: IF() is MySQL-only and breaks the SQLite test database.
+        return $query->get(['id', 'name', 'company'])->map(fn (Customer $customer) => (object) [
+            'label' => $customer->name.(filled($customer->company) ? ' @ '.$customer->company : ''),
+            'value' => $customer->id,
+        ]);
     }
 }
