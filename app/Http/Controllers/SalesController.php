@@ -71,7 +71,7 @@ class SalesController extends Controller
     public function updateStage(Request $request, Sale $sale)
     {
         $data = $request->validate([
-            'stage' => 'required|in:'.implode(',', array_keys(Sale::stages())),
+            'stage' => 'required|in:' . implode(',', array_keys(Sale::stages())),
         ]);
 
         $sale->update($data);
@@ -81,12 +81,12 @@ class SalesController extends Controller
 
     public function create(Request $request)
     {
-        $sale = new Sale;
-
+        $sale = new Sale();
+        
         if ($request->has('customer_id')) {
             $sale->customer_id = $request->query('customer_id');
         }
-
+        
         return view('pages.sales-edit', [
             'sale' => $sale,
             'customers' => Customer::toOptions(),

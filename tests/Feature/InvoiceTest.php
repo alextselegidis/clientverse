@@ -44,7 +44,7 @@ class InvoiceTest extends TestCase
         $this->assertSame(2, $invoice->items()->count());
         $this->assertEquals(298.00, $invoice->total);
         $this->assertEquals(198.00, $invoice->balance);
-        $this->assertSame('INV-'.str_pad($invoice->id, 6, '0', STR_PAD_LEFT), $invoice->number);
+        $this->assertSame('INV-' . str_pad($invoice->id, 6, '0', STR_PAD_LEFT), $invoice->number);
     }
 
     public function test_the_status_filter_agrees_with_the_displayed_status(): void

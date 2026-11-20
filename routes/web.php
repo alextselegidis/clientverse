@@ -76,7 +76,7 @@ Route::middleware('auth')->group(function () {
     // AboutController
     Route::get('/about', [AboutController::class, 'index'])->name('about');
 
-    Route::middleware(CheckPermission::class.':customers')->group(function () {
+    Route::middleware(CheckPermission::class . ':customers')->group(function () {
         // CustomersController
         Route::delete('customers/bulk-destroy', [CustomersController::class, 'bulkDestroy'])->name('customers.bulk-destroy');
         Route::resource('customers', CustomersController::class)->names([
@@ -105,7 +105,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/customers/{customer}/notes/{note}', [CustomerNotesController::class, 'destroy'])->name('customers.notes.destroy');
     });
 
-    Route::middleware(CheckPermission::class.':projects')->group(function () {
+    Route::middleware(CheckPermission::class . ':projects')->group(function () {
         // ProjectsController
         Route::delete('projects/bulk-destroy', [ProjectsController::class, 'bulkDestroy'])->name('projects.bulk-destroy');
         Route::resource('projects', ProjectsController::class)->names([
@@ -129,7 +129,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/projects/{project}/files/{file}', [ProjectsController::class, 'deleteFile'])->name('projects.files.delete');
     });
 
-    Route::middleware(CheckPermission::class.':sales')->group(function () {
+    Route::middleware(CheckPermission::class . ':sales')->group(function () {
         // SalesController
         Route::delete('sales/bulk-destroy', [SalesController::class, 'bulkDestroy'])->name('sales.bulk-destroy');
         Route::get('sales/board', [SalesController::class, 'board'])->name('sales.board');
@@ -141,7 +141,7 @@ Route::middleware('auth')->group(function () {
         Route::post('/sales/{sale}/convert-to-project', [SalesController::class, 'convertToProject'])->name('sales.convert-to-project');
     });
 
-    Route::middleware(CheckPermission::class.':contracts')->group(function () {
+    Route::middleware(CheckPermission::class . ':contracts')->group(function () {
         // ContractsController
         Route::delete('contracts/bulk-destroy', [ContractsController::class, 'bulkDestroy'])->name('contracts.bulk-destroy');
         Route::resource('contracts', ContractsController::class)->names([
@@ -154,7 +154,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/contracts/{contract}/files/{file}', [ContractsController::class, 'deleteFile'])->name('contracts.files.delete');
     });
 
-    Route::middleware(CheckPermission::class.':invoices')->group(function () {
+    Route::middleware(CheckPermission::class . ':invoices')->group(function () {
         // InvoicesController
         Route::delete('invoices/bulk-destroy', [InvoicesController::class, 'bulkDestroy'])->name('invoices.bulk-destroy');
         Route::resource('invoices', InvoicesController::class)->names([
@@ -170,7 +170,7 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    Route::middleware(CheckPermission::class.':estimates')->group(function () {
+    Route::middleware(CheckPermission::class . ':estimates')->group(function () {
         // EstimatesController
         Route::delete('estimates/bulk-destroy', [EstimatesController::class, 'bulkDestroy'])->name('estimates.bulk-destroy');
         Route::resource('estimates', EstimatesController::class)->names([
@@ -180,14 +180,14 @@ Route::middleware('auth')->group(function () {
         Route::post('/estimates/{estimate}/convert-to-invoice', [EstimatesController::class, 'convertToInvoice'])->name('estimates.convert-to-invoice');
     });
 
-    Route::middleware(CheckPermission::class.':items')->group(function () {
+    Route::middleware(CheckPermission::class . ':items')->group(function () {
         // ItemsController
         Route::resource('items', ItemsController::class)->except('show')->names([
             'index' => 'items',
         ]);
     });
 
-    Route::middleware(CheckPermission::class.':tasks')->group(function () {
+    Route::middleware(CheckPermission::class . ':tasks')->group(function () {
         // TasksController
         Route::delete('tasks/bulk-destroy', [TasksController::class, 'bulkDestroy'])->name('tasks.bulk-destroy');
         Route::resource('tasks', TasksController::class)->names([
@@ -203,7 +203,7 @@ Route::middleware('auth')->group(function () {
         });
     });
 
-    Route::middleware(CheckPermission::class.':tickets')->group(function () {
+    Route::middleware(CheckPermission::class . ':tickets')->group(function () {
         // TicketsController
         Route::delete('tickets/bulk-destroy', [TicketsController::class, 'bulkDestroy'])->name('tickets.bulk-destroy');
         Route::resource('tickets', TicketsController::class)->except('edit')->names([

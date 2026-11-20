@@ -30,7 +30,7 @@ class CheckPermission
             default => 'edit',
         };
 
-        if (! $request->user()?->hasPermission($module, $action)) {
+        if (!$request->user()?->hasPermission($module, $action)) {
             abort(403);
         }
 

@@ -30,7 +30,7 @@ class TicketReplied extends Notification
         $ticket = $this->reply->ticket;
 
         return (new MailMessage)
-            ->subject('[#'.$ticket->id.'] '.$ticket->subject)
+            ->subject('[#' . $ticket->id . '] ' . $ticket->subject)
             ->line($this->reply->body);
     }
 }

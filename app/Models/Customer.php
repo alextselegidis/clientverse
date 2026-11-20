@@ -82,7 +82,7 @@ class Customer extends Model
     public function getDisplayNameAttribute(): string
     {
         if ($this->company) {
-            return $this->name.' @ '.$this->company;
+            return $this->name . ' @ ' . $this->company;
         }
 
         return $this->name;
@@ -115,7 +115,7 @@ class Customer extends Model
 
         // Built in PHP rather than SQL: IF() is MySQL-only and breaks the SQLite test database.
         return $query->get(['id', 'name', 'company'])->map(fn (Customer $customer) => (object) [
-            'label' => $customer->name.(filled($customer->company) ? ' @ '.$customer->company : ''),
+            'label' => $customer->name . (filled($customer->company) ? ' @ ' . $customer->company : ''),
             'value' => $customer->id,
         ]);
     }
