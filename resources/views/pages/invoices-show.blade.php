@@ -123,5 +123,68 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-transparent">
+                    <h5 class="mb-0">{{ __('payments') }}</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    @forelse($invoice->payments as $payment)
+                        <li class="list-group-item d-flex align-items-center gap-2">
+                            <div class="flex-grow-1">
+                                <div class="fw-medium">{{ format_currency($payment->amount, $invoice->currency) }}</div>
+                                <div class="small text-muted text-truncate">
+                                    {{ $payment->paid_on->format('M d, Y') }}
+                                    @if($payment->method) · {{ $payment->method }} @endif
+                                    @if($payment->reference) · {{ $payment->reference }} @endif
+                                </div>
+                            </div>
+                            <form action="{{ route('invoices.payments.destroy', [$invoice->id, $payment->id]) }}" method="POST"
+                                  onsubmit="return confirm('{{ __('delete_record_prompt') }}')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-icon" aria-label="{{ __('delete') }}" title="{{ __('delete') }}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </li>
+                    @empty
+                        <li class="list-group-item text-muted">{{ __('no_records_found') }}</li>
+                    @endforelse
+                </ul>
+                @if($invoice->status !== 'cancelled')
+                    <div class="card-body border-top">
+                        <form action="{{ route('invoices.payments.store', $invoice->id) }}" method="POST" id="payment-form">
+                            @csrf
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <label for="amount" class="form-label">{{ __('amount') }}</label>
+                                    <input type="number" id="amount" name="amount" class="form-control" step="0.01" min="0.01" required
+                                           value="{{ old('amount', $invoice->balance > 0 ? number_format($invoice->balance, 2, '.', '') : '') }}">
+                                </div>
+                                <div class="col-6">
+                                    <label for="paid_on" class="form-label">{{ __('date') }}</label>
+                                    <input type="date" id="paid_on" name="paid_on" class="form-control" required
+                                           value="{{ old('paid_on', today()->format('Y-m-d')) }}">
+                                </div>
+                                <div class="col-6">
+                                    <label for="method" class="form-label">{{ __('method') }}</label>
+                                    <input type="text" id="method" name="method" class="form-control" maxlength="100"
+                                           value="{{ old('method') }}" placeholder="{{ __('bank_transfer') }}">
+                                </div>
+                                <div class="col-6">
+                                    <label for="reference" class="form-label">{{ __('reference') }}</label>
+                                    <input type="text" id="reference" name="reference" class="form-control" maxlength="255"
+                                           value="{{ old('reference') }}">
+                                </div>
+                            </div>
+                            @include('shared.errors', ['class' => 'mt-3 mb-0'])
+                            <button type="submit" class="btn btn-primary w-100 mt-3">{{ __('record_payment') }}</button>
+                        </form>
+                    </div>
+                @endif
+            </div>
+        </div>
     </div>
 @endsection

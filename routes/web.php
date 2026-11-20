@@ -21,6 +21,7 @@ use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\MilestonesController;
+use App\Http\Controllers\PaymentsController;
 use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\RecoveryController;
 use App\Http\Controllers\SalesController;
@@ -141,6 +142,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('invoices', InvoicesController::class)->names([
         'index' => 'invoices',
     ]);
+
+    // PaymentsController (nested under invoices)
+    Route::scopeBindings()->group(function () {
+        Route::post('/invoices/{invoice}/payments', [PaymentsController::class, 'store'])->name('invoices.payments.store');
+        Route::delete('/invoices/{invoice}/payments/{payment}', [PaymentsController::class, 'destroy'])->name('invoices.payments.destroy');
+    });
 
     // Setup routes (Admin only)
     Route::middleware(AdminMiddleware::class)->prefix('setup')->group(function () {

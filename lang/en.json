@@ -390,5 +390,11 @@
     "terms": "Terms",
     "amount": "Amount",
     "amount_paid": "Amount Paid",
-    "balance_due": "Balance Due"
+    "balance_due": "Balance Due",
+    "payments": "Payments",
+    "date": "Date",
+    "method": "Method",
+    "reference": "Reference",
+    "bank_transfer": "Bank transfer",
+    "record_payment": "Record payment"
 }

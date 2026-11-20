@@ -67,4 +67,40 @@ class InvoicesControllerTest extends TestCase
 
         $this->assertSame(0, Invoice::count());
     }
+
+    public function test_payments_move_the_balance_and_stay_on_their_own_invoice(): void
+    {
+        $user = User::factory()->create();
+        $invoice = Invoice::create(['status' => 'sent', 'currency' => 'EUR']);
+        $invoice->syncItems([['description' => 'Work', 'quantity' => 1, 'unit_price' => 500]]);
+        $other = Invoice::create(['status' => 'sent', 'currency' => 'EUR']);
+
+        $this->actingAs($user)
+            ->post(route('invoices.payments.store', $invoice), ['amount' => 200, 'paid_on' => '2026-11-20'])
+            ->assertSessionHasNoErrors();
+
+        $invoice->refresh();
+        $this->assertEquals(300.00, $invoice->balance);
+        $this->assertSame('partially_paid', $invoice->display_status);
+        $this->actingAs($user)->get(route('invoices.show', $invoice))->assertOk()->assertSee('200.00');
+
+        $payment = $invoice->payments()->sole();
+
+        $this->actingAs($user)
+            ->delete(route('invoices.payments.destroy', [$other, $payment]))
+            ->assertNotFound();
+
+        $this->actingAs($user)->delete(route('invoices.payments.destroy', [$invoice, $payment]));
+
+        $this->assertEquals(500.00, $invoice->fresh()->balance);
+    }
+
+    public function test_a_payment_must_be_positive(): void
+    {
+        $invoice = Invoice::create(['status' => 'sent', 'currency' => 'EUR']);
+
+        $this->actingAs(User::factory()->create())
+            ->post(route('invoices.payments.store', $invoice), ['amount' => -5, 'paid_on' => '2026-11-20'])
+            ->assertSessionHasErrors('amount');
+    }
 }
