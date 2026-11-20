@@ -500,5 +500,15 @@
     "articles": "Articles",
     "public": "Public",
     "markdown_hint": "Markdown: **bold**, # headings, - lists, [links](https://example.com).",
-    "publish_in_public_kb": "Publish in the public knowledge base"
+    "publish_in_public_kb": "Publish in the public knowledge base",
+    "goal": "Goal",
+    "goals": "Goals",
+    "metric": "Metric",
+    "target": "Target",
+    "ended": "Ended",
+    "amount_invoiced": "Amount invoiced",
+    "amount_collected": "Amount collected",
+    "new_customers": "New customers",
+    "won_deals": "Won deals",
+    "goal_currency_hint": "For invoiced and collected goals."
 }

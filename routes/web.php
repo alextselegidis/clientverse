@@ -22,6 +22,7 @@ use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentEmailsController;
 use App\Http\Controllers\EstimatesController;
+use App\Http\Controllers\GoalsController;
 use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\ItemsController;
@@ -273,6 +274,9 @@ Route::middleware('auth')->group(function () {
     Route::middleware(CheckPermission::class . ':reports')->group(function () {
         Route::get('/reports', [ReportsController::class, 'index'])->name('reports');
         Route::get('/reports/payments.csv', [ReportsController::class, 'paymentsCsv'])->name('reports.payments-csv');
+        Route::resource('goals', GoalsController::class)->except('show')->names([
+            'index' => 'goals',
+        ]);
     });
 
     // Setup routes (Admin only)

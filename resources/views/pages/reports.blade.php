@@ -22,6 +22,10 @@
 @endsection
 
 @section('navActions')
+    <a href="{{ route('goals') }}" class="nav-link me-lg-3">
+        <i class="bi bi-bullseye me-2"></i>
+        {{ __('goals') }}
+    </a>
     <a href="{{ route('reports.payments-csv', ['from' => $from->toDateString(), 'to' => $to->toDateString()]) }}" class="nav-link">
         <i class="bi bi-download me-2"></i>
         {{ __('export_payments') }}
