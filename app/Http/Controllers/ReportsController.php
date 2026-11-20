@@ -30,7 +30,7 @@ class ReportsController extends Controller
         [$from, $to] = $this->range($request);
 
         $invoices = Invoice::where('status', 'sent')->whereBetween('issue_date', [$from->toDateString(), $to->toDateString()])->get();
-        $payments = Payment::with('invoice')->whereBetween('paid_on', [$from->toDateString(), $to->toDateString()])->get();
+        $payments = Payment::with('invoice')->whereHas('invoice')->whereBetween('paid_on', [$from->toDateString(), $to->toDateString()])->get();
 
         // month => currency => [invoiced, collected]
         $monthly = [];
@@ -41,7 +41,7 @@ class ReportsController extends Controller
         }
 
         foreach ($payments as $payment) {
-            $currency = $payment->invoice?->currency ?? default_currency();
+            $currency = $payment->invoice->currency;
             $monthly[$payment->paid_on->format('Y-m')][$currency]['collected'] ??= 0;
             $monthly[$payment->paid_on->format('Y-m')][$currency]['collected'] += (float) $payment->amount;
         }
@@ -88,7 +88,7 @@ class ReportsController extends Controller
     {
         [$from, $to] = $this->range($request);
 
-        $payments = Payment::with('invoice.customer')->whereBetween('paid_on', [$from->toDateString(), $to->toDateString()])->orderBy('paid_on')->get();
+        $payments = Payment::with('invoice.customer')->whereHas('invoice')->whereBetween('paid_on', [$from->toDateString(), $to->toDateString()])->orderBy('paid_on')->get();
 
         return response()->streamDownload(function () use ($payments) {
             $out = fopen('php://output', 'w');

@@ -55,4 +55,17 @@ class ReportsTest extends TestCase
         $this->assertStringContainsString("'@SUM(1)", $csv);
         $this->assertStringContainsString(',5.00,', $csv);
     }
+
+    public function test_payments_of_deleted_invoices_are_left_out(): void
+    {
+        $invoice = Invoice::create(['status' => 'sent', 'currency' => 'CHF', 'issue_date' => '2026-03-01']);
+        $invoice->payments()->create(['amount' => 777, 'paid_on' => '2026-03-02']);
+        $invoice->delete();
+
+        $range = ['from' => '2026-01-01', 'to' => '2026-12-31'];
+        $user = User::factory()->create();
+
+        $this->actingAs($user)->get(route('reports', $range))->assertOk()->assertDontSee('777.00');
+        $this->assertStringNotContainsString('777.00', $this->actingAs($user)->get(route('reports.payments-csv', $range))->streamedContent());
+    }
 }
