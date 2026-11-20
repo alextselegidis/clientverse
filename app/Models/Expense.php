@@ -14,6 +14,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Expense extends Model
 {
@@ -57,27 +58,34 @@ class Expense extends Model
      */
     public function bill(): Invoice
     {
-        if ($this->invoice) {
-            return $this->invoice;
-        }
+        // Locked, so a double click cannot bill the same expense twice.
+        return DB::transaction(function () {
+            $expense = self::whereKey($this->id)->lockForUpdate()->firstOrFail();
 
-        $invoice = Invoice::create([
-            'customer_id' => $this->customer_id,
-            'status' => 'draft',
-            'issue_date' => today(),
-            'due_date' => today()->addDays(30),
-            'currency' => $this->currency,
-        ]);
-        $invoice->syncItems([[
-            'description' => $this->description,
-            'quantity' => 1,
-            'unit_price' => $this->amount,
-            'tax_rate' => 0,
-        ]]);
+            if ($expense->invoice) {
+                return $expense->invoice;
+            }
 
-        $this->invoice()->associate($invoice)->save();
+            $invoice = Invoice::create([
+                'customer_id' => $expense->customer_id,
+                'status' => 'draft',
+                'issue_date' => today(),
+                'due_date' => today()->addDays(30),
+                'currency' => $expense->currency,
+            ]);
+            $invoice->syncItems([[
+                'description' => $expense->description,
+                'quantity' => 1,
+                'unit_price' => $expense->amount,
+                'tax_rate' => 0,
+            ]]);
 
-        return $invoice;
+            $expense->invoice()->associate($invoice)->save();
+            $this->setRawAttributes($expense->getAttributes(), true);
+            $this->setRelation('invoice', $invoice);
+
+            return $invoice;
+        });
     }
 
     /**

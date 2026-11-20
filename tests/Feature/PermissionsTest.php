@@ -107,4 +107,19 @@ class PermissionsTest extends TestCase
         Sanctum::actingAs(User::factory()->create(['role' => 'user', 'permissions' => ['customers.view', 'sales.view']]));
         $this->getJson('/api/v1/customers?include=sales')->assertOk()->assertSee('Secret deal');
     }
+
+    public function test_conversions_need_edit_access_to_the_module_they_create_in(): void
+    {
+        $user = User::factory()->create(['role' => 'user', 'permissions' => ['estimates.view', 'estimates.edit', 'sales.view', 'sales.edit']]);
+        $estimate = \App\Models\Estimate::create(['status' => 'sent', 'currency' => 'EUR']);
+        $sale = \App\Models\Sale::create(['name' => 'Deal', 'customer_id' => Customer::create(['name' => 'A'])->id]);
+
+        $this->actingAs($user)->post(route('estimates.convert-to-invoice', $estimate))->assertForbidden();
+        $this->actingAs($user)->post(route('sales.convert-to-contract', $sale))->assertForbidden();
+        $this->actingAs($user)->post(route('sales.convert-to-project', $sale))->assertForbidden();
+
+        $this->assertSame(0, Invoice::count());
+        $this->assertSame(0, \App\Models\Contract::count());
+        $this->assertSame(0, \App\Models\Project::count());
+    }
 }

@@ -16,6 +16,7 @@ use App\Models\Concerns\HasDocumentNumber;
 use App\Models\Concerns\HasLineItems;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 
 class Estimate extends Model
@@ -72,26 +73,35 @@ class Estimate extends Model
      */
     public function convertToInvoice(): Invoice
     {
-        if ($this->invoice) {
-            return $this->invoice;
-        }
+        // Locking the row makes a double click wait for the first conversion and
+        // then return its invoice instead of making a second one.
+        return DB::transaction(function () {
+            $estimate = self::whereKey($this->id)->lockForUpdate()->firstOrFail();
 
-        $invoice = Invoice::create([
-            'customer_id' => $this->customer_id,
-            'status' => 'draft',
-            'issue_date' => today(),
-            'due_date' => today()->addDays(30),
-            'currency' => $this->currency,
-            'notes' => $this->notes,
-            'terms' => $this->terms,
-        ]);
-        $invoice->syncItems($this->itemRows());
+            if ($estimate->invoice) {
+                return $estimate->invoice;
+            }
 
-        $this->invoice()->associate($invoice);
-        $this->status = 'accepted';
-        $this->save();
+            $invoice = Invoice::create([
+                'customer_id' => $estimate->customer_id,
+                'status' => 'draft',
+                'issue_date' => today(),
+                'due_date' => today()->addDays(30),
+                'currency' => $estimate->currency,
+                'notes' => $estimate->notes,
+                'terms' => $estimate->terms,
+            ]);
+            $invoice->syncItems($estimate->itemRows());
 
-        return $invoice;
+            $estimate->invoice()->associate($invoice);
+            $estimate->status = 'accepted';
+            $estimate->save();
+
+            $this->setRawAttributes($estimate->getAttributes(), true);
+            $this->setRelation('invoice', $invoice);
+
+            return $invoice;
+        });
     }
 
     public static function statuses(): array

@@ -125,6 +125,8 @@ class EstimatesController extends Controller
 
     public function convertToInvoice(Request $request, Estimate $estimate)
     {
+        abort_unless($request->user()->hasPermission('invoices', 'edit'), 403);
+
         $invoice = $estimate->convertToInvoice();
 
         return redirect(route('invoices.edit', $invoice->id))->with('success', __('record_saved_message'));

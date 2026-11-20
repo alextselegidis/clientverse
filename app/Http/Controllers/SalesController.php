@@ -150,6 +150,8 @@ class SalesController extends Controller
 
     public function convertToContract(Request $request, Sale $sale)
     {
+        abort_unless($request->user()->hasPermission('contracts', 'edit'), 403);
+
         $contract = Contract::create([
             'customer_id' => $sale->customer_id,
             'sale_id' => $sale->id,
@@ -167,6 +169,8 @@ class SalesController extends Controller
 
     public function convertToProject(Request $request, Sale $sale)
     {
+        abort_unless($request->user()->hasPermission('projects', 'edit'), 403);
+
         $project = Project::create([
             'customer_id' => $sale->customer_id,
             'name' => $sale->name,

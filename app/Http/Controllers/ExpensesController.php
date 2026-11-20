@@ -96,8 +96,10 @@ class ExpensesController extends Controller
         return redirect(route('expenses'))->with('success', __('records_deleted_message'));
     }
 
-    public function bill(Expense $expense)
+    public function bill(Request $request, Expense $expense)
     {
+        abort_unless($request->user()->hasPermission('invoices', 'edit'), 403);
+
         if (!$expense->billable || !$expense->customer_id) {
             return back()->with('error', __('expense_not_billable_message'));
         }
