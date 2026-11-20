@@ -92,4 +92,19 @@ class PermissionsTest extends TestCase
         $this->actingAs($user)->get(route('customers.show', $customer))->assertOk()
             ->assertDontSee(['Secret deal', 'Hidden project']);
     }
+
+    public function test_the_api_does_not_include_relations_from_hidden_modules(): void
+    {
+        $customer = Customer::create(['name' => 'Acme']);
+        \App\Models\Sale::create(['customer_id' => $customer->id, 'name' => 'Secret deal']);
+
+        Sanctum::actingAs(User::factory()->create(['role' => 'user', 'permissions' => ['customers.view']]));
+        $this->getJson('/api/v1/customers?include=sales')->assertForbidden();
+        $this->postJson('/api/v1/customers/search', ['includes' => [['relation' => 'projects.milestones']]])->assertForbidden();
+        $this->getJson('/api/v1/customers?include=contacts')->assertOk();
+
+        $this->app['auth']->forgetGuards();
+        Sanctum::actingAs(User::factory()->create(['role' => 'user', 'permissions' => ['customers.view', 'sales.view']]));
+        $this->getJson('/api/v1/customers?include=sales')->assertOk()->assertSee('Secret deal');
+    }
 }
