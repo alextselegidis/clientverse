@@ -33,6 +33,7 @@
                                 </a>
                             </li>
                             <!-- Customers -->
+                            @if(Auth::user()->hasPermission('customers') || Auth::user()->hasPermission('tickets'))
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-menu-item dropdown-toggle text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('customers*', 'tickets*') ? 'fw-bold' : '' }}"
                                    href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -40,19 +41,25 @@
                                     {{ __('customers') }}
                                 </a>
                                 <ul class="dropdown-menu">
+                                    @if(Auth::user()->hasPermission('customers'))
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('customers*') ? 'active' : '' }}" href="{{ route('customers') }}">
                                             <i class="bi bi-people me-2"></i>{{ __('customers') }}
                                         </a>
                                     </li>
+                                    @endif
+                                    @if(Auth::user()->hasPermission('tickets'))
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('tickets*') ? 'active' : '' }}" href="{{ route('tickets') }}">
                                             <i class="bi bi-life-preserver me-2"></i>{{ __('tickets') }}
                                         </a>
                                     </li>
+                                    @endif
                                 </ul>
                             </li>
+                            @endif
                             <!-- Projects -->
+                            @if(Auth::user()->hasPermission('projects') || Auth::user()->hasPermission('tasks'))
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-menu-item dropdown-toggle text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('projects*', 'tasks*') ? 'fw-bold' : '' }}"
                                    href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -60,33 +67,43 @@
                                     {{ __('projects') }}
                                 </a>
                                 <ul class="dropdown-menu">
+                                    @if(Auth::user()->hasPermission('projects'))
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('projects*') ? 'active' : '' }}" href="{{ route('projects') }}">
                                             <i class="bi bi-kanban me-2"></i>{{ __('projects') }}
                                         </a>
                                     </li>
+                                    @endif
+                                    @if(Auth::user()->hasPermission('tasks'))
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('tasks*') ? 'active' : '' }}" href="{{ route('tasks') }}">
                                             <i class="bi bi-check2-square me-2"></i>{{ __('tasks') }}
                                         </a>
                                     </li>
+                                    @endif
                                 </ul>
                             </li>
+                            @endif
                             <!-- Sales -->
+                            @if(Auth::user()->hasPermission('sales'))
                             <li class="nav-item">
                                 <a class="nav-link nav-menu-item text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('sales*') ? 'fw-bold' : '' }}" href="{{ route('sales') }}">
                                     <i class="bi bi-graph-up me-2"></i>
                                     {{ __('sales') }}
                                 </a>
                             </li>
+                            @endif
                             <!-- Contracts -->
+                            @if(Auth::user()->hasPermission('contracts'))
                             <li class="nav-item">
                                 <a class="nav-link nav-menu-item text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('contracts*') ? 'fw-bold' : '' }}" href="{{ route('contracts') }}">
                                     <i class="bi bi-file-earmark-text me-2"></i>
                                     {{ __('contracts') }}
                                 </a>
                             </li>
+                            @endif
                             <!-- Billing -->
+                            @if(Auth::user()->hasPermission('invoices') || Auth::user()->hasPermission('estimates') || Auth::user()->hasPermission('items'))
                             <li class="nav-item dropdown">
                                 <a class="nav-link nav-menu-item dropdown-toggle text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('invoices*', 'estimates*', 'items*') ? 'fw-bold' : '' }}"
                                    href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -94,23 +111,30 @@
                                     {{ __('billing') }}
                                 </a>
                                 <ul class="dropdown-menu">
+                                    @if(Auth::user()->hasPermission('invoices'))
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('invoices*') ? 'active' : '' }}" href="{{ route('invoices') }}">
                                             <i class="bi bi-receipt me-2"></i>{{ __('invoices') }}
                                         </a>
                                     </li>
+                                    @endif
+                                    @if(Auth::user()->hasPermission('estimates'))
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('estimates*') ? 'active' : '' }}" href="{{ route('estimates') }}">
                                             <i class="bi bi-file-earmark-ruled me-2"></i>{{ __('estimates') }}
                                         </a>
                                     </li>
+                                    @endif
+                                    @if(Auth::user()->hasPermission('items'))
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('items*') ? 'active' : '' }}" href="{{ route('items') }}">
                                             <i class="bi bi-box me-2"></i>{{ __('items') }}
                                         </a>
                                     </li>
+                                    @endif
                                 </ul>
                             </li>
+                            @endif
                         </ul>
                         <!-- Global Search -->
                         <ul class="navbar-nav me-lg-2">

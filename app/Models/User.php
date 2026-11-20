@@ -29,7 +29,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = ['name', 'email', 'password', 'is_active', 'role'];
+    protected $fillable = ['name', 'email', 'password', 'is_active', 'role', 'permissions'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -49,6 +49,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'is_active' => 'boolean',
+            'permissions' => 'array',
         ];
     }
 
@@ -60,5 +61,28 @@ class User extends Authenticatable
     public function isAdmin(): bool
     {
         return $this->role === RoleEnum::ADMIN->value;
+    }
+
+    /**
+     * The modules a permission can be granted on, and the actions per module.
+     * Creating counts as editing.
+     */
+    public const PERMISSION_MODULES = [
+        'customers', 'projects', 'tasks', 'sales', 'contracts', 'invoices', 'estimates', 'items', 'tickets',
+    ];
+
+    public const PERMISSION_ACTIONS = ['view', 'edit', 'delete'];
+
+    /**
+     * Admins and users without a permission list may do everything; everyone
+     * else needs "module.action" in their list.
+     */
+    public function hasPermission(string $module, string $action = 'view'): bool
+    {
+        if ($this->isAdmin() || $this->permissions === null) {
+            return true;
+        }
+
+        return in_array("{$module}.{$action}", $this->permissions, true);
     }
 }

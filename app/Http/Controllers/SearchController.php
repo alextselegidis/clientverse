@@ -87,6 +87,13 @@ class SearchController extends Controller
             }
         }
 
+        // ponytail: restricted users still run the hidden queries; skip them up front if search gets slow.
+        $sections = array_filter(
+            $sections,
+            fn ($section, $module) => $module === 'users' || Auth::user()->hasPermission($module),
+            ARRAY_FILTER_USE_BOTH
+        );
+
         return view('pages.search', [
             'q' => $q,
             'sections' => array_filter($sections, fn (array $section) => $section['total'] > 0),

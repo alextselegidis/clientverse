@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\V1\MilestonesApiV1Controller;
 use App\Http\Controllers\Api\V1\ProjectsApiV1Controller;
 use App\Http\Controllers\Api\V1\SalesApiV1Controller;
 use App\Http\Controllers\Api\V1\TagsApiV1Controller;
+use App\Http\Middleware\CheckPermission;
 use Illuminate\Support\Facades\Route;
 use Orion\Facades\Orion;
 
@@ -38,12 +39,12 @@ Route::prefix('v1')->as('api.v1.')->middleware(['auth:sanctum'])->group(function
     Route::get('/me', MeApiV1Controller::class);
 
     // Orion resource routes
-    Orion::resource('customers', CustomersApiV1Controller::class);
-    Orion::resource('contacts', ContactsApiV1Controller::class);
-    Orion::resource('projects', ProjectsApiV1Controller::class);
-    Orion::resource('sales', SalesApiV1Controller::class);
-    Orion::resource('contracts', ContractsApiV1Controller::class);
-    Orion::resource('milestones', MilestonesApiV1Controller::class);
+    Orion::resource('customers', CustomersApiV1Controller::class)->middleware(CheckPermission::class.':customers');
+    Orion::resource('contacts', ContactsApiV1Controller::class)->middleware(CheckPermission::class.':customers');
+    Orion::resource('projects', ProjectsApiV1Controller::class)->middleware(CheckPermission::class.':projects');
+    Orion::resource('sales', SalesApiV1Controller::class)->middleware(CheckPermission::class.':sales');
+    Orion::resource('contracts', ContractsApiV1Controller::class)->middleware(CheckPermission::class.':contracts');
+    Orion::resource('milestones', MilestonesApiV1Controller::class)->middleware(CheckPermission::class.':projects');
     Orion::resource('tags', TagsApiV1Controller::class);
-    Orion::resource('customer-notes', CustomerNotesApiV1Controller::class);
+    Orion::resource('customer-notes', CustomerNotesApiV1Controller::class)->middleware(CheckPermission::class.':customers');
 });

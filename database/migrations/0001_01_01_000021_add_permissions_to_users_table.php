@@ -1,0 +1,39 @@
+<?php
+
+/* ----------------------------------------------------------------------------
+ * Clientverse - Self-Hosted CRM
+ *
+ * @package     Clientverse
+ * @author      A.Tselegidis <alextselegidis@gmail.com>
+ * @copyright   Copyright (c) Alex Tselegidis
+ * @license     https://opensource.org/licenses/GPL-3.0 - GPLv3
+ * @link        https://clientverse.org
+ * ---------------------------------------------------------------------------- */
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            // Null means unrestricted, so existing users keep the access they had.
+            $table->json('permissions')->nullable()->after('role');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('permissions');
+        });
+    }
+};

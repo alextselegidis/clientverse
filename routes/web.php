@@ -36,6 +36,7 @@ use App\Http\Controllers\TimeEntriesController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\WelcomeController;
 use App\Http\Middleware\AdminMiddleware;
+use App\Http\Middleware\CheckPermission;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use Illuminate\Support\Facades\Route;
 
@@ -75,123 +76,141 @@ Route::middleware('auth')->group(function () {
     // AboutController
     Route::get('/about', [AboutController::class, 'index'])->name('about');
 
-    // CustomersController
-    Route::delete('customers/bulk-destroy', [CustomersController::class, 'bulkDestroy'])->name('customers.bulk-destroy');
-    Route::resource('customers', CustomersController::class)->names([
-        'index' => 'customers',
-    ]);
+    Route::middleware(CheckPermission::class.':customers')->group(function () {
+        // CustomersController
+        Route::delete('customers/bulk-destroy', [CustomersController::class, 'bulkDestroy'])->name('customers.bulk-destroy');
+        Route::resource('customers', CustomersController::class)->names([
+            'index' => 'customers',
+        ]);
 
-    // ContactsController (nested under customers)
-    Route::resource('customers.contacts', ContactsController::class)->names([
-        'index' => 'customers.contacts',
-        'create' => 'customers.contacts.create',
-        'store' => 'customers.contacts.store',
-        'show' => 'customers.contacts.show',
-        'edit' => 'customers.contacts.edit',
-        'update' => 'customers.contacts.update',
-        'destroy' => 'customers.contacts.destroy',
-    ]);
+        // ContactsController (nested under customers)
+        Route::resource('customers.contacts', ContactsController::class)->names([
+            'index' => 'customers.contacts',
+            'create' => 'customers.contacts.create',
+            'store' => 'customers.contacts.store',
+            'show' => 'customers.contacts.show',
+            'edit' => 'customers.contacts.edit',
+            'update' => 'customers.contacts.update',
+            'destroy' => 'customers.contacts.destroy',
+        ]);
 
-    // Customer file routes
-    Route::post('/customers/{customer}/files', [CustomersController::class, 'uploadFiles'])->name('customers.files.upload');
-    Route::get('/customers/{customer}/files/{file}/download', [CustomersController::class, 'downloadFile'])->name('customers.files.download');
-    Route::delete('/customers/{customer}/files/{file}', [CustomersController::class, 'deleteFile'])->name('customers.files.delete');
+        // Customer file routes
+        Route::post('/customers/{customer}/files', [CustomersController::class, 'uploadFiles'])->name('customers.files.upload');
+        Route::get('/customers/{customer}/files/{file}/download', [CustomersController::class, 'downloadFile'])->name('customers.files.download');
+        Route::delete('/customers/{customer}/files/{file}', [CustomersController::class, 'deleteFile'])->name('customers.files.delete');
 
-    // Customer notes routes
-    Route::post('/customers/{customer}/notes', [CustomerNotesController::class, 'store'])->name('customers.notes.store');
-    Route::put('/customers/{customer}/notes/{note}', [CustomerNotesController::class, 'update'])->name('customers.notes.update');
-    Route::delete('/customers/{customer}/notes/{note}', [CustomerNotesController::class, 'destroy'])->name('customers.notes.destroy');
-
-    // ProjectsController
-    Route::delete('projects/bulk-destroy', [ProjectsController::class, 'bulkDestroy'])->name('projects.bulk-destroy');
-    Route::resource('projects', ProjectsController::class)->names([
-        'index' => 'projects',
-    ]);
-
-    // MilestonesController (nested under projects)
-    Route::resource('projects.milestones', MilestonesController::class)->names([
-        'index' => 'projects.milestones',
-        'create' => 'projects.milestones.create',
-        'store' => 'projects.milestones.store',
-        'show' => 'projects.milestones.show',
-        'edit' => 'projects.milestones.edit',
-        'update' => 'projects.milestones.update',
-        'destroy' => 'projects.milestones.destroy',
-    ]);
-
-    // Project file routes
-    Route::post('/projects/{project}/files', [ProjectsController::class, 'uploadFiles'])->name('projects.files.upload');
-    Route::get('/projects/{project}/files/{file}/download', [ProjectsController::class, 'downloadFile'])->name('projects.files.download');
-    Route::delete('/projects/{project}/files/{file}', [ProjectsController::class, 'deleteFile'])->name('projects.files.delete');
-
-    // SalesController
-    Route::delete('sales/bulk-destroy', [SalesController::class, 'bulkDestroy'])->name('sales.bulk-destroy');
-    Route::get('sales/board', [SalesController::class, 'board'])->name('sales.board');
-    Route::patch('sales/{sale}/stage', [SalesController::class, 'updateStage'])->name('sales.stage');
-    Route::resource('sales', SalesController::class)->names([
-        'index' => 'sales',
-    ]);
-    Route::post('/sales/{sale}/convert-to-contract', [SalesController::class, 'convertToContract'])->name('sales.convert-to-contract');
-    Route::post('/sales/{sale}/convert-to-project', [SalesController::class, 'convertToProject'])->name('sales.convert-to-project');
-
-    // ContractsController
-    Route::delete('contracts/bulk-destroy', [ContractsController::class, 'bulkDestroy'])->name('contracts.bulk-destroy');
-    Route::resource('contracts', ContractsController::class)->names([
-        'index' => 'contracts',
-    ]);
-
-    // Contract file routes
-    Route::post('/contracts/{contract}/files', [ContractsController::class, 'uploadFiles'])->name('contracts.files.upload');
-    Route::get('/contracts/{contract}/files/{file}/download', [ContractsController::class, 'downloadFile'])->name('contracts.files.download');
-    Route::delete('/contracts/{contract}/files/{file}', [ContractsController::class, 'deleteFile'])->name('contracts.files.delete');
-
-    // InvoicesController
-    Route::delete('invoices/bulk-destroy', [InvoicesController::class, 'bulkDestroy'])->name('invoices.bulk-destroy');
-    Route::resource('invoices', InvoicesController::class)->names([
-        'index' => 'invoices',
-    ]);
-
-    Route::get('/invoices/{invoice}/print', [InvoicesController::class, 'print'])->name('invoices.print');
-
-    // PaymentsController (nested under invoices)
-    Route::scopeBindings()->group(function () {
-        Route::post('/invoices/{invoice}/payments', [PaymentsController::class, 'store'])->name('invoices.payments.store');
-        Route::delete('/invoices/{invoice}/payments/{payment}', [PaymentsController::class, 'destroy'])->name('invoices.payments.destroy');
+        // Customer notes routes
+        Route::post('/customers/{customer}/notes', [CustomerNotesController::class, 'store'])->name('customers.notes.store');
+        Route::put('/customers/{customer}/notes/{note}', [CustomerNotesController::class, 'update'])->name('customers.notes.update');
+        Route::delete('/customers/{customer}/notes/{note}', [CustomerNotesController::class, 'destroy'])->name('customers.notes.destroy');
     });
 
-    // EstimatesController
-    Route::delete('estimates/bulk-destroy', [EstimatesController::class, 'bulkDestroy'])->name('estimates.bulk-destroy');
-    Route::resource('estimates', EstimatesController::class)->names([
-        'index' => 'estimates',
-    ]);
-    Route::get('/estimates/{estimate}/print', [EstimatesController::class, 'print'])->name('estimates.print');
-    Route::post('/estimates/{estimate}/convert-to-invoice', [EstimatesController::class, 'convertToInvoice'])->name('estimates.convert-to-invoice');
+    Route::middleware(CheckPermission::class.':projects')->group(function () {
+        // ProjectsController
+        Route::delete('projects/bulk-destroy', [ProjectsController::class, 'bulkDestroy'])->name('projects.bulk-destroy');
+        Route::resource('projects', ProjectsController::class)->names([
+            'index' => 'projects',
+        ]);
 
-    // ItemsController
-    Route::resource('items', ItemsController::class)->except('show')->names([
-        'index' => 'items',
-    ]);
+        // MilestonesController (nested under projects)
+        Route::resource('projects.milestones', MilestonesController::class)->names([
+            'index' => 'projects.milestones',
+            'create' => 'projects.milestones.create',
+            'store' => 'projects.milestones.store',
+            'show' => 'projects.milestones.show',
+            'edit' => 'projects.milestones.edit',
+            'update' => 'projects.milestones.update',
+            'destroy' => 'projects.milestones.destroy',
+        ]);
 
-    // TasksController
-    Route::delete('tasks/bulk-destroy', [TasksController::class, 'bulkDestroy'])->name('tasks.bulk-destroy');
-    Route::resource('tasks', TasksController::class)->names([
-        'index' => 'tasks',
-    ]);
-
-    // TimeEntriesController (nested under tasks)
-    Route::scopeBindings()->group(function () {
-        Route::post('/tasks/{task}/timer', [TimeEntriesController::class, 'start'])->name('tasks.timer.start');
-        Route::post('/tasks/{task}/timer/stop', [TimeEntriesController::class, 'stop'])->name('tasks.timer.stop');
-        Route::post('/tasks/{task}/time-entries', [TimeEntriesController::class, 'store'])->name('tasks.time-entries.store');
-        Route::delete('/tasks/{task}/time-entries/{timeEntry}', [TimeEntriesController::class, 'destroy'])->name('tasks.time-entries.destroy');
+        // Project file routes
+        Route::post('/projects/{project}/files', [ProjectsController::class, 'uploadFiles'])->name('projects.files.upload');
+        Route::get('/projects/{project}/files/{file}/download', [ProjectsController::class, 'downloadFile'])->name('projects.files.download');
+        Route::delete('/projects/{project}/files/{file}', [ProjectsController::class, 'deleteFile'])->name('projects.files.delete');
     });
 
-    // TicketsController
-    Route::delete('tickets/bulk-destroy', [TicketsController::class, 'bulkDestroy'])->name('tickets.bulk-destroy');
-    Route::resource('tickets', TicketsController::class)->except('edit')->names([
-        'index' => 'tickets',
-    ]);
-    Route::post('/tickets/{ticket}/replies', [TicketRepliesController::class, 'store'])->name('tickets.replies.store');
+    Route::middleware(CheckPermission::class.':sales')->group(function () {
+        // SalesController
+        Route::delete('sales/bulk-destroy', [SalesController::class, 'bulkDestroy'])->name('sales.bulk-destroy');
+        Route::get('sales/board', [SalesController::class, 'board'])->name('sales.board');
+        Route::patch('sales/{sale}/stage', [SalesController::class, 'updateStage'])->name('sales.stage');
+        Route::resource('sales', SalesController::class)->names([
+            'index' => 'sales',
+        ]);
+        Route::post('/sales/{sale}/convert-to-contract', [SalesController::class, 'convertToContract'])->name('sales.convert-to-contract');
+        Route::post('/sales/{sale}/convert-to-project', [SalesController::class, 'convertToProject'])->name('sales.convert-to-project');
+    });
+
+    Route::middleware(CheckPermission::class.':contracts')->group(function () {
+        // ContractsController
+        Route::delete('contracts/bulk-destroy', [ContractsController::class, 'bulkDestroy'])->name('contracts.bulk-destroy');
+        Route::resource('contracts', ContractsController::class)->names([
+            'index' => 'contracts',
+        ]);
+
+        // Contract file routes
+        Route::post('/contracts/{contract}/files', [ContractsController::class, 'uploadFiles'])->name('contracts.files.upload');
+        Route::get('/contracts/{contract}/files/{file}/download', [ContractsController::class, 'downloadFile'])->name('contracts.files.download');
+        Route::delete('/contracts/{contract}/files/{file}', [ContractsController::class, 'deleteFile'])->name('contracts.files.delete');
+    });
+
+    Route::middleware(CheckPermission::class.':invoices')->group(function () {
+        // InvoicesController
+        Route::delete('invoices/bulk-destroy', [InvoicesController::class, 'bulkDestroy'])->name('invoices.bulk-destroy');
+        Route::resource('invoices', InvoicesController::class)->names([
+            'index' => 'invoices',
+        ]);
+
+        Route::get('/invoices/{invoice}/print', [InvoicesController::class, 'print'])->name('invoices.print');
+
+        // PaymentsController (nested under invoices)
+        Route::scopeBindings()->group(function () {
+            Route::post('/invoices/{invoice}/payments', [PaymentsController::class, 'store'])->name('invoices.payments.store');
+            Route::delete('/invoices/{invoice}/payments/{payment}', [PaymentsController::class, 'destroy'])->name('invoices.payments.destroy');
+        });
+    });
+
+    Route::middleware(CheckPermission::class.':estimates')->group(function () {
+        // EstimatesController
+        Route::delete('estimates/bulk-destroy', [EstimatesController::class, 'bulkDestroy'])->name('estimates.bulk-destroy');
+        Route::resource('estimates', EstimatesController::class)->names([
+            'index' => 'estimates',
+        ]);
+        Route::get('/estimates/{estimate}/print', [EstimatesController::class, 'print'])->name('estimates.print');
+        Route::post('/estimates/{estimate}/convert-to-invoice', [EstimatesController::class, 'convertToInvoice'])->name('estimates.convert-to-invoice');
+    });
+
+    Route::middleware(CheckPermission::class.':items')->group(function () {
+        // ItemsController
+        Route::resource('items', ItemsController::class)->except('show')->names([
+            'index' => 'items',
+        ]);
+    });
+
+    Route::middleware(CheckPermission::class.':tasks')->group(function () {
+        // TasksController
+        Route::delete('tasks/bulk-destroy', [TasksController::class, 'bulkDestroy'])->name('tasks.bulk-destroy');
+        Route::resource('tasks', TasksController::class)->names([
+            'index' => 'tasks',
+        ]);
+
+        // TimeEntriesController (nested under tasks)
+        Route::scopeBindings()->group(function () {
+            Route::post('/tasks/{task}/timer', [TimeEntriesController::class, 'start'])->name('tasks.timer.start');
+            Route::post('/tasks/{task}/timer/stop', [TimeEntriesController::class, 'stop'])->name('tasks.timer.stop');
+            Route::post('/tasks/{task}/time-entries', [TimeEntriesController::class, 'store'])->name('tasks.time-entries.store');
+            Route::delete('/tasks/{task}/time-entries/{timeEntry}', [TimeEntriesController::class, 'destroy'])->name('tasks.time-entries.destroy');
+        });
+    });
+
+    Route::middleware(CheckPermission::class.':tickets')->group(function () {
+        // TicketsController
+        Route::delete('tickets/bulk-destroy', [TicketsController::class, 'bulkDestroy'])->name('tickets.bulk-destroy');
+        Route::resource('tickets', TicketsController::class)->except('edit')->names([
+            'index' => 'tickets',
+        ]);
+        Route::post('/tickets/{ticket}/replies', [TicketRepliesController::class, 'store'])->name('tickets.replies.store');
+    });
 
     // Setup routes (Admin only)
     Route::middleware(AdminMiddleware::class)->prefix('setup')->group(function () {
