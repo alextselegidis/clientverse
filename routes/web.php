@@ -14,6 +14,7 @@ use App\Http\Controllers\AboutController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\ContractsController;
+use App\Http\Controllers\CreditNotesController;
 use App\Http\Controllers\CustomerNotesController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\DashboardController;
@@ -212,6 +213,17 @@ Route::middleware('auth')->group(function () {
             'index' => 'tickets',
         ]);
         Route::post('/tickets/{ticket}/replies', [TicketRepliesController::class, 'store'])->name('tickets.replies.store');
+    });
+
+    Route::middleware(CheckPermission::class . ':credit_notes')->group(function () {
+        // CreditNotesController
+        Route::delete('credit-notes/bulk-destroy', [CreditNotesController::class, 'bulkDestroy'])->name('credit-notes.bulk-destroy');
+        Route::resource('credit-notes', CreditNotesController::class)->parameters(['credit-notes' => 'creditNote'])->names([
+            'index' => 'credit-notes',
+        ]);
+        Route::get('/credit-notes/{creditNote}/print', [CreditNotesController::class, 'print'])->name('credit-notes.print');
+        Route::post('/credit-notes/{creditNote}/invoice', [CreditNotesController::class, 'apply'])->name('credit-notes.apply');
+        Route::delete('/credit-notes/{creditNote}/invoice', [CreditNotesController::class, 'unapply'])->name('credit-notes.unapply');
     });
 
     Route::middleware(CheckPermission::class . ':expenses')->group(function () {

@@ -461,5 +461,7 @@
     "credited": "Credited",
     "apply_to_invoice": "Apply to invoice",
     "remove_from_invoice": "Remove from invoice",
-    "credit_note_must_match_message": "The invoice must belong to the same customer and use the same currency."
+    "credit_note_must_match_message": "The invoice must belong to the same customer and use the same currency.",
+    "credit_note_draft_hint": "Counts toward the invoice once issued.",
+    "no_open_invoices_message": "This customer has no open invoices in this currency."
 }

@@ -146,6 +146,16 @@
                         <li class="list-group-item text-muted">{{ __('no_records_found') }}</li>
                     @endforelse
                 </ul>
+                @if($invoice->creditNotes->isNotEmpty())
+                    <ul class="list-group list-group-flush border-top">
+                        @foreach($invoice->creditNotes as $creditNote)
+                            <li class="list-group-item d-flex justify-content-between">
+                                <a href="{{ route('credit-notes.show', $creditNote->id) }}">{{ $creditNote->number }}</a>
+                                <span>&minus;{{ format_currency($creditNote->total, $invoice->currency) }}</span>
+                            </li>
+                        @endforeach
+                    </ul>
+                @endif
                 @if($invoice->status !== 'cancelled')
                     <div class="card-body border-top">
                         <form action="{{ route('invoices.payments.store', $invoice->id) }}" method="POST" id="payment-form">

@@ -103,9 +103,9 @@
                             </li>
                             @endif
                             <!-- Billing -->
-                            @if(Auth::user()->hasPermission('invoices') || Auth::user()->hasPermission('estimates') || Auth::user()->hasPermission('items') || Auth::user()->hasPermission('expenses') || Auth::user()->hasPermission('reports'))
+                            @if(Auth::user()->hasPermission('invoices') || Auth::user()->hasPermission('estimates') || Auth::user()->hasPermission('credit_notes') || Auth::user()->hasPermission('items') || Auth::user()->hasPermission('expenses') || Auth::user()->hasPermission('reports'))
                             <li class="nav-item dropdown">
-                                <a class="nav-link nav-menu-item dropdown-toggle text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('invoices*', 'estimates*', 'items*', 'expenses*', 'reports*') ? 'fw-bold' : '' }}"
+                                <a class="nav-link nav-menu-item dropdown-toggle text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('invoices*', 'estimates*', 'credit-notes*', 'items*', 'expenses*', 'reports*') ? 'fw-bold' : '' }}"
                                    href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-receipt me-2"></i>
                                     {{ __('billing') }}
@@ -122,6 +122,13 @@
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('estimates*') ? 'active' : '' }}" href="{{ route('estimates') }}">
                                             <i class="bi bi-file-earmark-ruled me-2"></i>{{ __('estimates') }}
+                                        </a>
+                                    </li>
+                                    @endif
+                                    @if(Auth::user()->hasPermission('credit_notes'))
+                                    <li>
+                                        <a class="dropdown-item {{ request()->routeIs('credit-notes*') ? 'active' : '' }}" href="{{ route('credit-notes') }}">
+                                            <i class="bi bi-receipt-cutoff me-2"></i>{{ __('credit_notes') }}
                                         </a>
                                     </li>
                                     @endif
