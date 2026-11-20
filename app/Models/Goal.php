@@ -24,10 +24,18 @@ class Goal extends Model
         'end_date' => 'date',
     ];
 
+    private ?float $progressCache = null;
+
     /**
      * How far the goal has got, measured live from the records in its period.
      */
     public function getProgressAttribute(): float
+    {
+        // The goals page reads this several times per card; count once.
+        return $this->progressCache ??= $this->measureProgress();
+    }
+
+    private function measureProgress(): float
     {
         $range = [$this->start_date->toDateString(), $this->end_date->toDateString()];
         $until = $this->end_date->copy()->endOfDay();
