@@ -34,4 +34,15 @@ class SalesBoardTest extends TestCase
 
         $this->actingAs($user)->patch(route('sales.stage', $sale), ['stage' => 'nonsense'])->assertSessionHasErrors('stage');
     }
+
+    public function test_old_closed_deals_leave_the_board(): void
+    {
+        $customer = Customer::create(['name' => 'Acme']);
+        $old = Sale::create(['name' => 'Won long ago', 'stage' => 'won', 'customer_id' => $customer->id]);
+        $old->forceFill(['updated_at' => now()->subDays(200)])->saveQuietly();
+        Sale::create(['name' => 'Won last week', 'stage' => 'won', 'customer_id' => $customer->id]);
+
+        $this->actingAs(User::factory()->create())->get(route('sales.board'))
+            ->assertSee('Won last week')->assertDontSee('Won long ago');
+    }
 }

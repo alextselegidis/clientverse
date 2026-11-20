@@ -58,7 +58,15 @@ class SalesController extends Controller
 
     public function board(Request $request)
     {
-        $sales = Sale::with('customer')->orderByDesc('updated_at')->get()->groupBy('stage');
+        // Open deals all show; won and lost ones only from the last 90 days, or the
+        // closed columns grow without end.
+        $sales = Sale::with('customer')
+            ->where(fn ($query) => $query
+                ->whereNotIn('stage', ['won', 'lost'])
+                ->orWhere('updated_at', '>=', now()->subDays(90)))
+            ->orderByDesc('updated_at')
+            ->get()
+            ->groupBy('stage');
 
         return view('pages.sales-board', [
             'columns' => collect(Sale::stages())->map(fn ($label, $stage) => [
