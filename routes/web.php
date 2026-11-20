@@ -18,6 +18,7 @@ use App\Http\Controllers\CustomerNotesController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EstimatesController;
+use App\Http\Controllers\ExpensesController;
 use App\Http\Controllers\InvoicesController;
 use App\Http\Controllers\ItemsController;
 use App\Http\Controllers\LoginController;
@@ -211,6 +212,15 @@ Route::middleware('auth')->group(function () {
             'index' => 'tickets',
         ]);
         Route::post('/tickets/{ticket}/replies', [TicketRepliesController::class, 'store'])->name('tickets.replies.store');
+    });
+
+    Route::middleware(CheckPermission::class . ':expenses')->group(function () {
+        // ExpensesController
+        Route::delete('expenses/bulk-destroy', [ExpensesController::class, 'bulkDestroy'])->name('expenses.bulk-destroy');
+        Route::resource('expenses', ExpensesController::class)->except('show')->names([
+            'index' => 'expenses',
+        ]);
+        Route::post('/expenses/{expense}/bill', [ExpensesController::class, 'bill'])->name('expenses.bill');
     });
 
     // ReportsController

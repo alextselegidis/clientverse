@@ -447,5 +447,12 @@
     "outstanding_by_customer": "Outstanding by customer",
     "invoice_count": ":count invoice|:count invoices",
     "opened": "Opened",
-    "open_now": "Open now"
+    "open_now": "Open now",
+    "expense": "Expense",
+    "expenses": "Expenses",
+    "billed": "Billed",
+    "billable": "Billable",
+    "billable_to_customer": "Billable to the customer",
+    "bill_to_customer": "Bill to customer",
+    "expense_not_billable_message": "Mark the expense billable and pick a customer first."
 }

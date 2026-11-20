@@ -68,7 +68,7 @@ class User extends Authenticatable
      * Creating counts as editing.
      */
     public const PERMISSION_MODULES = [
-        'customers', 'projects', 'tasks', 'sales', 'contracts', 'invoices', 'estimates', 'items', 'tickets', 'reports',
+        'customers', 'projects', 'tasks', 'sales', 'contracts', 'invoices', 'estimates', 'items', 'expenses', 'tickets', 'reports',
     ];
 
     public const PERMISSION_ACTIONS = ['view', 'edit', 'delete'];

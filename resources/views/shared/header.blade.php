@@ -103,9 +103,9 @@
                             </li>
                             @endif
                             <!-- Billing -->
-                            @if(Auth::user()->hasPermission('invoices') || Auth::user()->hasPermission('estimates') || Auth::user()->hasPermission('items') || Auth::user()->hasPermission('reports'))
+                            @if(Auth::user()->hasPermission('invoices') || Auth::user()->hasPermission('estimates') || Auth::user()->hasPermission('items') || Auth::user()->hasPermission('expenses') || Auth::user()->hasPermission('reports'))
                             <li class="nav-item dropdown">
-                                <a class="nav-link nav-menu-item dropdown-toggle text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('invoices*', 'estimates*', 'items*', 'reports*') ? 'fw-bold' : '' }}"
+                                <a class="nav-link nav-menu-item dropdown-toggle text-white py-lg-4 px-lg-2 px-xl-4 {{ request()->routeIs('invoices*', 'estimates*', 'items*', 'expenses*', 'reports*') ? 'fw-bold' : '' }}"
                                    href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bi bi-receipt me-2"></i>
                                     {{ __('billing') }}
@@ -129,6 +129,13 @@
                                     <li>
                                         <a class="dropdown-item {{ request()->routeIs('items*') ? 'active' : '' }}" href="{{ route('items') }}">
                                             <i class="bi bi-box me-2"></i>{{ __('items') }}
+                                        </a>
+                                    </li>
+                                    @endif
+                                    @if(Auth::user()->hasPermission('expenses'))
+                                    <li>
+                                        <a class="dropdown-item {{ request()->routeIs('expenses*') ? 'active' : '' }}" href="{{ route('expenses') }}">
+                                            <i class="bi bi-wallet2 me-2"></i>{{ __('expenses') }}
                                         </a>
                                     </li>
                                     @endif
