@@ -24,6 +24,7 @@
 @section('content')
     <!-- Overview Widgets -->
     <div class="row mb-4">
+        @if(auth()->user()->hasPermission('customers'))
         <div class="col-sm-6 col-lg-3 mb-3">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
@@ -44,6 +45,8 @@
                 </a>
             </div>
         </div>
+        @endif
+        @if(auth()->user()->hasPermission('projects'))
         <div class="col-sm-6 col-lg-3 mb-3">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
@@ -64,6 +67,8 @@
                 </a>
             </div>
         </div>
+        @endif
+        @if(auth()->user()->hasPermission('sales'))
         <div class="col-sm-6 col-lg-3 mb-3">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
@@ -87,6 +92,8 @@
                 </a>
             </div>
         </div>
+        @endif
+        @if(auth()->user()->hasPermission('contracts'))
         <div class="col-sm-6 col-lg-3 mb-3">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
@@ -107,6 +114,7 @@
                 </a>
             </div>
         </div>
+        @endif
     </div>
 
     <!-- Quick Actions -->
@@ -118,26 +126,34 @@
                 </div>
                 <div class="card-body">
                     <div class="row row-cols-2 row-cols-sm-auto g-2">
+                        @if(auth()->user()->hasPermission('customers'))
                         <div class="col d-grid">
                             <a href="{{ route('customers.create') }}" class="btn btn-outline-primary">
                                 <i class="bi bi-person-plus me-1"></i> {{ __('add') }} {{ __('customer') }}
                             </a>
                         </div>
+                        @endif
+                        @if(auth()->user()->hasPermission('projects'))
                         <div class="col d-grid">
                             <a href="{{ route('projects.create') }}" class="btn btn-outline-success">
                                 <i class="bi bi-folder-plus me-1"></i> {{ __('create') }} {{ __('project') }}
                             </a>
                         </div>
+                        @endif
+                        @if(auth()->user()->hasPermission('sales'))
                         <div class="col d-grid">
                             <a href="{{ route('sales.create') }}" class="btn btn-outline-warning">
                                 <i class="bi bi-plus-circle me-1"></i> {{ __('new') }} {{ __('sale') }}
                             </a>
                         </div>
+                        @endif
+                        @if(auth()->user()->hasPermission('contracts'))
                         <div class="col d-grid">
                             <a href="{{ route('contracts.create') }}" class="btn btn-outline-info">
                                 <i class="bi bi-file-plus me-1"></i> {{ __('new') }} {{ __('contract') }}
                             </a>
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -153,7 +169,7 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="list-group list-group-flush">
-                        @foreach($recentCustomers as $customer)
+                        @foreach(auth()->user()->hasPermission('customers') ? $recentCustomers : [] as $customer)
                             <a href="{{ route('customers.show', $customer->id) }}" class="list-group-item list-group-item-action d-flex align-items-center">
                                 <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                                     <i class="bi bi-person-plus text-primary"></i>
@@ -165,7 +181,7 @@
                                 <small class="text-muted text-nowrap flex-shrink-0 ms-3">{{ $customer->created_at->diffForHumans() }}</small>
                             </a>
                         @endforeach
-                        @foreach($recentProjects as $project)
+                        @foreach(auth()->user()->hasPermission('projects') ? $recentProjects : [] as $project)
                             <a href="{{ route('projects.show', $project->id) }}" class="list-group-item list-group-item-action d-flex align-items-center">
                                 <div class="bg-success bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
                                     <i class="bi bi-kanban text-success"></i>
@@ -177,7 +193,7 @@
                                 <small class="text-muted text-nowrap flex-shrink-0 ms-3">{{ $project->updated_at->diffForHumans() }}</small>
                             </a>
                         @endforeach
-                        @if($recentCustomers->isEmpty() && $recentProjects->isEmpty())
+                        @if((!auth()->user()->hasPermission('customers') || $recentCustomers->isEmpty()) && (!auth()->user()->hasPermission('projects') || $recentProjects->isEmpty()))
                             <div class="list-group-item text-center text-muted py-4">
                                 {{ __('no_records_found') }}
                             </div>
@@ -189,6 +205,7 @@
 
         <!-- Performance Metrics -->
         <div class="col-lg-4 mb-4">
+            @if(auth()->user()->hasPermission('sales'))
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-transparent">
                     <h6 class="mb-0"><i class="bi bi-bar-chart me-2"></i>{{ __('monthly_sales') }}</h6>
@@ -202,6 +219,8 @@
                     <small class="text-muted">{{ now()->format('F Y') }}</small>
                 </div>
             </div>
+            @endif
+            @if(auth()->user()->hasPermission('projects'))
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-transparent">
                     <h6 class="mb-0"><i class="bi bi-check2-circle me-2"></i>{{ __('project_completion_rate') }}</h6>
@@ -213,6 +232,7 @@
                     </div>
                 </div>
             </div>
+            @endif
         </div>
     </div>
 @endsection

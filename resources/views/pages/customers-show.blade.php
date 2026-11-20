@@ -223,6 +223,7 @@
         <!-- Sidebar -->
         <div class="col-lg-4">
             <!-- Projects -->
+            @if(auth()->user()->hasPermission('projects'))
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
                     <h6 class="mb-0"><i class="bi bi-kanban me-2"></i>{{ __('projects') }}</h6>
@@ -250,8 +251,10 @@
                     @endif
                 </div>
             </div>
+            @endif
 
             <!-- Sales -->
+            @if(auth()->user()->hasPermission('sales'))
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
                     <h6 class="mb-0"><i class="bi bi-graph-up me-2"></i>{{ __('sales') }}</h6>
@@ -277,8 +280,10 @@
                     @endif
                 </div>
             </div>
+            @endif
 
             <!-- Contracts -->
+            @if(auth()->user()->hasPermission('contracts'))
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
                     <h6 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>{{ __('contracts') }}</h6>
@@ -306,6 +311,7 @@
                     @endif
                 </div>
             </div>
+            @endif
         </div>
     </div>
 @endsection

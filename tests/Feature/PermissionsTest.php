@@ -79,4 +79,17 @@ class PermissionsTest extends TestCase
         $this->actingAs($admin)->put(route('setup.users.update', $user), $form + ['restrict_permissions' => '0']);
         $this->assertNull($user->fresh()->permissions);
     }
+
+    public function test_the_dashboard_and_customer_page_hide_other_modules(): void
+    {
+        $customer = Customer::create(['name' => 'Acme']);
+        \App\Models\Sale::create(['customer_id' => $customer->id, 'name' => 'Secret deal', 'value' => 5000, 'currency' => 'EUR']);
+        \App\Models\Project::create(['customer_id' => $customer->id, 'name' => 'Hidden project']);
+        $user = User::factory()->create(['role' => 'user', 'permissions' => ['customers.view']]);
+
+        $this->actingAs($user)->get(route('dashboard'))->assertOk()
+            ->assertDontSee(['Hidden project', 'EUR 5,000.00', __('open_deals')]);
+        $this->actingAs($user)->get(route('customers.show', $customer))->assertOk()
+            ->assertDontSee(['Secret deal', 'Hidden project']);
+    }
 }
