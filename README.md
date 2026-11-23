@@ -29,7 +29,7 @@
   <a href="#license">License</a>
 </p>
 
-![screenshot](screenshot.png)
+![Clientverse demo](demo.gif)
 
 ## About
 
