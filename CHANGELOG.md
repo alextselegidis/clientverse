@@ -4,7 +4,6 @@
 
 ### Added
 
-- Latest blog posts from clientverse.org on the About page, read once a day and cached
 - Invoices with line items, tax, payments and a derived status (unpaid, partially paid, paid, overdue)
 - Estimates that convert into a draft invoice, and credit notes that reduce the balance of an invoice
 - Items catalog that fills the price and tax of invoice and estimate lines
@@ -48,12 +47,6 @@
   credit notes, proposals and subscriptions; customers, contacts, projects, deals and contracts expose custom field
   values, all documented in `openapi.yml`
 
-### Changed
-
-- One secondary column in every list table now shows from 768px, so tablets no longer waste half the row width
-- Denser table rows: every row is one line tall, long record names and links cut off with an ellipsis instead of
-  wrapping, tighter cell padding
-
 ### Fixed
 
 - Saving an applied credit note without changes no longer detaches it from its invoice
@@ -63,11 +56,30 @@
 - Faster pages: settings, custom fields and sortable columns are read once instead of on every use, customer
   notes load their authors in one query, and the outstanding-balance report sums in the database
 - Customer dropdowns failed on SQLite because their labels were built with MySQL-only `IF()`
-- Incorrect `http://` URLs when deployed behind a reverse proxy; proxies are now trusted via the `TRUSTED_PROXIES` env var (#19)
+
+
+## [1.0.1] - 2026-11-02
+
+### Added
+
+- Latest blog posts from clientverse.org on the About page, read once a day and cached
+
+### Changed
+
+- One secondary column in every list table now shows from 768px, so tablets no longer waste half the row width
+- Denser table rows: every row is one line tall, long record names and links cut off with an ellipsis instead of
+  wrapping, tighter cell padding
+
+### Fixed
+
+- Incorrect `http://` URLs when deployed behind a reverse proxy; proxies are now trusted via the `TRUSTED_PROXIES`
+  env var (#19)
 - Row action dropdown items were 30px tall on a phone instead of the intended 40px
 - `mailto:`/`tel:`, sort and breadcrumb links now reach the intended 40px touch target below 992px
 - Page scrolled sideways between 992px and 1199px, so the navbar now fits a 1024px tablet in landscape
 - List tables needed horizontal scrolling at 320px
+- A long user name pushed the navbar past the page edge between 992px and 1399px; the account menu now shows just
+  its icon there and truncates the name from 1400px
 
 
 ## [1.0.0] - 2026-03-26
