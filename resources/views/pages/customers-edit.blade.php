@@ -161,6 +161,7 @@
                     <label for="notes" class="form-label">{{ __('notes') }}</label>
                     <textarea id="notes" name="notes" class="form-control" rows="4">{{ old('notes', $customer->notes) }}</textarea>
                 </div>
+                @include('shared.custom-fields-edit', ['record' => $customer])
             </form>
         </div>
         <div class="card-footer bg-body-secondary border-top text-end py-3 px-4">

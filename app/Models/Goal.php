@@ -12,10 +12,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
 
 class Goal extends Model
 {
+    use RecordsActivity;
+
     protected $fillable = ['name', 'metric', 'currency', 'target', 'start_date', 'end_date'];
 
     protected $casts = [

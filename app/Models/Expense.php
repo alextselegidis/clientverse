@@ -12,12 +12,14 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 
 class Expense extends Model
 {
+    use RecordsActivity;
     use SoftDeletes;
 
     protected $fillable = [

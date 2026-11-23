@@ -12,11 +12,15 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasCustomFields;
+use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Sale extends Model
 {
+    use HasCustomFields;
+    use RecordsActivity;
     use SoftDeletes;
 
     protected $fillable = [

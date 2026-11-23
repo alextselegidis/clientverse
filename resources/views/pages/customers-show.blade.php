@@ -90,6 +90,7 @@
                             @endif
                         </div>
                     </div>
+                    @include('shared.custom-fields-show', ['record' => $customer, 'class' => 'mt-1'])
                 </div>
                 <div class="card-footer bg-transparent text-muted small">
                     {{ __('created') }}: {{ $customer->created_at->format('M d, Y') }} |

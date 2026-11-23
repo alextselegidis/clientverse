@@ -12,6 +12,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Announcement;
 use App\Models\Contract;
 use App\Models\Customer;
 use App\Models\Project;
@@ -55,6 +56,7 @@ class DashboardController extends Controller
             'recentSales' => $recentSales,
             'monthlySales' => $monthlySales,
             'projectCompletionRate' => $projectCompletionRate,
+            'announcements' => Announcement::shownTo('staff')->get(),
         ]);
     }
 }

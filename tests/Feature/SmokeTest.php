@@ -12,12 +12,15 @@
 
 namespace Tests\Feature;
 
+use App\Models\Announcement;
 use App\Models\Article;
 use App\Models\Contact;
 use App\Models\Contract;
 use App\Models\CreditNote;
 use App\Models\Customer;
 use App\Models\CustomerNote;
+use App\Models\CustomField;
+use App\Models\Department;
 use App\Models\Estimate;
 use App\Models\Expense;
 use App\Models\Goal;
@@ -26,6 +29,7 @@ use App\Models\Item;
 use App\Models\Milestone;
 use App\Models\Project;
 use App\Models\Sale;
+use App\Models\Subscription;
 use App\Models\Survey;
 use App\Models\Task;
 use App\Models\Ticket;
@@ -63,6 +67,8 @@ class SmokeTest extends TestCase
         $invoice->syncItems([['description' => 'Work', 'quantity' => 2, 'unit_price' => 100, 'tax_rate' => 24]]);
         $estimate = Estimate::create(['customer_id' => $customer->id, 'status' => 'sent', 'currency' => 'EUR']);
         $estimate->syncItems([['description' => 'Audit', 'quantity' => 1, 'unit_price' => 300]]);
+        $proposal = \App\Models\Proposal::create(['customer_id' => $customer->id, 'sale_id' => $sale->id, 'subject' => 'Pitch', 'status' => 'sent']);
+        $proposal->syncItems([['description' => 'Design', 'quantity' => 1, 'unit_price' => 500]]);
         $credit = CreditNote::create(['customer_id' => $customer->id, 'status' => 'issued', 'currency' => 'EUR']);
         $credit->syncItems([['description' => 'Refund', 'quantity' => 1, 'unit_price' => 20]]);
         $credit->invoice()->associate($invoice)->save();
@@ -86,11 +92,24 @@ class SmokeTest extends TestCase
             $goal = Goal::create(['name' => $metric, 'metric' => $metric, 'currency' => 'EUR', 'target' => 5, 'start_date' => today()->startOfMonth(), 'end_date' => today()->endOfMonth()]);
         }
 
+        $announcement = Announcement::create(['title' => 'News', 'body' => 'Hi', 'audience' => 'everyone']);
+        $department = Department::create(['name' => 'Support']);
+        $ticket->update(['department_id' => $department->id]);
+        $customField = CustomField::create([
+            'applies_to' => 'customers', 'label' => 'Tier', 'type' => 'select', 'options' => ['Gold'],
+        ]);
+        $customer->update(['custom_values' => [$customField->id => 'Gold']]);
+        $subscription = Subscription::create([
+            'customer_id' => $customer->id, 'name' => 'Care plan', 'currency' => 'EUR', 'amount' => 50, 'tax_rate' => 24,
+        ]);
+
         $this->params = [
             'customer' => $customer->id, 'contact' => $contact->id, 'project' => $project->id, 'milestone' => $milestone->id,
-            'sale' => $sale->id, 'contract' => $contract->id, 'invoice' => $invoice->id, 'estimate' => $estimate->id,
+            'sale' => $sale->id, 'contract' => $contract->id, 'invoice' => $invoice->id, 'estimate' => $estimate->id, 'proposal' => $proposal->id,
             'creditNote' => $credit->id, 'item' => $item->id, 'expense' => $expense->id, 'task' => $task->id,
             'ticket' => $ticket->id, 'article' => $article->id, 'survey' => $survey->id, 'goal' => $goal->id,
+            'announcement' => $announcement->id, 'department' => $department->id,
+            'customField' => $customField->id, 'subscription' => $subscription->id,
             'user' => $admin->id, 'slug' => $article->slug,
         ];
 
@@ -154,6 +173,7 @@ class SmokeTest extends TestCase
             Invoice::find($this->params['invoice'])->publicUrl(),
             Estimate::find($this->params['estimate'])->publicUrl(),
             Survey::find($this->params['survey'])->publicUrl(),
+            Subscription::find($this->params['subscription'])->publicUrl(),
             route('kb'),
             route('kb.show', $this->params['slug']),
         ] as $url) {

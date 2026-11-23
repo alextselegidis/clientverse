@@ -12,18 +12,34 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasCustomFields;
+use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\URL;
 
 class Contract extends Model
 {
+    use HasCustomFields;
+    use RecordsActivity;
     use SoftDeletes;
 
     /**
      * The fields a signature covers; they cannot change once the contract is signed.
      */
     public const SIGNED_TERMS = ['customer_id', 'title', 'description', 'value', 'currency', 'start_date', 'end_date'];
+
+    protected static function booted(): void
+    {
+        // A new end_date earns a new reminder.
+        // Written straight to the row: a model loaded before the reminder went out
+        // still holds reminded_at = null, so setting it on the model would save nothing.
+        static::updated(function (self $model) {
+            if ($model->wasChanged('end_date')) {
+                $model->newQuery()->whereKey($model->getKey())->toBase()->update(['reminded_at' => null]);
+            }
+        });
+    }
 
     protected $fillable = [
         'customer_id',
@@ -42,6 +58,7 @@ class Contract extends Model
     ];
 
     protected $casts = [
+        'reminded_at' => 'datetime',
         'value' => 'decimal:2',
         'start_date' => 'date',
         'end_date' => 'date',

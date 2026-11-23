@@ -46,7 +46,7 @@
                     @foreach($ticket->replies as $reply)
                         <li class="list-group-item py-3">
                             <div class="d-flex justify-content-between small text-muted mb-2">
-                                <span class="fw-medium text-body">{{ $reply->user?->name ?? $ticket->customer?->name }}</span>
+                                <span class="fw-medium text-body">{{ $reply->user?->name ?? $reply->contact?->full_name ?? $ticket->customer?->name }}</span>
                                 <span>{{ $reply->created_at->format('M d, Y H:i') }}</span>
                             </div>
                             <div>{!! nl2br(e($reply->body)) !!}</div>
@@ -115,6 +115,7 @@
                                 @endforeach
                             </select>
                         </div>
+                        @include('shared.department-select', ['selected' => $ticket->department_id])
                         <div class="mb-3">
                             <label for="assigned_to" class="form-label">{{ __('assigned_to') }}</label>
                             <select id="assigned_to" name="assigned_to" class="form-select">

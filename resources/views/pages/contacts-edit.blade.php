@@ -91,6 +91,9 @@
                         <label for="email" class="form-label">{{ __('email') }}</label>
                         <input type="email" id="email" name="email" class="form-control"
                                value="{{ old('email', $contact->email) }}">
+                        @error('email')
+                        <span class="form-text text-danger">{{ $message }}</span>
+                        @enderror
                     </div>
 
                     <div class="col-md-6 mb-3">
@@ -121,6 +124,9 @@
 
                 <div class="row">
                     <div class="col-12 mb-3">
+                        {{-- Unticked boxes post nothing; the hidden zeros make unticking save. --}}
+                        <input type="hidden" name="is_primary" value="0">
+                        <input type="hidden" name="has_portal_access" value="0">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" type="checkbox" id="is_primary" name="is_primary" value="1"
                                    {{ old('is_primary', $contact->is_primary) ? 'checked' : '' }}>
@@ -134,10 +140,24 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="password" class="form-label">{{ __('portal_password') }}</label>
+                        <input type="password" id="password" name="password" class="form-control" minlength="8"
+                               autocomplete="new-password"
+                               placeholder="{{ $contact->password ? __('leave_blank_to_keep') : '' }}">
+                        <div class="form-text">{{ __('portal_password_hint', ['url' => route('portal.login')]) }}</div>
+                        @error('password')
+                        <span class="form-text text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
                 <div class="mb-3">
                     <label for="notes" class="form-label">{{ __('notes') }}</label>
                     <textarea id="notes" name="notes" class="form-control" rows="3">{{ old('notes', $contact->notes) }}</textarea>
                 </div>
+                @include('shared.custom-fields-edit', ['record' => $contact])
             </form>
         </div>
         <div class="card-footer bg-body-secondary border-top text-end py-3 px-4">

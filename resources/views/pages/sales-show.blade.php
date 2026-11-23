@@ -31,6 +31,12 @@
         <i class="bi bi-pencil me-2"></i>
         {{ __('edit') }}
     </a>
+    @if(Auth::user()->hasPermission('proposals', 'edit'))
+        <a href="{{ route('proposals.create', ['sale_id' => $sale->id]) }}" class="nav-link me-lg-3">
+            <i class="bi bi-file-earmark-richtext me-2"></i>
+            {{ __('create_proposal') }}
+        </a>
+    @endif
     @if($sale->stage !== 'won' && $sale->stage !== 'lost')
         <form action="{{ route('sales.convert-to-contract', $sale->id) }}" method="POST" class="d-inline me-lg-3">
             @csrf
@@ -104,6 +110,7 @@
                             </p>
                         </div>
                     </div>
+                    @include('shared.custom-fields-show', ['record' => $sale, 'class' => 'mt-1'])
                     @if($sale->notes)
                         <hr>
                         <h6>{{ __('notes') }}</h6>

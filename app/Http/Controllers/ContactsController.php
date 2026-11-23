@@ -14,7 +14,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Contact;
 use App\Models\Customer;
+use App\Models\CustomField;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ContactsController extends Controller
 {
@@ -56,14 +58,18 @@ class ContactsController extends Controller
 
     public function store(Request $request, Customer $customer)
     {
-        $request->validate([
-            'first_name' => 'required',
-        ]);
+        $request->validate(
+            ['first_name' => 'required'] + $this->portalRules($request) + CustomField::rules('contacts'),
+            [],
+            CustomField::attributes('contacts'),
+        );
 
         $data = $request->all();
         $data['customer_id'] = $customer->id;
 
-        $contact = Contact::create($data);
+        $contact = new Contact($data);
+        $this->setPassword($request, $contact);
+        $contact->save();
 
         return redirect(route('customers.contacts.show', [$customer->id, $contact->id]))->with('success', __('record_saved_message'));
     }
@@ -86,12 +92,14 @@ class ContactsController extends Controller
 
     public function update(Request $request, Customer $customer, Contact $contact)
     {
-        $request->validate([
-            'first_name' => 'required|min:2',
-            'email' => 'nullable|email',
-        ]);
+        $request->validate(
+            ['first_name' => 'required|min:2'] + $this->portalRules($request, $contact) + CustomField::rules('contacts'),
+            [],
+            CustomField::attributes('contacts'),
+        );
 
         $contact->fill($request->all());
+        $this->setPassword($request, $contact);
         $contact->save();
 
         return redirect(route('customers.contacts.edit', [$customer->id, $contact->id]))->with('success', __('record_saved_message'));
@@ -102,5 +110,29 @@ class ContactsController extends Controller
         $contact->delete();
 
         return redirect(route('customers.contacts', $customer->id))->with('success', __('record_deleted_message'));
+    }
+
+    /**
+     * A portal login needs an email no other portal contact uses, since that is
+     * what the contact signs in with.
+     */
+    private function portalRules(Request $request, ?Contact $contact = null): array
+    {
+        if (!$request->boolean('has_portal_access')) {
+            return ['email' => 'nullable|email'];
+        }
+
+        return [
+            'email' => ['required', 'email', Rule::unique('contacts')->where('has_portal_access', true)->ignore($contact)],
+            'password' => [$contact?->password ? 'nullable' : 'required', 'string', 'min:8'],
+        ];
+    }
+
+    // A blank password field keeps the current one.
+    private function setPassword(Request $request, Contact $contact): void
+    {
+        if (filled($request->input('password'))) {
+            $contact->password = $request->input('password');
+        }
     }
 }

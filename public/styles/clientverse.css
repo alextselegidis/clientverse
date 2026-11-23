@@ -171,6 +171,11 @@ a:hover {
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
 }
 
+/* Markdown announcement bodies: no stray gap under the last paragraph */
+.announcement-body > :last-child {
+    margin-bottom: 0;
+}
+
 /* Card footer reads as a quiet strip, not a second surface */
 .card .card-footer {
     background-color: transparent !important;

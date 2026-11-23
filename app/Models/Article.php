@@ -12,6 +12,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\HtmlString;
@@ -19,6 +20,7 @@ use Illuminate\Support\Str;
 
 class Article extends Model
 {
+    use RecordsActivity;
     use SoftDeletes;
 
     protected $fillable = ['title', 'category', 'body', 'is_public'];

@@ -65,6 +65,16 @@
                                 @endforeach
                             </select>
                         </div>
+                        @if($departments = \App\Models\Department::options())
+                            <div class="col-md-3">
+                                <select name="department_id" class="form-select" onchange="this.form.submit()">
+                                    <option value="">{{ __('department') }}: {{ __('all') }}</option>
+                                    @foreach($departments as $id => $name)
+                                        <option value="{{ $id }}" @selected($departmentId == $id)>{{ $name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
                     </form>
                     @include('shared.bulk-actions', ['tableId' => 'tickets', 'route' => route('tickets.bulk-destroy')])
                 </div>
@@ -114,6 +124,9 @@
                             </td>
                             <td class="d-none d-lg-table-cell" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
                                 {{ $ticket->assignedUser?->name }}
+                                @if($ticket->department)
+                                    <div class="small text-muted text-truncate">{{ $ticket->department->name }}</div>
+                                @endif
                             </td>
                             <td class="d-none d-lg-table-cell" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
                                 {{ $ticket->updated_at->diffForHumans() }}

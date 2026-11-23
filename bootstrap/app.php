@@ -16,6 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->trustProxies(at: explode(',', (string) env('TRUSTED_PROXIES', '*')));
         $middleware->statefulApi();
+
+        // The client portal has its own login page and home.
+        $middleware->redirectGuestsTo(fn ($request) => $request->is('portal*') ? route('portal.login') : route('login'));
+        $middleware->redirectUsersTo(fn ($request) => $request->is('portal*') ? route('portal') : route('dashboard'));
         $middleware->web(append: [
             ExtendRememberSession::class,
         ]);

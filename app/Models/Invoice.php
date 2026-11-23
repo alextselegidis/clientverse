@@ -14,14 +14,17 @@ namespace App\Models;
 
 use App\Models\Concerns\HasDocumentNumber;
 use App\Models\Concerns\HasLineItems;
+use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 
 class Invoice extends Model
 {
     use HasDocumentNumber;
     use HasLineItems;
+    use RecordsActivity;
     use SoftDeletes;
 
     public const NUMBER_PREFIX = 'INV';
@@ -40,6 +43,8 @@ class Invoice extends Model
         'status',
         'issue_date',
         'due_date',
+        'recurring_interval',
+        'next_recurring_date',
         'currency',
         'notes',
         'terms',
@@ -48,6 +53,8 @@ class Invoice extends Model
     protected $casts = [
         'issue_date' => 'date',
         'due_date' => 'date',
+        'next_recurring_date' => 'date',
+        'reminded_at' => 'datetime',
         'total' => 'decimal:2',
         'amount_paid' => 'decimal:2',
     ];
@@ -60,6 +67,129 @@ class Invoice extends Model
         return URL::signedRoute('public.invoices.show', ['invoice' => $this->id]);
     }
 
+    /**
+     * The {placeholders} the invoice email templates fill in.
+     */
+    public function emailValues(): array
+    {
+        return [
+            'number' => $this->number,
+            'total' => format_currency($this->total, $this->currency),
+            'balance' => format_currency($this->balance, $this->currency),
+            'due_date' => $this->due_date?->format('M d, Y') ?? '-',
+            'link' => $this->publicUrl(),
+        ];
+    }
+
+    /**
+     * The online payment providers an admin has set up under Setup > Billing.
+     */
+    public static function paymentGateways(): array
+    {
+        return array_keys(array_filter([
+            'stripe' => filled(setting('stripe_secret_key')),
+            'paypal' => filled(setting('paypal_client_id')) && filled(setting('paypal_secret')),
+        ]));
+    }
+
+    /**
+     * Whether the customer can pay the balance online, through $gateway or any.
+     */
+    public function canBePaidOnline(?string $gateway = null): bool
+    {
+        $gateways = self::paymentGateways();
+
+        return $this->status === 'sent' && $this->balance > 0
+            && ($gateway ? in_array($gateway, $gateways, true) : $gateways !== []);
+    }
+
+    /**
+     * Record money a payment provider confirmed. Providers retry and customers
+     * reload, so a payment already recorded under this reference is skipped. A
+     * deleted invoice still gets the record: the money did arrive.
+     */
+    public static function recordOnlinePayment(
+        int|string $invoiceId,
+        float $amount,
+        string $method,
+        string $reference,
+    ): void {
+        DB::transaction(function () use ($invoiceId, $amount, $method, $reference) {
+            $invoice = self::withTrashed()->whereKey($invoiceId)->lockForUpdate()->first();
+
+            if (!$invoice || $invoice->payments()->where('reference', $reference)->exists()) {
+                return;
+            }
+
+            $invoice->payments()->create([
+                'amount' => round($amount, 2),
+                'paid_on' => today(),
+                'method' => $method,
+                'reference' => $reference,
+            ]);
+            $invoice->recalculate();
+        });
+    }
+
+    public static function recurringIntervals(): array
+    {
+        return [
+            'week' => __('weekly'),
+            'month' => __('monthly'),
+            'quarter' => __('quarterly'),
+            'year' => __('yearly'),
+        ];
+    }
+
+    /**
+     * Copy a recurring invoice once for every scheduled date that has come, each
+     * copy a sent invoice dated on its day with the template's payment terms.
+     * Only sent invoices recur, so a draft or cancelled one is paused. The row
+     * lock stops two overlapping runs from billing the same date twice.
+     *
+     * @return Invoice[]
+     */
+    public function createDueCopies(): array
+    {
+        return DB::transaction(function () {
+            $template = self::whereKey($this->id)->lockForUpdate()->firstOrFail()->load('items');
+            $paymentDays = $template->issue_date && $template->due_date
+                ? (int) abs($template->issue_date->diffInDays($template->due_date))
+                : 30;
+            $copies = [];
+
+            while ($template->status === 'sent' && $template->recurring_interval
+                && $template->next_recurring_date?->lte(today())) {
+                $issueDate = $template->next_recurring_date->copy();
+
+                $copy = self::create([
+                    'customer_id' => $template->customer_id,
+                    'status' => 'sent',
+                    'issue_date' => $issueDate,
+                    'due_date' => $issueDate->copy()->addDays($paymentDays),
+                    'currency' => $template->currency,
+                    'notes' => $template->notes,
+                    'terms' => $template->terms,
+                ]);
+                $copy->recurring_parent_id = $template->id;
+                $copy->syncItems($template->itemRows());
+
+                // ponytail: steps from the last date, so the 31st drifts to the 28th after February.
+                $template->next_recurring_date = match ($template->recurring_interval) {
+                    'week' => $issueDate->addWeek(),
+                    'quarter' => $issueDate->addMonthsNoOverflow(3),
+                    'year' => $issueDate->addYearNoOverflow(),
+                    default => $issueDate->addMonthNoOverflow(),
+                };
+                $copies[] = $copy;
+            }
+
+            $template->save();
+
+            return $copies;
+        });
+    }
+
     public function customer()
     {
         return $this->belongsTo(Customer::class);
@@ -68,6 +198,11 @@ class Invoice extends Model
     public function items()
     {
         return $this->hasMany(InvoiceItem::class)->orderBy('position');
+    }
+
+    public function subscription()
+    {
+        return $this->belongsTo(Subscription::class);
     }
 
     public function payments()

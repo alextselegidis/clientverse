@@ -18,9 +18,24 @@
 - Per-user view, edit and delete permissions for each module, enforced on the web and API routes
 - Reports for invoiced and collected amounts, outstanding balances, time logged and tickets, with a CSV export
 - Goals that track invoicing, collections, new customers and won deals
+- Client portal where contacts with portal access sign in to see their documents, projects and tickets, and open or
+  reply to tickets
+- Proposals with a subject, body and line items, created from a sale, accepted or declined through a signed link and
+  converted into an estimate
+- Recurring invoices that copy themselves weekly, monthly, quarterly or yearly and email each copy to the customer
+- Optional reminder emails for overdue invoices, expiring estimates and proposals, and contracts about to end
+- Online invoice payments through Stripe Checkout, recorded from Stripe's signed webhook
 - Pages crossfade instead of flashing white, and a link starts loading while the pointer rests on it
 - List search filters as you type, a form posts only once per click, and saving keeps the scroll position
 - Month calendar of due dates across tasks, milestones, invoices, contracts and deals
+- Subscriptions billed through Stripe: the customer subscribes on a signed page and every paid period is booked as a
+  paid invoice; staff can cancel from the subscription page
+- Online invoice payments through PayPal next to Stripe, captured when the customer returns from PayPal
+- Custom fields (text, long text, number, date, dropdown, checkbox) on customers, contacts, projects, sales and
+  contracts
+- Support departments that tickets are filed under, picked by staff or by the contact in the portal
+- Activity log under Setup of who created, changed or deleted which record, kept for a year
+- Announcements for staff on the dashboard, for customers in the portal, or both, with an optional end date
 - Knowledge base with a public page for published articles
 - Surveys with choice, rating and text questions and a results page
 

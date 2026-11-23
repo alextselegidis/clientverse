@@ -12,6 +12,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\URL;
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\URL;
  */
 class Survey extends Model
 {
+    use RecordsActivity;
     use SoftDeletes;
 
     public const TYPES = ['text', 'choice', 'rating'];

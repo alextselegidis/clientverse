@@ -14,6 +14,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\ProjectStatusEnum;
 use App\Models\Customer;
+use App\Models\CustomField;
 use App\Models\File;
 use App\Models\Project;
 use App\Models\User;
@@ -79,7 +80,7 @@ class ProjectsController extends Controller
     {
         $request->validate([
             'name' => 'required',
-        ]);
+        ] + CustomField::rules('projects'), [], CustomField::attributes('projects'));
 
         $project = Project::create($request->all());
 
@@ -115,7 +116,7 @@ class ProjectsController extends Controller
         $request->validate([
             'name' => 'required|min:2',
             'customer_id' => 'nullable|exists:customers,id',
-        ]);
+        ] + CustomField::rules('projects'), [], CustomField::attributes('projects'));
 
         $project->fill($request->all());
         $project->save();

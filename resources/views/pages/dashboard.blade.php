@@ -22,6 +22,8 @@
 @endsection
 
 @section('content')
+    @include('shared.announcements')
+
     <!-- Overview Widgets -->
     <div class="row mb-4">
         @if(auth()->user()->hasPermission('customers'))

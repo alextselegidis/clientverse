@@ -53,13 +53,23 @@ class SettingsController extends Controller
     }
 
     /**
-     * Company details printed on documents, and the email templates.
+     * Company details printed on documents, reminders, online payments and the
+     * email templates.
      */
     private const BILLING_SETTINGS = [
         'company_name', 'company_address',
         'invoice_email_subject', 'invoice_email_body',
         'estimate_email_subject', 'estimate_email_body',
+        'proposal_email_subject', 'proposal_email_body',
         'contract_email_subject', 'contract_email_body',
+        'subscription_email_subject', 'subscription_email_body',
+        'send_reminders',
+        'invoice_overdue_email_subject', 'invoice_overdue_email_body',
+        'estimate_expiring_email_subject', 'estimate_expiring_email_body',
+        'proposal_expiring_email_subject', 'proposal_expiring_email_body',
+        'contract_expiring_email_subject', 'contract_expiring_email_body',
+        'stripe_secret_key', 'stripe_webhook_secret',
+        'paypal_client_id', 'paypal_secret', 'paypal_sandbox',
     ];
 
     public function billing(Request $request)
@@ -80,6 +90,12 @@ class SettingsController extends Controller
             'company_address' => 'nullable|string|max:1000',
             '*_email_subject' => 'nullable|string|max:255',
             '*_email_body' => 'nullable|string|max:5000',
+            'send_reminders' => 'nullable|boolean',
+            'stripe_secret_key' => ['nullable', 'string', 'max:255', 'regex:/^(sk|rk)_(test|live)_/'],
+            'stripe_webhook_secret' => ['nullable', 'string', 'max:255', 'regex:/^whsec_/'],
+            'paypal_client_id' => 'nullable|string|max:255|required_with:paypal_secret',
+            'paypal_secret' => 'nullable|string|max:255|required_with:paypal_client_id',
+            'paypal_sandbox' => 'nullable|boolean',
         ]);
 
         setting(collect(self::BILLING_SETTINGS)->mapWithKeys(fn ($name) => [$name => $validated[$name] ?? ''])->all());

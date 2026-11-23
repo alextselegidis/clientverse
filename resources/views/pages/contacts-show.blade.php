@@ -89,6 +89,8 @@
                         </div>
                     </div>
 
+                    @include('shared.custom-fields-show', ['record' => $contact, 'class' => 'mb-4'])
+
                     @if($contact->notes)
                         <div>
                             <h6 class="text-muted mb-2">{{ __('notes') }}</h6>

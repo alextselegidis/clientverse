@@ -31,4 +31,32 @@
             {{ __('users') }}
         </a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link px-3 px-lg-0 py-2 d-flex align-items-center {{ request()->routeIs('setup.custom-fields*') ? 'text-primary fw-medium' : 'text-body' }}"
+           href="{{ route('setup.custom-fields') }}">
+            <i class="bi bi-input-cursor-text me-3 text-muted"></i>
+            {{ __('custom_fields') }}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link px-3 px-lg-0 py-2 d-flex align-items-center {{ request()->routeIs('setup.departments*') ? 'text-primary fw-medium' : 'text-body' }}"
+           href="{{ route('setup.departments') }}">
+            <i class="bi bi-diagram-3 me-3 text-muted"></i>
+            {{ __('departments') }}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link px-3 px-lg-0 py-2 d-flex align-items-center {{ request()->routeIs('setup.announcements*') ? 'text-primary fw-medium' : 'text-body' }}"
+           href="{{ route('setup.announcements') }}">
+            <i class="bi bi-megaphone me-3 text-muted"></i>
+            {{ __('announcements') }}
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link px-3 px-lg-0 py-2 d-flex align-items-center {{ request()->routeIs('setup.activity*') ? 'text-primary fw-medium' : 'text-body' }}"
+           href="{{ route('setup.activity') }}">
+            <i class="bi bi-clock-history me-3 text-muted"></i>
+            {{ __('activity_log') }}
+        </a>
+    </li>
 </ul>

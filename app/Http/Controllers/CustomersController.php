@@ -13,6 +13,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\CustomField;
 use App\Models\File;
 use App\Models\Tag;
 use App\Traits\HandlesFileUploads;
@@ -80,7 +81,7 @@ class CustomersController extends Controller
     {
         $request->validate([
             'name' => 'required',
-        ]);
+        ] + CustomField::rules('customers'), [], CustomField::attributes('customers'));
 
         $customer = Customer::create($request->all());
 
@@ -115,7 +116,7 @@ class CustomersController extends Controller
         $request->validate([
             'name' => 'required|min:2',
             'email' => 'nullable|email',
-        ]);
+        ] + CustomField::rules('customers'), [], CustomField::attributes('customers'));
 
         $customer->fill($request->input());
         $customer->save();

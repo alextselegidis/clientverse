@@ -147,6 +147,8 @@ class InvoicesController extends Controller
             'status' => 'required|in:draft,sent,cancelled',
             'issue_date' => 'nullable|date',
             'due_date' => 'nullable|date|after_or_equal:issue_date',
+            'recurring_interval' => ['nullable', Rule::in(array_keys(Invoice::recurringIntervals()))],
+            'next_recurring_date' => 'nullable|required_with:recurring_interval|date',
             'currency' => 'required|string|size:3',
             'notes' => 'nullable|string',
             'terms' => 'nullable|string',

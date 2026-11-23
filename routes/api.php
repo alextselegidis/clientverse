@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\V1\MilestonesApiV1Controller;
 use App\Http\Controllers\Api\V1\ProjectsApiV1Controller;
 use App\Http\Controllers\Api\V1\SalesApiV1Controller;
 use App\Http\Controllers\Api\V1\TagsApiV1Controller;
+use App\Http\Controllers\Public\StripeController;
 use App\Http\Middleware\CheckApiIncludes;
 use App\Http\Middleware\CheckPermission;
 use Illuminate\Support\Facades\Route;
@@ -49,3 +50,6 @@ Route::prefix('v1')->as('api.v1.')->middleware(['auth:sanctum', CheckApiIncludes
     Orion::resource('tags', TagsApiV1Controller::class);
     Orion::resource('customer-notes', CustomerNotesApiV1Controller::class)->middleware(CheckPermission::class . ':customers');
 });
+
+// Stripe's payment notifications: no token, the Stripe-Signature header is the credential.
+Route::post('/stripe/webhook', [StripeController::class, 'webhook'])->name('api.stripe.webhook');

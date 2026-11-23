@@ -14,6 +14,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Contract;
 use App\Models\Customer;
+use App\Models\CustomField;
 use App\Models\Project;
 use App\Models\Sale;
 use Illuminate\Http\Request;
@@ -106,7 +107,7 @@ class SalesController extends Controller
         $request->validate([
             'name' => 'required',
             'customer_id' => 'required|exists:customers,id',
-        ]);
+        ] + CustomField::rules('sales'), [], CustomField::attributes('sales'));
 
         $sale = Sale::create($request->all());
 
@@ -133,7 +134,7 @@ class SalesController extends Controller
         $request->validate([
             'name' => 'required|min:2',
             'customer_id' => 'required|exists:customers,id',
-        ]);
+        ] + CustomField::rules('sales'), [], CustomField::attributes('sales'));
 
         $sale->fill($request->input());
         $sale->save();

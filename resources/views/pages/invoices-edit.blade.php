@@ -114,6 +114,31 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label for="recurring_interval" class="form-label">{{ __('repeat') }}</label>
+                        <select id="recurring_interval" name="recurring_interval" class="form-select">
+                            <option value="">{{ __('does_not_repeat') }}</option>
+                            @foreach(\App\Models\Invoice::recurringIntervals() as $key => $label)
+                                <option value="{{ $key }}" {{ old('recurring_interval', $invoice->recurring_interval) === $key ? 'selected' : '' }}>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label for="next_recurring_date" class="form-label">{{ __('next_invoice_date') }}</label>
+                        <input type="date" id="next_recurring_date" name="next_recurring_date" class="form-control"
+                               value="{{ old('next_recurring_date', $invoice->next_recurring_date?->format('Y-m-d')) }}">
+                        @error('next_recurring_date')
+                        <span class="form-text text-danger">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-4 mb-3 d-flex align-items-end">
+                        <p class="form-text mb-2">{{ __('recurring_invoice_hint') }}</p>
+                    </div>
+                </div>
+
                 @include('shared.line-items-editor', ['document' => $invoice])
 
                 @if($invoice->exists)

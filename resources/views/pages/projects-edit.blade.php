@@ -137,6 +137,7 @@
                     <label for="notes" class="form-label">{{ __('notes') }}</label>
                     <textarea id="notes" name="notes" class="form-control" rows="3">{{ old('notes', $project->notes) }}</textarea>
                 </div>
+                @include('shared.custom-fields-edit', ['record' => $project])
             </form>
         </div>
         <div class="card-footer bg-body-secondary border-top text-end py-3 px-4">

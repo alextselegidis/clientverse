@@ -73,6 +73,15 @@
                             </p>
                             <p class="mb-2"><strong>{{ __('issue_date') }}:</strong> {{ $invoice->issue_date?->format('M d, Y') ?? '-' }}</p>
                             <p class="mb-2"><strong>{{ __('due_date') }}:</strong> {{ $invoice->due_date?->format('M d, Y') ?? '-' }}</p>
+                            @if($invoice->recurring_interval)
+                                <p class="mb-2"><strong>{{ __('repeat') }}:</strong>
+                                    {{ \App\Models\Invoice::recurringIntervals()[$invoice->recurring_interval] }},
+                                    {{ __('next_invoice_date') }} {{ $invoice->next_recurring_date?->format('M d, Y') ?? '-' }}</p>
+                            @endif
+                            @if($invoice->recurring_parent_id)
+                                <p class="mb-2"><strong>{{ __('created_from') }}:</strong>
+                                    <a href="{{ route('invoices.show', $invoice->recurring_parent_id) }}">{{ __('recurring_invoice') }}</a></p>
+                            @endif
                         </div>
                     </div>
 

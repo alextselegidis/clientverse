@@ -12,10 +12,13 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
+    use RecordsActivity;
+
     protected $fillable = ['amount', 'paid_on', 'method', 'reference'];
 
     protected $casts = [

@@ -12,14 +12,18 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Ticket extends Model
 {
+    use RecordsActivity;
     use SoftDeletes;
 
-    protected $fillable = ['customer_id', 'contact_id', 'assigned_to', 'subject', 'status', 'priority'];
+    protected $fillable = [
+        'customer_id', 'contact_id', 'department_id', 'assigned_to', 'subject', 'status', 'priority',
+    ];
 
     public function customer()
     {
@@ -29,6 +33,11 @@ class Ticket extends Model
     public function contact()
     {
         return $this->belongsTo(Contact::class);
+    }
+
+    public function department()
+    {
+        return $this->belongsTo(Department::class);
     }
 
     public function assignedUser()

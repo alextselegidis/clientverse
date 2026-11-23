@@ -102,6 +102,8 @@
                         </div>
                     @endif
 
+                    @include('shared.custom-fields-show', ['record' => $contract, 'class' => 'mb-4'])
+
                     @if($contract->notes)
                         <div>
                             <h6 class="text-muted mb-2">{{ __('notes') }}</h6>

@@ -14,6 +14,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Contract;
 use App\Models\Customer;
+use App\Models\CustomField;
 use App\Models\File;
 use App\Models\Project;
 use App\Models\Sale;
@@ -86,7 +87,7 @@ class ContractsController extends Controller
     {
         $request->validate([
             'title' => 'required',
-        ]);
+        ] + CustomField::rules('contracts'), [], CustomField::attributes('contracts'));
 
         $contract = Contract::create($request->all());
 
@@ -119,7 +120,7 @@ class ContractsController extends Controller
         $request->validate([
             'title' => 'required|min:2',
             'customer_id' => 'nullable|exists:customers,id',
-        ]);
+        ] + CustomField::rules('contracts'), [], CustomField::attributes('contracts'));
 
         $contract->fill($request->all());
 

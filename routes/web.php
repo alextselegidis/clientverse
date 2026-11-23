@@ -12,14 +12,18 @@
 
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\ActivityController;
+use App\Http\Controllers\AnnouncementsController;
 use App\Http\Controllers\ArticlesController;
 use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ContactsController;
 use App\Http\Controllers\ContractsController;
 use App\Http\Controllers\CreditNotesController;
 use App\Http\Controllers\CustomerNotesController;
+use App\Http\Controllers\CustomFieldsController;
 use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DepartmentsController;
 use App\Http\Controllers\DocumentEmailsController;
 use App\Http\Controllers\EstimatesController;
 use App\Http\Controllers\GoalsController;
@@ -30,16 +34,22 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LogoutController;
 use App\Http\Controllers\MilestonesController;
 use App\Http\Controllers\PaymentsController;
+use App\Http\Controllers\Portal\PortalController;
+use App\Http\Controllers\Portal\PortalLoginController;
 use App\Http\Controllers\ProjectsController;
+use App\Http\Controllers\ProposalsController;
 use App\Http\Controllers\Public\PublicContractsController;
 use App\Http\Controllers\Public\KnowledgeBaseController;
+use App\Http\Controllers\Public\PayPalController;
 use App\Http\Controllers\Public\PublicDocumentsController;
 use App\Http\Controllers\Public\PublicSurveysController;
+use App\Http\Controllers\Public\StripeController;
 use App\Http\Controllers\RecoveryController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\SubscriptionsController;
 use App\Http\Controllers\SurveysController;
 use App\Http\Controllers\TasksController;
 use App\Http\Controllers\TicketRepliesController;
@@ -73,16 +83,42 @@ Route::middleware(['signed', 'throttle:30,1'])->prefix('p')->name('public.')->gr
     Route::get('/contracts/{contract}', [PublicContractsController::class, 'show'])->name('contracts.show');
     Route::post('/contracts/{contract}', [PublicContractsController::class, 'sign'])->name('contracts.sign');
     Route::get('/invoices/{invoice}', [PublicDocumentsController::class, 'invoice'])->name('invoices.show');
+    Route::post('/invoices/{invoice}/pay', [StripeController::class, 'checkout'])->name('invoices.pay');
+    Route::post('/invoices/{invoice}/paypal', [PayPalController::class, 'checkout'])->name('invoices.paypal');
+    Route::get('/subscriptions/{subscription}', [StripeController::class, 'showSubscription'])->name('subscriptions.show');
+    Route::post('/subscriptions/{subscription}', [StripeController::class, 'subscribe'])->name('subscriptions.subscribe');
     Route::get('/estimates/{estimate}', [PublicDocumentsController::class, 'estimate'])->name('estimates.show');
     Route::post('/estimates/{estimate}', [PublicDocumentsController::class, 'respondToEstimate'])->name('estimates.respond');
+    Route::get('/proposals/{proposal}', [PublicDocumentsController::class, 'proposal'])->name('proposals.show');
+    Route::post('/proposals/{proposal}', [PublicDocumentsController::class, 'respondToProposal'])->name('proposals.respond');
     Route::get('/surveys/{survey}', [PublicSurveysController::class, 'show'])->name('surveys.show');
     Route::post('/surveys/{survey}', [PublicSurveysController::class, 'respond'])->name('surveys.respond');
 });
+
+// PayPal sends the customer back here after approving; the order id is all it carries.
+Route::get('/p/paypal/return', [PayPalController::class, 'return'])->middleware('throttle:30,1')->name('public.paypal.return');
 
 // Public knowledge base: public articles only.
 Route::middleware('throttle:60,1')->group(function () {
     Route::get('/kb', [KnowledgeBaseController::class, 'index'])->name('kb');
     Route::get('/kb/{slug}', [KnowledgeBaseController::class, 'show'])->name('kb.show');
+});
+
+// Client portal: customer contacts on the "contact" guard, separate from staff.
+Route::prefix('portal')->name('portal')->group(function () {
+    Route::middleware('guest:contact')->group(function () {
+        Route::get('/login', [PortalLoginController::class, 'index'])->name('.login');
+        Route::post('/login', [PortalLoginController::class, 'perform'])->name('.login.perform');
+    });
+
+    Route::middleware('auth:contact')->group(function () {
+        Route::get('/', [PortalController::class, 'index']);
+        Route::post('/logout', [PortalLoginController::class, 'logout'])->name('.logout');
+        Route::get('/tickets/create', [PortalController::class, 'createTicket'])->name('.tickets.create');
+        Route::post('/tickets', [PortalController::class, 'storeTicket'])->name('.tickets.store');
+        Route::get('/tickets/{ticket}', [PortalController::class, 'showTicket'])->name('.tickets.show');
+        Route::post('/tickets/{ticket}/replies', [PortalController::class, 'replyToTicket'])->name('.tickets.replies.store');
+    });
 });
 
 // Auth
@@ -215,6 +251,26 @@ Route::middleware('auth')->group(function () {
         Route::post('/estimates/{estimate}/convert-to-invoice', [EstimatesController::class, 'convertToInvoice'])->name('estimates.convert-to-invoice');
     });
 
+    Route::middleware(CheckPermission::class . ':subscriptions')->group(function () {
+        // SubscriptionsController
+        Route::post('/subscriptions/{subscription}/cancel', [SubscriptionsController::class, 'cancel'])->name('subscriptions.cancel');
+        Route::post('/subscriptions/{subscription}/email', [DocumentEmailsController::class, 'subscription'])->name('subscriptions.email');
+        Route::resource('subscriptions', SubscriptionsController::class)->names([
+            'index' => 'subscriptions',
+        ]);
+    });
+
+    Route::middleware(CheckPermission::class . ':proposals')->group(function () {
+        // ProposalsController
+        Route::delete('proposals/bulk-destroy', [ProposalsController::class, 'bulkDestroy'])->name('proposals.bulk-destroy');
+        Route::resource('proposals', ProposalsController::class)->names([
+            'index' => 'proposals',
+        ]);
+        Route::get('/proposals/{proposal}/print', [ProposalsController::class, 'print'])->name('proposals.print');
+        Route::post('/proposals/{proposal}/email', [DocumentEmailsController::class, 'proposal'])->name('proposals.email');
+        Route::post('/proposals/{proposal}/convert-to-estimate', [ProposalsController::class, 'convertToEstimate'])->name('proposals.convert-to-estimate');
+    });
+
     Route::middleware(CheckPermission::class . ':items')->group(function () {
         // ItemsController
         Route::resource('items', ItemsController::class)->except('show')->names([
@@ -297,6 +353,36 @@ Route::middleware('auth')->group(function () {
         Route::put('/localization', [SettingsController::class, 'update'])->name('setup.localization.update');
         Route::get('/billing', [SettingsController::class, 'billing'])->name('setup.billing');
         Route::put('/billing', [SettingsController::class, 'updateBilling'])->name('setup.billing.update');
+        // AnnouncementsController
+        Route::resource('announcements', AnnouncementsController::class)->except('show')->names([
+            'index' => 'setup.announcements',
+            'create' => 'setup.announcements.create',
+            'store' => 'setup.announcements.store',
+            'edit' => 'setup.announcements.edit',
+            'update' => 'setup.announcements.update',
+            'destroy' => 'setup.announcements.destroy',
+        ]);
+        // ActivityController
+        Route::get('/activity', [ActivityController::class, 'index'])->name('setup.activity');
+        // CustomFieldsController
+        Route::resource('custom-fields', CustomFieldsController::class)->except('show')
+            ->parameters(['custom-fields' => 'customField'])->names([
+                'index' => 'setup.custom-fields',
+                'create' => 'setup.custom-fields.create',
+                'store' => 'setup.custom-fields.store',
+                'edit' => 'setup.custom-fields.edit',
+                'update' => 'setup.custom-fields.update',
+                'destroy' => 'setup.custom-fields.destroy',
+            ]);
+        // DepartmentsController
+        Route::resource('departments', DepartmentsController::class)->except('show')->names([
+            'index' => 'setup.departments',
+            'create' => 'setup.departments.create',
+            'store' => 'setup.departments.store',
+            'edit' => 'setup.departments.edit',
+            'update' => 'setup.departments.update',
+            'destroy' => 'setup.departments.destroy',
+        ]);
         // UsersController
         Route::delete('users/bulk-destroy', [UsersController::class, 'bulkDestroy'])->name('setup.users.bulk-destroy');
         // Users are created through the modal on the index page, so there is no

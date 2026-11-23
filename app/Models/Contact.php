@@ -12,11 +12,23 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Concerns\HasCustomFields;
+use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Contact extends Model
+/**
+ * A person at a customer. Contacts with portal access and a password sign in to
+ * the client portal through the "contact" guard. The password is set by staff
+ * on purpose outside $fillable, so neither the edit form nor the API mass-assigns it.
+ */
+class Contact extends Authenticatable
 {
+    use HasCustomFields;
+    use RecordsActivity;
+
+    protected $hidden = ['password', 'remember_token'];
+
     protected $fillable = [
         'customer_id',
         'first_name',
@@ -33,9 +45,19 @@ class Contact extends Model
     protected $casts = [
         'is_primary' => 'boolean',
         'has_portal_access' => 'boolean',
+        'password' => 'hashed',
     ];
 
     protected $appends = ['full_name'];
+
+    /**
+     * Read by AppSessionGuard on every request, as it is for users: taking portal
+     * access away signs the contact out.
+     */
+    public function getIsActiveAttribute(): bool
+    {
+        return $this->has_portal_access && filled($this->password);
+    }
 
     public function customer()
     {

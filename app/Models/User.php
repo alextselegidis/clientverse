@@ -14,6 +14,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Enums\RoleEnum;
+use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -23,6 +24,7 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, Notifiable;
+    use RecordsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -68,7 +70,7 @@ class User extends Authenticatable
      * Creating counts as editing.
      */
     public const PERMISSION_MODULES = [
-        'customers', 'projects', 'tasks', 'sales', 'contracts', 'invoices', 'estimates', 'credit_notes', 'items', 'expenses', 'tickets', 'articles', 'surveys', 'reports',
+        'customers', 'projects', 'tasks', 'sales', 'proposals', 'contracts', 'invoices', 'estimates', 'credit_notes', 'subscriptions', 'items', 'expenses', 'tickets', 'articles', 'surveys', 'reports',
     ];
 
     public const PERMISSION_ACTIONS = ['view', 'edit', 'delete'];

@@ -16,8 +16,9 @@ use App\Models\Contract;
 use App\Models\Customer;
 use App\Models\Estimate;
 use App\Models\Invoice;
+use App\Models\Proposal;
+use App\Models\Subscription;
 use App\Notifications\DocumentEmail;
-use Illuminate\Support\Facades\Notification;
 use Throwable;
 
 /**
@@ -28,12 +29,7 @@ class DocumentEmailsController extends Controller
 {
     public function invoice(Invoice $invoice)
     {
-        return $this->send($invoice->customer, 'invoice', [
-            'number' => $invoice->number,
-            'total' => format_currency($invoice->total, $invoice->currency),
-            'due_date' => $invoice->due_date?->format('M d, Y') ?? '-',
-            'link' => $invoice->publicUrl(),
-        ], fn () => $invoice->status === 'draft' && $invoice->update(['status' => 'sent']));
+        return $this->send($invoice->customer, 'invoice', $invoice->emailValues(), fn () => $invoice->status === 'draft' && $invoice->update(['status' => 'sent']));
     }
 
     public function estimate(Estimate $estimate)
@@ -45,6 +41,16 @@ class DocumentEmailsController extends Controller
         ], fn () => $estimate->status === 'draft' && $estimate->update(['status' => 'sent']));
     }
 
+    public function proposal(Proposal $proposal)
+    {
+        return $this->send($proposal->customer, 'proposal', [
+            'number' => $proposal->number,
+            'subject' => $proposal->subject,
+            'total' => format_currency($proposal->total, $proposal->currency),
+            'link' => $proposal->publicUrl(),
+        ], fn () => $proposal->status === 'draft' && $proposal->update(['status' => 'sent']));
+    }
+
     public function contract(Contract $contract)
     {
         return $this->send($contract->customer, 'contract', [
@@ -53,19 +59,20 @@ class DocumentEmailsController extends Controller
         ]);
     }
 
+    public function subscription(Subscription $subscription)
+    {
+        abort_unless($subscription->isEditable(), 403);
+
+        return $this->send($subscription->customer, 'subscription', $subscription->emailValues(),
+            fn () => $subscription->status === 'draft' && $subscription->forceFill(['status' => 'pending'])->save());
+    }
+
     private function send(?Customer $customer, string $type, array $values, ?callable $afterSending = null)
     {
-        if (blank($customer?->email)) {
-            return back()->with('error', __('customer_has_no_email_message'));
-        }
-
-        $template = email_template($type, $values + [
-            'customer' => $customer->name,
-            'company' => setting('company_name') ?: config('app.name'),
-        ]);
-
         try {
-            Notification::route('mail', $customer->email)->notify(new DocumentEmail($template['subject'], $template['body']));
+            if (!DocumentEmail::sendTemplate($customer, $type, $values)) {
+                return back()->with('error', __('customer_has_no_email_message'));
+            }
         } catch (Throwable $exception) {
             report($exception);
 

@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TicketReply extends Model
 {
-    protected $fillable = ['user_id', 'body'];
+    protected $fillable = ['user_id', 'contact_id', 'body'];
 
     // Replying moves the ticket up the list.
     protected $touches = ['ticket'];
@@ -29,5 +29,11 @@ class TicketReply extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    // Set when the customer replied through the client portal.
+    public function contact()
+    {
+        return $this->belongsTo(Contact::class);
     }
 }

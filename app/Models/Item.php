@@ -12,6 +12,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -20,6 +21,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Item extends Model
 {
+    use RecordsActivity;
+
     protected $fillable = ['description', 'unit_price', 'tax_rate'];
 
     protected $casts = [

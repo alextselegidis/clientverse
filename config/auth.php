@@ -41,6 +41,12 @@ return [
             'provider' => 'users',
             'remember' => 52560000, // ~100 years in minutes
         ],
+
+        // Customer contacts signed in to the client portal (/portal).
+        'contact' => [
+            'driver' => 'session',
+            'provider' => 'contacts',
+        ],
     ],
 
     /*
@@ -64,6 +70,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
+        ],
+
+        'contacts' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Contact::class,
         ],
 
         // 'users' => [
