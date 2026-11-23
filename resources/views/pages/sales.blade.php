@@ -119,22 +119,22 @@
                             <td class="ps-3" onclick="event.stopPropagation();">
                                 <input type="checkbox" class="form-check-input bulk-select-item" data-table="sales" value="{{ $sale->id }}">
                             </td>
-                            <td onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">
-                                <span class="fw-medium">{{ $sale->name }}</span>
+                            <td>
+                                <a href="{{ route('sales.show', $sale->id) }}" class="fw-medium text-body text-decoration-none">{{ $sale->name }}</a>
                             </td>
-                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell">
                                 @if($sale->customer)
                                     <a href="{{ route('customers.show', $sale->customer_id) }}" onclick="event.stopPropagation()">
                                         {{ $sale->customer->name }}
                                     </a>
                                 @endif
                             </td>
-                            <td class="d-none d-md-table-cell text-nowrap" onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">
+                            <td class="d-none d-md-table-cell text-nowrap">
                                 @if($sale->value)
                                     {{ format_currency($sale->value, $sale->currency) }}
                                 @endif
                             </td>
-                            <td onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">
+                            <td>
                                 @php
                                     $stageColors = ['lead' => 'secondary', 'qualified' => 'info', 'proposal_sent' => 'warning', 'won' => 'success', 'lost' => 'danger'];
                                 @endphp
@@ -142,7 +142,7 @@
                                     {{ __($sale->stage) }}
                                 </span>
                             </td>
-                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('sales.show', $sale->id) }}'" style="cursor: pointer;">{{ $sale->probability }}%</td>
+                            <td class="d-none d-lg-table-cell">{{ $sale->probability }}%</td>
                             <td class="pe-3 text-end">
                                 <div class="dropdown" onclick="event.stopPropagation();">
                                     <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown"

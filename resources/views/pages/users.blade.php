@@ -106,18 +106,18 @@
                                         <td class="ps-4" onclick="event.stopPropagation();">
                                             <input type="checkbox" class="form-check-input bulk-select-item" data-table="users" value="{{ $user->id }}">
                                         </td>
-                                        <td onclick="window.location='{{ route('setup.users.edit', $user->id) }}'" style="cursor: pointer;">
-                                            <span class="fw-medium">{{ $user->name }}</span>
+                                        <td>
+                                            <a href="{{ route('setup.users.edit', $user->id) }}" class="fw-medium text-body text-decoration-none">{{ $user->name }}</a>
                                         </td>
-                                        <td class="d-none d-md-table-cell" onclick="window.location='{{ route('setup.users.edit', $user->id) }}'" style="cursor: pointer;">
+                                        <td class="d-none d-md-table-cell">
                                             <a href="mailto:{{ $user->email }}" class="text-decoration-none" onclick="event.stopPropagation();">
                                                 {{ $user->email }}
                                             </a>
                                         </td>
-                                        <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('setup.users.edit', $user->id) }}'" style="cursor: pointer;">
+                                        <td class="d-none d-lg-table-cell">
                                             <span class="badge bg-light text-dark">{{ __($user->role) }}</span>
                                         </td>
-                                        <td onclick="window.location='{{ route('setup.users.edit', $user->id) }}'" style="cursor: pointer;">
+                                        <td>
                                             @if($user->is_active)
                                                 <span class="badge bg-success-subtle text-success">{{ __('yes') }}</span>
                                             @else

@@ -51,6 +51,14 @@ class ContractsController extends Controller
             $query->where('type', $type);
         }
 
+        // Renewal overview: active contracts ending within 30 days, or contracts already past their end date.
+        $ends = $request->query('ends');
+        if ($ends === 'soon') {
+            $query->where('status', 'active')->whereBetween('end_date', [today(), today()->addDays(30)]);
+        } elseif ($ends === 'ended') {
+            $query->whereDate('end_date', '<', today());
+        }
+
         $sort = $request->query('sort', 'start_date');
         $direction = $request->query('direction', 'desc');
         sort_query($query, $sort, $direction);
@@ -62,6 +70,7 @@ class ContractsController extends Controller
             'q' => $q,
             'status' => $status,
             'type' => $type,
+            'ends' => $ends,
             'customers' => Customer::toOptions(),
         ]);
     }

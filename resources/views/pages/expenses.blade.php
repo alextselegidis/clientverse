@@ -99,19 +99,19 @@
                             <td class="ps-3" onclick="event.stopPropagation();">
                                 <input type="checkbox" class="form-check-input bulk-select-item" data-table="expenses" value="{{ $expense->id }}">
                             </td>
-                            <td onclick="window.location='{{ $showUrl }}'" style="cursor: pointer; width: 32%;">
-                                <div class="fw-medium text-truncate" style="width: 0; min-width: 100%;">{{ $expense->description }}</div>
+                            <td style="width: 32%;">
+                                <a href="{{ $showUrl }}" class="fw-medium text-truncate d-block text-body text-decoration-none" style="width: 0; min-width: 100%;">{{ $expense->description }}</a>
                             </td>
-                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">{{ $expense->category }}</td>
-                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell">{{ $expense->category }}</td>
+                            <td class="d-none d-lg-table-cell">
                                 @if($expense->customer)
                                     <a href="{{ route('customers.show', $expense->customer_id) }}" onclick="event.stopPropagation()">{{ $expense->customer->name }}</a>
                                 @endif
                             </td>
-                            <td class="d-none d-md-table-cell" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td class="d-none d-md-table-cell">
                                 {{ $expense->expense_date->format('M d, Y') }}
                             </td>
-                            <td class="text-end" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td class="text-end">
                                 {{ format_currency($expense->amount, $expense->currency) }}
                                 @if($expense->invoice_id)
                                     <i class="bi bi-receipt text-success ms-1" title="{{ __('billed') }}"></i>

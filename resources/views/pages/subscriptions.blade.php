@@ -85,9 +85,9 @@
                     <tbody>
                     @foreach($subscriptions as $subscription)
                         @php($showUrl = route('subscriptions.show', $subscription->id))
-                        <tr onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                        <tr>
                             <td class="ps-3" style="width: 32%;">
-                                <div class="fw-medium text-truncate" style="width: 0; min-width: 100%;">{{ $subscription->name }}</div>
+                                <a href="{{ $showUrl }}" class="fw-medium text-truncate d-block text-body text-decoration-none" style="width: 0; min-width: 100%;">{{ $subscription->name }}</a>
                             </td>
                             <td class="d-none d-md-table-cell text-nowrap">
                                 {{ format_currency($subscription->gross_amount, $subscription->currency) }}

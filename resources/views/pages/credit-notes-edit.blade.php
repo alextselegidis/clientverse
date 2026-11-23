@@ -18,7 +18,10 @@
 @section('breadcrumbs')
     @include('shared.breadcrumb', ['breadcrumbs' => [
         ['label' => __('credit_notes'), 'url' => route('credit-notes')],
-        ['label' => $creditNote->exists ? $creditNote->number : __('create')]
+        // An existing record links back to its page, so the trail leads out of the form.
+        ...($creditNote->exists
+            ? [['label' => $creditNote->number, 'url' => route('credit-notes.show', $creditNote->id)], ['label' => __('edit')]]
+            : [['label' => __('create')]]),
     ]])
 @endsection
 

@@ -109,29 +109,29 @@
                             <td class="ps-3" onclick="event.stopPropagation();">
                                 <input type="checkbox" class="form-check-input bulk-select-item" data-table="tickets" value="{{ $ticket->id }}">
                             </td>
-                            <td onclick="window.location='{{ $showUrl }}'" style="cursor: pointer; width: 32%;">
-                                <div class="fw-medium text-truncate" style="width: 0; min-width: 100%;">
+                            <td style="width: 32%;">
+                                <a href="{{ $showUrl }}" class="fw-medium text-truncate d-block text-body text-decoration-none" style="width: 0; min-width: 100%;">
                                     @if($ticket->priority === 'high')
                                         <i class="bi bi-flag-fill text-danger me-1" title="{{ __('high') }}"></i>
                                     @endif
                                     #{{ $ticket->id }} {{ $ticket->subject }}
-                                </div>
+                                </a>
                             </td>
-                            <td class="d-none d-md-table-cell" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td class="d-none d-md-table-cell">
                                 @if($ticket->customer)
                                     <a href="{{ route('customers.show', $ticket->customer_id) }}" onclick="event.stopPropagation()">{{ $ticket->customer->name }}</a>
                                 @endif
                             </td>
-                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell">
                                 {{ $ticket->assignedUser?->name }}
                                 @if($ticket->department)
                                     <div class="small text-muted text-truncate">{{ $ticket->department->name }}</div>
                                 @endif
                             </td>
-                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell">
                                 {{ $ticket->updated_at->diffForHumans() }}
                             </td>
-                            <td onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td>
                                 <span class="badge bg-{{ \App\Models\Ticket::statusColors()[$ticket->status] }}">{{ __($ticket->status) }}</span>
                             </td>
                             <td class="pe-3 text-end">

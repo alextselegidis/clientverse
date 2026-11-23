@@ -18,7 +18,10 @@
 @section('breadcrumbs')
     @include('shared.breadcrumb', ['breadcrumbs' => [
         ['label' => __('contracts'), 'url' => route('contracts')],
-        ['label' => $contract->exists ? $contract->title : __('create')]
+        // An existing record links back to its page, so the trail leads out of the form.
+        ...($contract->exists
+            ? [['label' => $contract->title, 'url' => route('contracts.show', $contract->id)], ['label' => __('edit')]]
+            : [['label' => __('create')]]),
     ]])
 @endsection
 

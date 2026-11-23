@@ -18,7 +18,10 @@
 @section('breadcrumbs')
     @include('shared.breadcrumb', ['breadcrumbs' => [
         ['label' => __('surveys'), 'url' => route('surveys')],
-        ['label' => $survey->exists ? $survey->title : __('create')]
+        // An existing record links back to its page, so the trail leads out of the form.
+        ...($survey->exists
+            ? [['label' => $survey->title, 'url' => route('surveys.show', $survey->id)], ['label' => __('edit')]]
+            : [['label' => __('create')]]),
     ]])
 @endsection
 

@@ -99,23 +99,23 @@
                             <td class="ps-3" onclick="event.stopPropagation();">
                                 <input type="checkbox" class="form-check-input bulk-select-item" data-table="credit-notes" value="{{ $creditNote->id }}">
                             </td>
-                            <td onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
-                                <span class="fw-medium">{{ $creditNote->number }}</span>
+                            <td>
+                                <a href="{{ $showUrl }}" class="fw-medium text-body text-decoration-none">{{ $creditNote->number }}</a>
                             </td>
-                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell">
                                 @if($creditNote->customer)
                                     <a href="{{ route('customers.show', $creditNote->customer_id) }}" onclick="event.stopPropagation()">
                                         {{ $creditNote->customer->name }}
                                     </a>
                                 @endif
                             </td>
-                            <td class="d-none d-md-table-cell text-nowrap" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td class="d-none d-md-table-cell text-nowrap">
                                 {{ format_currency($creditNote->total, $creditNote->currency) }}
                             </td>
-                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell">
                                 {{ $creditNote->issue_date?->format('M d, Y') }}
                             </td>
-                            <td onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td>
                                 <span class="badge bg-{{ \App\Models\CreditNote::statusColors()[$creditNote->status] }}">
                                     {{ __($creditNote->status) }}
                                 </span>

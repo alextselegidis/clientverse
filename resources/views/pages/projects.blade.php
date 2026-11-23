@@ -107,17 +107,17 @@
                             <td class="ps-3" onclick="event.stopPropagation();">
                                 <input type="checkbox" class="form-check-input bulk-select-item" data-table="projects" value="{{ $project->id }}">
                             </td>
-                            <td onclick="window.location='{{ route('projects.show', $project->id) }}'" style="cursor: pointer;">
-                                <span class="fw-medium">{{ $project->name }}</span>
+                            <td>
+                                <a href="{{ route('projects.show', $project->id) }}" class="fw-medium text-body text-decoration-none">{{ $project->name }}</a>
                             </td>
-                            <td class="d-none d-md-table-cell" onclick="window.location='{{ route('projects.show', $project->id) }}'" style="cursor: pointer;">
+                            <td class="d-none d-md-table-cell">
                                 @if($project->customer)
                                     <a href="{{ route('customers.show', $project->customer_id) }}" onclick="event.stopPropagation()">
                                         {{ $project->customer->name }}
                                     </a>
                                 @endif
                             </td>
-                            <td onclick="window.location='{{ route('projects.show', $project->id) }}'" style="cursor: pointer;">
+                            <td>
                                 @php
                                     $statusColors = ['planned' => 'secondary', 'active' => 'primary', 'on_hold' => 'warning', 'completed' => 'success'];
                                 @endphp
@@ -125,7 +125,7 @@
                                     {{ __($project->status) }}
                                 </span>
                             </td>
-                            <td class="d-none d-lg-table-cell text-nowrap" onclick="window.location='{{ route('projects.show', $project->id) }}'" style="cursor: pointer;">{{ $project->due_date?->format('M d, Y') }}</td>
+                            <td class="d-none d-lg-table-cell text-nowrap">{{ $project->due_date?->format('M d, Y') }}</td>
                             <td class="pe-3 text-end">
                                 <div class="dropdown" onclick="event.stopPropagation();">
                                     <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown"

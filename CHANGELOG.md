@@ -49,8 +49,13 @@
   credit notes, proposals and subscriptions; customers, contacts, projects, deals and contracts expose custom field
   values, all documented in `openapi.yml`
 
+- Contracts list filters those ending within 30 days or already ended, and staff with access to contracts get an
+  email 30 and 7 days before a recurring contract ends (#17)
+
 ### Fixed
 
+- Clicking anywhere on a list row no longer opens the record; only its name is a link (#15)
+- On an edit page the breadcrumb links back to the record's own page (#14)
 - Saving an applied credit note without changes no longer detaches it from its invoice
 - Changing an invoice's customer or currency drops credit notes that no longer match it
 - Page links on the contacts and milestones lists keep the search and sort

@@ -18,7 +18,10 @@
 @section('breadcrumbs')
     @include('shared.breadcrumb', ['breadcrumbs' => [
         ['label' => __('knowledge_base'), 'url' => route('articles')],
-        ['label' => $article->exists ? $article->title : __('create')]
+        // An existing record links back to its page, so the trail leads out of the form.
+        ...($article->exists
+            ? [['label' => $article->title, 'url' => route('articles.show', $article->id)], ['label' => __('edit')]]
+            : [['label' => __('create')]]),
     ]])
 @endsection
 

@@ -42,9 +42,9 @@
                     </thead>
                     <tbody>
                     @forelse($surveys as $survey)
-                        <tr onclick="window.location='{{ route('surveys.show', $survey->id) }}'" style="cursor: pointer;">
+                        <tr>
                             <td class="ps-3" style="width: 32%;">
-                                <div class="fw-medium text-truncate" style="width: 0; min-width: 100%;">{{ $survey->title }}</div>
+                                <a href="{{ route('surveys.show', $survey->id) }}" class="fw-medium text-truncate d-block text-body text-decoration-none" style="width: 0; min-width: 100%;">{{ $survey->title }}</a>
                             </td>
                             <td class="d-none d-md-table-cell">{{ $survey->responses_count }}</td>
                             <td class="pe-3">

@@ -18,7 +18,10 @@
 @section('breadcrumbs')
     @include('shared.breadcrumb', ['breadcrumbs' => [
         ['label' => __('customers'), 'url' => route('customers')],
-        ['label' => $customer->exists ? $customer->name : __('create')]
+        // An existing record links back to its page, so the trail leads out of the form.
+        ...($customer->exists
+            ? [['label' => $customer->name, 'url' => route('customers.show', $customer->id)], ['label' => __('edit')]]
+            : [['label' => __('create')]]),
     ]])
 @endsection
 

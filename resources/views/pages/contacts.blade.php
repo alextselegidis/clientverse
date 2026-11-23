@@ -99,9 +99,9 @@
                     </thead>
                     <tbody>
                     @foreach($contacts as $contact)
-                        <tr onclick="window.location='{{ route('customers.contacts.show', [$customer->id, $contact->id]) }}'" style="cursor: pointer;">
+                        <tr>
                             <td class="ps-3">
-                                <span class="fw-medium">{{ $contact->full_name }}</span>
+                                <a href="{{ route('customers.contacts.show', [$customer->id, $contact->id]) }}" class="fw-medium text-body text-decoration-none">{{ $contact->full_name }}</a>
                                 @if($contact->position)
                                     <small class="text-muted d-block">{{ $contact->position }}</small>
                                 @endif

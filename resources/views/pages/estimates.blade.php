@@ -99,23 +99,23 @@
                             <td class="ps-3" onclick="event.stopPropagation();">
                                 <input type="checkbox" class="form-check-input bulk-select-item" data-table="estimates" value="{{ $estimate->id }}">
                             </td>
-                            <td onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
-                                <span class="fw-medium">{{ $estimate->number }}</span>
+                            <td>
+                                <a href="{{ $showUrl }}" class="fw-medium text-body text-decoration-none">{{ $estimate->number }}</a>
                             </td>
-                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell">
                                 @if($estimate->customer)
                                     <a href="{{ route('customers.show', $estimate->customer_id) }}" onclick="event.stopPropagation()">
                                         {{ $estimate->customer->name }}
                                     </a>
                                 @endif
                             </td>
-                            <td class="d-none d-md-table-cell text-nowrap" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td class="d-none d-md-table-cell text-nowrap">
                                 {{ format_currency($estimate->total, $estimate->currency) }}
                             </td>
-                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell">
                                 {{ $estimate->expiry_date?->format('M d, Y') }}
                             </td>
-                            <td onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td>
                                 <span class="badge bg-{{ \App\Models\Estimate::statusColors()[$estimate->status] }}">
                                     {{ __($estimate->status) }}
                                 </span>

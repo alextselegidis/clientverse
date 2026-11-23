@@ -20,7 +20,10 @@
         ['label' => __('customers'), 'url' => route('customers')],
         ['label' => $customer->name, 'url' => route('customers.show', $customer->id)],
         ['label' => __('contacts'), 'url' => route('customers.contacts', $customer->id)],
-        ['label' => $contact->exists ? $contact->full_name : __('create')]
+        // An existing record links back to its page, so the trail leads out of the form.
+        ...($contact->exists
+            ? [['label' => $contact->full_name, 'url' => route('customers.contacts.show', [$customer->id, $contact->id])], ['label' => __('edit')]]
+            : [['label' => __('create')]]),
     ]])
 @endsection
 

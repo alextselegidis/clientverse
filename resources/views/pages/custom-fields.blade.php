@@ -53,16 +53,16 @@
                             @foreach($fields as $field)
                                 @php($editUrl = route('setup.custom-fields.edit', $field->id))
                                 <tr>
-                                    <td class="ps-3" onclick="window.location='{{ $editUrl }}'" style="cursor: pointer; width: 32%;">
-                                        <div class="fw-medium text-truncate" style="width: 0; min-width: 100%;">{{ $field->label }}</div>
+                                    <td class="ps-3" style="width: 32%;">
+                                        <a href="{{ $editUrl }}" class="fw-medium text-truncate d-block text-body text-decoration-none" style="width: 0; min-width: 100%;">{{ $field->label }}</a>
                                     </td>
-                                    <td onclick="window.location='{{ $editUrl }}'" style="cursor: pointer;">
+                                    <td>
                                         {{ \App\Models\CustomField::appliesToOptions()[$field->applies_to] ?? $field->applies_to }}
                                     </td>
-                                    <td class="d-none d-md-table-cell" onclick="window.location='{{ $editUrl }}'" style="cursor: pointer;">
+                                    <td class="d-none d-md-table-cell">
                                         {{ \App\Models\CustomField::types()[$field->type] ?? $field->type }}
                                     </td>
-                                    <td class="d-none d-lg-table-cell" onclick="window.location='{{ $editUrl }}'" style="cursor: pointer;">
+                                    <td class="d-none d-lg-table-cell">
                                         {{ $field->is_required ? __('yes') : __('no') }}
                                     </td>
                                     <td class="pe-3 text-end">

@@ -52,16 +52,16 @@
                             @foreach($announcements as $announcement)
                                 @php($editUrl = route('setup.announcements.edit', $announcement->id))
                                 <tr>
-                                    <td class="ps-3" onclick="window.location='{{ $editUrl }}'" style="cursor: pointer; width: 32%;">
-                                        <div class="fw-medium text-truncate {{ $announcement->isExpired() ? 'text-muted' : '' }}"
-                                             style="width: 0; min-width: 100%;">{{ $announcement->title }}</div>
+                                    <td class="ps-3" style="width: 32%;">
+                                        <a href="{{ $editUrl }}" class="fw-medium text-truncate {{ $announcement->isExpired() ? 'text-muted' : '' }} d-block text-body text-decoration-none"
+                                             style="width: 0; min-width: 100%;">{{ $announcement->title }}</a>
                                     </td>
-                                    <td onclick="window.location='{{ $editUrl }}'" style="cursor: pointer;">
+                                    <td>
                                         <span class="badge bg-{{ $announcement->audience === 'staff' ? 'secondary' : 'info' }}">
                                             {{ \App\Models\Announcement::audiences()[$announcement->audience] }}
                                         </span>
                                     </td>
-                                    <td class="d-none d-md-table-cell" onclick="window.location='{{ $editUrl }}'" style="cursor: pointer;">
+                                    <td class="d-none d-md-table-cell">
                                         {{ $announcement->visible_until?->format('M d, Y') ?? '-' }}
                                     </td>
                                     <td class="pe-3 text-end">

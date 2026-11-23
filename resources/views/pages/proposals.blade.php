@@ -99,26 +99,26 @@
                             <td class="ps-3" onclick="event.stopPropagation();">
                                 <input type="checkbox" class="form-check-input bulk-select-item" data-table="proposals" value="{{ $proposal->id }}">
                             </td>
-                            <td onclick="window.location='{{ $showUrl }}'" style="cursor: pointer; width: 32%;">
+                            <td style="width: 32%;">
                                 <div class="text-truncate" style="width: 0; min-width: 100%;">
-                                    <span class="fw-medium">{{ $proposal->number }}</span>
+                                    <a href="{{ $showUrl }}" class="fw-medium text-body text-decoration-none">{{ $proposal->number }}</a>
                                     <span class="text-muted ms-2">{{ $proposal->subject }}</span>
                                 </div>
                             </td>
-                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell">
                                 @if($proposal->customer)
                                     <a href="{{ route('customers.show', $proposal->customer_id) }}" onclick="event.stopPropagation()">
                                         {{ $proposal->customer->name }}
                                     </a>
                                 @endif
                             </td>
-                            <td class="d-none d-md-table-cell text-nowrap" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td class="d-none d-md-table-cell text-nowrap">
                                 {{ format_currency($proposal->total, $proposal->currency) }}
                             </td>
-                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell">
                                 {{ $proposal->open_till?->format('M d, Y') }}
                             </td>
-                            <td onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td>
                                 <span class="badge bg-{{ \App\Models\Proposal::statusColors()[$proposal->status] }}">
                                     {{ __($proposal->status) }}
                                 </span>

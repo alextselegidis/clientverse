@@ -14,7 +14,10 @@ use App\Models\Contract;
 use App\Models\Estimate;
 use App\Models\Invoice;
 use App\Models\Proposal;
+use App\Models\User;
+use App\Notifications\ContractRenewalDue;
 use App\Notifications\DocumentEmail;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
@@ -47,6 +50,20 @@ Artisan::command('invoices:recur', function () {
 })->purpose('Create the invoices that recurring invoices are due to produce');
 
 Artisan::command('reminders:send', function () {
+    // Staff hear about recurring contracts 30 and 7 days before they end, whatever the customer
+    // reminder setting says. Matching the exact day keeps it to two emails without a sent flag.
+    $staff = User::where('is_active', true)->get()->filter(fn (User $user) => $user->hasPermission('contracts'));
+    Contract::with('customer')->where('status', 'active')->where('type', 'recurring')
+        ->where(fn ($query) => $query->whereDate('end_date', today()->addDays(30))->orWhereDate('end_date', today()->addDays(7)))
+        ->lazyById()->each(function (Contract $contract) use ($staff) {
+            try {
+                Notification::send($staff, new ContractRenewalDue($contract));
+                $this->info("Sent renewal notice for contract #{$contract->id}");
+            } catch (Throwable $exception) {
+                report($exception);
+            }
+        });
+
     if (!setting('send_reminders')) {
         $this->info('Reminders are switched off under Setup > Billing.');
 
@@ -98,4 +115,4 @@ Artisan::command('reminders:send', function () {
             'date' => $contract->end_date->format('M d, Y'),
             'link' => $contract->signingUrl(),
         ]));
-})->purpose('Email customers about overdue invoices and expiring estimates, proposals and contracts');
+})->purpose('Email staff about recurring contracts up for renewal, and customers about overdue invoices and expiring documents');

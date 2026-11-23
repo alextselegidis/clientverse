@@ -74,13 +74,13 @@
                     @foreach($items as $item)
                         @php($editUrl = route('items.edit', $item->id))
                         <tr>
-                            <td class="ps-3" onclick="window.location='{{ $editUrl }}'" style="cursor: pointer; width: 32%;">
-                                <div class="fw-medium text-truncate" style="width: 0; min-width: 100%;">{{ $item->description }}</div>
+                            <td class="ps-3" style="width: 32%;">
+                                <a href="{{ $editUrl }}" class="fw-medium text-truncate d-block text-body text-decoration-none" style="width: 0; min-width: 100%;">{{ $item->description }}</a>
                             </td>
-                            <td class="text-nowrap" onclick="window.location='{{ $editUrl }}'" style="cursor: pointer;">
+                            <td class="text-nowrap">
                                 {{ format_currency($item->unit_price) }}
                             </td>
-                            <td class="d-none d-md-table-cell" onclick="window.location='{{ $editUrl }}'" style="cursor: pointer;">
+                            <td class="d-none d-md-table-cell">
                                 {{ rtrim(rtrim($item->tax_rate, '0'), '.') }}%
                             </td>
                             <td class="pe-3 text-end">

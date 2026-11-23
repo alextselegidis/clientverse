@@ -115,16 +115,16 @@
                             <td class="ps-3" onclick="event.stopPropagation();">
                                 <input type="checkbox" class="form-check-input bulk-select-item" data-table="customers" value="{{ $customer->id }}">
                             </td>
-                            <td onclick="window.location='{{ route('customers.show', $customer->id) }}'" style="cursor: pointer;">
-                                <span class="fw-medium">{{ $customer->name }}</span>
+                            <td>
+                                <a href="{{ route('customers.show', $customer->id) }}" class="fw-medium text-body text-decoration-none">{{ $customer->name }}</a>
                             </td>
-                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('customers.show', $customer->id) }}'" style="cursor: pointer;">{{ $customer->company }}</td>
-                            <td class="d-none d-md-table-cell" onclick="window.location='{{ route('customers.show', $customer->id) }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell">{{ $customer->company }}</td>
+                            <td class="d-none d-md-table-cell">
                                 @if($customer->email)
                                     <a href="mailto:{{ $customer->email }}" onclick="event.stopPropagation()">{{ $customer->email }}</a>
                                 @endif
                             </td>
-                            <td onclick="window.location='{{ route('customers.show', $customer->id) }}'" style="cursor: pointer;">
+                            <td>
                                 @php
                                     $statusColors = ['lead' => 'warning', 'active' => 'success', 'inactive' => 'secondary'];
                                 @endphp

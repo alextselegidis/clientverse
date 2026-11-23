@@ -20,7 +20,10 @@
         ['label' => __('projects'), 'url' => route('projects')],
         ['label' => $project->name, 'url' => route('projects.show', $project->id)],
         ['label' => __('milestones'), 'url' => route('projects.milestones', $project->id)],
-        ['label' => $milestone->exists ? $milestone->name : __('create')]
+        // An existing record links back to its page, so the trail leads out of the form.
+        ...($milestone->exists
+            ? [['label' => $milestone->name, 'url' => route('projects.milestones.show', [$project->id, $milestone->id])], ['label' => __('edit')]]
+            : [['label' => __('create')]]),
     ]])
 @endsection
 

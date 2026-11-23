@@ -61,6 +61,13 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="col-md-2">
+                            <select name="ends" class="form-select" onchange="this.form.submit()">
+                                <option value="">{{ __('ends') }}: {{ __('all') }}</option>
+                                <option value="soon" {{ $ends === 'soon' ? 'selected' : '' }}>{{ __('ends') }}: {{ __('ending_soon') }}</option>
+                                <option value="ended" {{ $ends === 'ended' ? 'selected' : '' }}>{{ __('ended') }}</option>
+                            </select>
+                        </div>
                     </form>
                     @include('shared.bulk-actions', ['tableId' => 'contracts', 'route' => route('contracts.bulk-destroy')])
                 </div>
@@ -131,22 +138,22 @@
                             <td class="ps-3" onclick="event.stopPropagation();">
                                 <input type="checkbox" class="form-check-input bulk-select-item" data-table="contracts" value="{{ $contract->id }}">
                             </td>
-                            <td onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
-                                <span class="fw-medium">{{ $contract->title }}</span>
+                            <td>
+                                <a href="{{ route('contracts.show', $contract->id) }}" class="fw-medium text-body text-decoration-none">{{ $contract->title }}</a>
                             </td>
-                            <td class="d-none d-md-table-cell" onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
+                            <td class="d-none d-md-table-cell">
                                 @if($contract->customer)
                                     <a href="{{ route('customers.show', $contract->customer_id) }}" onclick="event.stopPropagation()">
                                         {{ $contract->customer->name }}
                                     </a>
                                 @endif
                             </td>
-                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell">
                                 <span class="badge bg-{{ $contract->type == 'recurring' ? 'info' : 'secondary' }}">
                                     {{ __($contract->type) }}
                                 </span>
                             </td>
-                            <td onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
+                            <td>
                                 @php
                                     $statusColors = ['draft' => 'secondary', 'active' => 'success', 'expired' => 'warning', 'cancelled' => 'danger'];
                                 @endphp
@@ -154,14 +161,14 @@
                                     {{ __($contract->status) }}
                                 </span>
                             </td>
-                            <td class="d-none d-lg-table-cell text-nowrap" onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell text-nowrap">
                                 @if($contract->value)
                                     {{ format_currency($contract->value, $contract->customer?->currency) }}
                                 @else
                                     -
                                 @endif
                             </td>
-                            <td class="d-none d-xl-table-cell text-nowrap" onclick="window.location='{{ route('contracts.show', $contract->id) }}'" style="cursor: pointer;">
+                            <td class="d-none d-xl-table-cell text-nowrap">
                                 {{ $contract->start_date?->format('M d, Y') ?? '-' }}
                                 @if($contract->end_date)
                                     → {{ $contract->end_date->format('M d, Y') }}

@@ -18,7 +18,10 @@
 @section('breadcrumbs')
     @include('shared.breadcrumb', ['breadcrumbs' => [
         ['label' => __('invoices'), 'url' => route('invoices')],
-        ['label' => $invoice->exists ? $invoice->number : __('create')]
+        // An existing record links back to its page, so the trail leads out of the form.
+        ...($invoice->exists
+            ? [['label' => $invoice->number, 'url' => route('invoices.show', $invoice->id)], ['label' => __('edit')]]
+            : [['label' => __('create')]]),
     ]])
 @endsection
 

@@ -51,10 +51,10 @@
                             @foreach($departments as $department)
                                 @php($editUrl = route('setup.departments.edit', $department->id))
                                 <tr>
-                                    <td class="ps-3" onclick="window.location='{{ $editUrl }}'" style="cursor: pointer; width: 32%;">
-                                        <div class="fw-medium text-truncate" style="width: 0; min-width: 100%;">{{ $department->name }}</div>
+                                    <td class="ps-3" style="width: 32%;">
+                                        <a href="{{ $editUrl }}" class="fw-medium text-truncate d-block text-body text-decoration-none" style="width: 0; min-width: 100%;">{{ $department->name }}</a>
                                     </td>
-                                    <td onclick="window.location='{{ $editUrl }}'" style="cursor: pointer;">
+                                    <td>
                                         <a href="{{ route('tickets', ['department_id' => $department->id]) }}" onclick="event.stopPropagation()">{{ $department->tickets_count }}</a>
                                     </td>
                                     <td class="pe-3 text-end">

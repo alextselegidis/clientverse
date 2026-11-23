@@ -99,23 +99,23 @@
                             <td class="ps-3" onclick="event.stopPropagation();">
                                 <input type="checkbox" class="form-check-input bulk-select-item" data-table="invoices" value="{{ $invoice->id }}">
                             </td>
-                            <td onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
-                                <span class="fw-medium">{{ $invoice->number }}</span>
+                            <td>
+                                <a href="{{ $showUrl }}" class="fw-medium text-body text-decoration-none">{{ $invoice->number }}</a>
                             </td>
-                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell">
                                 @if($invoice->customer)
                                     <a href="{{ route('customers.show', $invoice->customer_id) }}" onclick="event.stopPropagation()">
                                         {{ $invoice->customer->name }}
                                     </a>
                                 @endif
                             </td>
-                            <td class="d-none d-md-table-cell text-nowrap" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td class="d-none d-md-table-cell text-nowrap">
                                 {{ format_currency($invoice->total, $invoice->currency) }}
                             </td>
-                            <td class="d-none d-lg-table-cell" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td class="d-none d-lg-table-cell">
                                 {{ $invoice->due_date?->format('M d, Y') }}
                             </td>
-                            <td onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td>
                                 <span class="badge bg-{{ \App\Models\Invoice::statusColors()[$invoice->display_status] }}">
                                     {{ __($invoice->display_status) }}
                                 </span>

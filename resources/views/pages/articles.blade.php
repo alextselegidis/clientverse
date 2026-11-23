@@ -75,11 +75,11 @@
                         @php($editUrl = route('articles.edit', $article->id))
                         @php($showUrl = route('articles.show', $article->id))
                         <tr>
-                            <td class="ps-3" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer; width: 32%;">
-                                <div class="fw-medium text-truncate" style="width: 0; min-width: 100%;">{{ $article->title }}</div>
+                            <td class="ps-3" style="width: 32%;">
+                                <a href="{{ $showUrl }}" class="fw-medium text-truncate d-block text-body text-decoration-none" style="width: 0; min-width: 100%;">{{ $article->title }}</a>
                             </td>
-                            <td class="d-none d-md-table-cell" onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">{{ $article->category }}</td>
-                            <td onclick="window.location='{{ $showUrl }}'" style="cursor: pointer;">
+                            <td class="d-none d-md-table-cell">{{ $article->category }}</td>
+                            <td>
                                 <span class="badge bg-{{ $article->is_public ? 'success' : 'secondary' }}">{{ $article->is_public ? __('public') : __('internal_only') }}</span>
                             </td>
                             <td class="pe-3 text-end">

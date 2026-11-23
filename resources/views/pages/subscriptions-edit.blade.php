@@ -18,7 +18,10 @@
 @section('breadcrumbs')
     @include('shared.breadcrumb', ['breadcrumbs' => [
         ['label' => __('subscriptions'), 'url' => route('subscriptions')],
-        ['label' => $subscription->exists ? $subscription->name : __('create')]
+        // An existing record links back to its page, so the trail leads out of the form.
+        ...($subscription->exists
+            ? [['label' => $subscription->name, 'url' => route('subscriptions.show', $subscription->id)], ['label' => __('edit')]]
+            : [['label' => __('create')]]),
     ]])
 @endsection
 

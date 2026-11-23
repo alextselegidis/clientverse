@@ -18,7 +18,10 @@
 @section('breadcrumbs')
     @include('shared.breadcrumb', ['breadcrumbs' => [
         ['label' => __('estimates'), 'url' => route('estimates')],
-        ['label' => $estimate->exists ? $estimate->number : __('create')]
+        // An existing record links back to its page, so the trail leads out of the form.
+        ...($estimate->exists
+            ? [['label' => $estimate->number, 'url' => route('estimates.show', $estimate->id)], ['label' => __('edit')]]
+            : [['label' => __('create')]]),
     ]])
 @endsection
 

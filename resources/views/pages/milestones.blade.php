@@ -83,11 +83,11 @@
                     </thead>
                     <tbody>
                     @foreach($milestones as $milestone)
-                        <tr onclick="window.location='{{ route('projects.milestones.show', [$project->id, $milestone->id]) }}'" style="cursor: pointer;">
+                        <tr>
                             <td class="ps-3">
-                                <span class="fw-medium {{ $milestone->is_completed ? 'text-decoration-line-through text-muted' : '' }}">
+                                <a href="{{ route('projects.milestones.show', [$project->id, $milestone->id]) }}" class="fw-medium {{ $milestone->is_completed ? 'text-decoration-line-through text-muted' : '' }} text-body text-decoration-none">
                                     {{ $milestone->name }}
-                                </span>
+                                </a>
                             </td>
                             <td class="d-none d-md-table-cell text-nowrap">{{ $milestone->due_date?->format('M d, Y') ?? '-' }}</td>
                             <td>

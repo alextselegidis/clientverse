@@ -104,8 +104,8 @@
                     <table class="table table-hover table-light-header align-middle mb-0">
                         <tbody>
                         @forelse($subscription->invoices as $invoice)
-                            <tr onclick="window.location='{{ route('invoices.show', $invoice->id) }}'" style="cursor: pointer;">
-                                <td class="ps-3 w-100 w-md-auto"><span class="fw-medium">{{ $invoice->number }}</span></td>
+                            <tr>
+                                <td class="ps-3 w-100 w-md-auto"><a href="{{ route('invoices.show', $invoice->id) }}" class="fw-medium text-body text-decoration-none">{{ $invoice->number }}</a></td>
                                 <td class="d-none d-md-table-cell">{{ $invoice->issue_date?->format('M d, Y') }}</td>
                                 <td class="text-nowrap">{{ format_currency($invoice->total, $invoice->currency) }}</td>
                                 <td class="pe-3">
