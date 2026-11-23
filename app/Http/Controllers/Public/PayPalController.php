@@ -112,7 +112,7 @@ class PayPalController extends Controller
     }
 
     /**
-     * An authorised client for the live or sandbox API, per Setup > Billing.
+     * An authorised client for the live or sandbox API, per Setup > Company & Emails.
      */
     private function api(): PendingRequest
     {

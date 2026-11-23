@@ -86,7 +86,7 @@ class Invoice extends Model
     }
 
     /**
-     * The online payment providers an admin has set up under Setup > Billing.
+     * The online payment providers an admin has set up under Setup > Company & Emails.
      */
     public static function paymentGateways(): array
     {

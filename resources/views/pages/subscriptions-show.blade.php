@@ -60,7 +60,7 @@
         <div class="col-lg-8 mb-4">
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-transparent d-flex align-items-center">
-                    <h5 class="mb-0 text-truncate">{{ $subscription->name }}</h5>
+                    <h5 class="mb-0 text-truncate">{{ __('details') }}</h5>
                     <span class="badge bg-{{ \App\Models\Subscription::statusColors()[$subscription->status] }} ms-2">
                         {{ \App\Models\Subscription::statuses()[$subscription->status] }}
                     </span>

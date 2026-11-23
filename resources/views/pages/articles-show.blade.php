@@ -49,7 +49,6 @@
         <div class="col-lg-9">
             <article class="card border-0 shadow-sm">
                 <div class="card-body p-4 kb-article">
-                    <h1 class="h3 mb-3">{{ $article->title }}</h1>
                     {{ $article->body_html }}
                 </div>
             </article>

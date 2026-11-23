@@ -52,7 +52,7 @@
         <div class="col-lg-8 mb-4">
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-transparent d-flex align-items-center">
-                    <h5 class="mb-0">{{ $customer->name }}</h5>
+                    <h5 class="mb-0">{{ __('details') }}</h5>
                     @php
                         $statusColors = ['lead' => 'warning', 'active' => 'success', 'inactive' => 'secondary'];
                     @endphp

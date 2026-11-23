@@ -50,7 +50,7 @@ Artisan::command('invoices:recur', function () {
 })->purpose('Create the invoices that recurring invoices are due to produce');
 
 Artisan::command('reminders:send', function () {
-    // Staff hear about recurring contracts on each of the Setup > Billing days before they end (30 and 7
+    // Staff hear about recurring contracts on each of the Setup > Company & Emails days before they end (30 and 7
     // unless changed), whatever the customer reminder setting says. Matching the exact day keeps it to one
     // email per day listed, without a sent flag.
     $staffDays = collect(explode(',', setting('staff_renewal_days') ?: '30, 7'))
@@ -70,7 +70,7 @@ Artisan::command('reminders:send', function () {
         });
 
     if (!setting('send_reminders')) {
-        $this->info('Reminders are switched off under Setup > Billing.');
+        $this->info('Reminders are switched off under Setup > Company & Emails.');
 
         return;
     }
@@ -112,7 +112,7 @@ Artisan::command('reminders:send', function () {
             'link' => $proposal->publicUrl(),
         ]));
 
-    // Active contracts, once, the Setup > Billing number of days (a week unless changed) before they end.
+    // Active contracts, once, the Setup > Company & Emails number of days (a week unless changed) before they end.
     Contract::with('customer')->where('status', 'active')->whereNull('reminded_at')
         ->whereBetween('end_date', $soon((int) (setting('contract_reminder_days') ?: 7)))
         ->lazyById()->each(fn (Contract $contract) => $remind($contract, 'contract_expiring', [

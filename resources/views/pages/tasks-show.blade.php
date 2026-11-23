@@ -45,7 +45,7 @@
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-transparent d-flex align-items-center gap-2">
-                    <h5 class="mb-0 text-truncate">{{ $task->title }}</h5>
+                    <h5 class="mb-0 text-truncate">{{ __('details') }}</h5>
                     <span class="badge bg-{{ \App\Models\Task::statusColors()[$task->status] }}">{{ __($task->status) }}</span>
                 </div>
                 <div class="card-body">

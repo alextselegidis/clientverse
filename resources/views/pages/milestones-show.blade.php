@@ -47,22 +47,16 @@
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-4">
-                        <div>
-                            <h4 class="mb-1 {{ $milestone->is_completed ? 'text-decoration-line-through text-muted' : '' }}">
-                                {{ $milestone->name }}
-                            </h4>
-                            <a href="{{ route('projects.show', $project->id) }}" class="text-muted">
-                                <i class="bi bi-folder me-1"></i>{{ $project->name }}
-                            </a>
-                        </div>
-                        <div>
-                            @if($milestone->is_completed)
-                                <span class="badge bg-success fs-6">{{ __('completed') }}</span>
-                            @else
-                                <span class="badge bg-secondary fs-6">{{ __('pending') }}</span>
-                            @endif
-                        </div>
+                    {{-- The page header already shows the name; the card opens with its project and status --}}
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+                        <a href="{{ route('projects.show', $project->id) }}" class="text-muted">
+                            <i class="bi bi-folder me-1"></i>{{ $project->name }}
+                        </a>
+                        @if($milestone->is_completed)
+                            <span class="badge bg-success">{{ __('completed') }}</span>
+                        @else
+                            <span class="badge bg-secondary">{{ __('pending') }}</span>
+                        @endif
                     </div>
 
                     <div class="row g-3 mb-4">

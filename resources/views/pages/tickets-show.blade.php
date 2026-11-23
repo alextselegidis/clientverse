@@ -39,7 +39,7 @@
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-header bg-transparent d-flex align-items-center gap-2">
-                    <h5 class="mb-0 text-truncate">{{ $ticket->subject }}</h5>
+                    <h5 class="mb-0 text-truncate">{{ __('replies') }}</h5>
                     <span class="badge bg-{{ \App\Models\Ticket::statusColors()[$ticket->status] }}">{{ __($ticket->status) }}</span>
                 </div>
                 <ul class="list-group list-group-flush">

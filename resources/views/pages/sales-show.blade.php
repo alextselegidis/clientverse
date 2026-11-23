@@ -65,7 +65,7 @@
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-transparent d-flex align-items-center">
-                    <h5 class="mb-0">{{ $sale->name }}</h5>
+                    <h5 class="mb-0">{{ __('details') }}</h5>
                     @php
                         $stageColors = ['lead' => 'secondary', 'qualified' => 'info', 'proposal_sent' => 'warning', 'won' => 'success', 'lost' => 'danger'];
                     @endphp

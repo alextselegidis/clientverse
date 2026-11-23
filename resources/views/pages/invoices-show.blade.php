@@ -57,7 +57,7 @@
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-transparent d-flex align-items-center">
-                    <h5 class="mb-0">{{ $invoice->number }}</h5>
+                    <h5 class="mb-0">{{ __('details') }}</h5>
                     <span class="badge bg-{{ \App\Models\Invoice::statusColors()[$invoice->display_status] }} ms-2">
                         {{ __($invoice->display_status) }}
                     </span>

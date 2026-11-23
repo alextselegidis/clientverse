@@ -69,7 +69,7 @@
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm">
                 <div class="card-header bg-transparent d-flex align-items-center">
-                    <h5 class="mb-0 text-truncate">{{ $proposal->number }} · {{ $proposal->subject }}</h5>
+                    <h5 class="mb-0 text-truncate">{{ $proposal->subject }}</h5>
                     <span class="badge bg-{{ \App\Models\Proposal::statusColors()[$proposal->status] }} ms-2">
                         {{ __($proposal->status) }}
                     </span>

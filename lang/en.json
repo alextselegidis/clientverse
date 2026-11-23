@@ -631,7 +631,7 @@
     "subscription_cancel_failed_message": "Stripe did not cancel the subscription. Nothing was changed; please try again.",
     "subscription_canceled_message": "The subscription is cancelled and will not be billed again.",
     "customer_link": "Customer link",
-    "subscription_needs_stripe_message": "Add a Stripe secret key under Setup > Billing to collect subscriptions.",
+    "subscription_needs_stripe_message": "Add a Stripe secret key under Setup > Company & Emails to collect subscriptions.",
     "subscription_link_hint": "Send this link, or email it, and the customer subscribes with a card on Stripe's page. Every paid period shows up below as a paid invoice.",
     "subscription_link_used_message": "The customer has subscribed; Stripe bills them every period.",
     "email_template_subscription_subject": "Your subscription: {name}",
