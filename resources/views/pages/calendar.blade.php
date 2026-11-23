@@ -24,15 +24,46 @@
 @php
     $start = $month->copy()->startOfWeek();
     $end = $month->copy()->endOfMonth()->endOfWeek();
+    // type => [permission module, icon]; keep the icons in step with CalendarController.
+    $types = array_filter([
+        'tasks' => ['tasks', 'check2-square'],
+        'milestones' => ['projects', 'flag'],
+        'invoices' => ['invoices', 'receipt'],
+        'contracts' => ['contracts', 'file-earmark-text'],
+        'sales' => ['sales', 'graph-up'],
+    ], fn ($entry) => auth()->user()->hasPermission($entry[0]));
 @endphp
 
 @section('content')
     <div class="card border-0 shadow-sm">
+        <div class="table-filters">
+            <form action="{{ route('calendar') }}" method="GET" class="row g-3">
+                <input type="hidden" name="month" value="{{ $month->format('Y-m') }}">
+                <div class="col-md-4">
+                    <div class="input-group">
+                        <span class="input-group-text border-end-0">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text" name="q" class="form-control border-start-0" value="{{ $q }}"
+                               placeholder="{{ __('search') }}...">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <select name="type" class="form-select" onchange="this.form.submit()">
+                        <option value="">{{ __('type') }}: {{ __('all') }}</option>
+                        @foreach($types as $key => $entry)
+                            <option value="{{ $key }}" {{ $type === $key ? 'selected' : '' }}>{{ __($key) }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </form>
+        </div>
+
         <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
-            <a href="{{ route('calendar', ['month' => $month->copy()->subMonth()->format('Y-m')]) }}" class="btn btn-sm btn-light border"
+            <a href="{{ route('calendar', array_filter(['month' => $month->copy()->subMonth()->format('Y-m'), 'type' => $type, 'q' => $q])) }}" class="btn btn-sm btn-light border"
                aria-label="{{ __('previous_month') }}"><i class="bi bi-chevron-left"></i></a>
             <h5 class="mb-0">{{ $month->translatedFormat('F Y') }}</h5>
-            <a href="{{ route('calendar', ['month' => $month->copy()->addMonth()->format('Y-m')]) }}" class="btn btn-sm btn-light border"
+            <a href="{{ route('calendar', array_filter(['month' => $month->copy()->addMonth()->format('Y-m'), 'type' => $type, 'q' => $q])) }}" class="btn btn-sm btn-light border"
                aria-label="{{ __('next_month') }}"><i class="bi bi-chevron-right"></i></a>
         </div>
 
@@ -67,5 +98,11 @@
                 <li class="list-group-item text-muted">{{ __('no_records_found') }}</li>
             @endforelse
         </ul>
+
+        <div class="card-footer bg-transparent d-flex flex-wrap gap-3 small text-muted">
+            @foreach($types as $key => [$module, $icon])
+                <span><i class="bi bi-{{ $icon }} me-1"></i>{{ __($key) }}</span>
+            @endforeach
+        </div>
     </div>
 @endsection

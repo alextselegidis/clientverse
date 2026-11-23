@@ -43,7 +43,7 @@ class TasksController extends Controller
             $query->where('assigned_to', $request->user()->id);
         }
 
-        sort_query($query, $request->query('sort', 'created_at'), $request->query('direction', 'desc'));
+        sort_query($query, $request->query('sort', 'due_date'), $request->query('direction', 'asc'));
 
         return view('pages.tasks', [
             'tasks' => $query->paginate(25)->withQueryString(),

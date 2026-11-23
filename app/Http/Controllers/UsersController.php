@@ -35,8 +35,8 @@ class UsersController extends Controller
             $query->where('name', 'like', '%' . $q . '%');
         }
 
-        $sort = $request->query('sort');
-        $direction = $request->query('direction');
+        $sort = $request->query('sort', 'name');
+        $direction = $request->query('direction', 'asc');
 
         sort_query($query, $sort, $direction);
 

@@ -27,6 +27,9 @@ class CheckApiIncludes
         'customer' => 'customers', 'contacts' => 'customers', 'customerNotes' => 'customers',
         'projects' => 'projects', 'project' => 'projects', 'milestones' => 'projects',
         'contracts' => 'contracts', 'sales' => 'sales', 'sale' => 'sales',
+        'contact' => 'customers', 'timeEntries' => 'tasks', 'replies' => 'tickets',
+        'invoice' => 'invoices', 'invoices' => 'invoices', 'payments' => 'invoices',
+        'estimate' => 'estimates', 'creditNotes' => 'credit_notes', 'subscription' => 'subscriptions',
     ];
 
     public function handle(Request $request, Closure $next): Response

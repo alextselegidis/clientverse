@@ -31,7 +31,7 @@ class MilestonesController extends Controller
         $direction = $request->query('direction', 'asc');
         sort_query($query, $sort, $direction);
 
-        $milestones = $query->paginate(25);
+        $milestones = $query->paginate(25)->withQueryString();
 
         return view('pages.milestones', [
             'project' => $project,

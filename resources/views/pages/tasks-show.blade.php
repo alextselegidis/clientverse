@@ -11,6 +11,8 @@
 --}}
 @extends('layouts.main-layout')
 
+@section('recordCode', $task->code)
+
 @section('pageTitle')
     {{ $task->title }}
 @endsection

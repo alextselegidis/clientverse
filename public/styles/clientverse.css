@@ -8,13 +8,17 @@
  * @link        https://clientverse.org
  * ---------------------------------------------------------------------------- */
 
-/* Page-to-page navigation crossfades instead of flashing white; the navbar stays put */
+/* Page-to-page navigation crossfades instead of flashing white; the sidebar and top bar stay put */
 @view-transition {
     navigation: auto;
 }
 
 #header {
     view-transition-name: header;
+}
+
+#sidebar {
+    view-transition-name: sidebar;
 }
 
 ::view-transition-old(root),
@@ -49,97 +53,224 @@ a,
 
 /* Design tokens - Bootstrap components all read these */
 :root {
-    /* Brand. Deep slate blue: confident without the corporate-navy heaviness. */
+    /* Brand. Deep slate blue: confident without the corporate-navy heaviness. It is
+       both the committing button and the accent (links, focus, the active item). */
     --bs-primary: #33507a;
     --bs-primary-rgb: 51, 80, 122;
     --cv-primary-hover: #2a4265;
     --cv-primary-active: #223650;
+
+    --cv-accent: #33507a;
+    --cv-accent-rgb: 51, 80, 122;
+    --cv-accent-subtle: #eef2f8;
 
     --bs-link-color: #33507a;
     --bs-link-color-rgb: 51, 80, 122;
     --bs-link-hover-color: #2a4265;
     --bs-link-hover-color-rgb: 42, 66, 101;
 
-    --bs-body-color: #384252;
+    --bs-body-color: #1f2633;
     --bs-secondary-color: #667085;
+    --bs-emphasis-color: #0f1520;
 
     /* Semantic colours, desaturated from the Bootswatch defaults. The bright teal
        and orange read as consumer-app; these hold up in a business report. */
-    --bs-secondary: #667085;
-    --bs-secondary-rgb: 102, 112, 133;
-    --bs-success: #0e9384;
-    --bs-success-rgb: 14, 147, 132;
-    --bs-info: #175cd3;
-    --bs-info-rgb: 23, 92, 211;
+    --bs-secondary: #6b6b76;
+    --bs-secondary-rgb: 107, 107, 118;
+    --bs-success: #0e8a63;
+    --bs-success-rgb: 14, 138, 99;
+    --bs-info: #2563d9;
+    --bs-info-rgb: 37, 99, 217;
     --bs-warning: #b54708;
     --bs-warning-rgb: 181, 71, 8;
-    --bs-danger: #b42318;
-    --bs-danger-rgb: 180, 35, 24;
+    --bs-danger: #c4321f;
+    --bs-danger-rgb: 196, 50, 31;
 
     /* Tinted pill palette: background / border / text for each semantic colour */
     --bs-primary-bg-subtle: #eef2f8;
     --bs-primary-border-subtle: #d3dded;
     --bs-primary-text-emphasis: #2a4265;
 
-    --bs-secondary-bg-subtle: #f1f3f7;
-    --bs-secondary-border-subtle: #dfe3eb;
-    --bs-secondary-text-emphasis: #4b5565;
+    --bs-secondary-bg-subtle: #f2f2f4;
+    --bs-secondary-border-subtle: #e3e3e8;
+    --bs-secondary-text-emphasis: var(--cv-text-soft);
 
-    --bs-success-bg-subtle: #e6f6f4;
-    --bs-success-border-subtle: #bfe8e2;
-    --bs-success-text-emphasis: #0b6f65;
+    --bs-success-bg-subtle: #e7f6ef;
+    --bs-success-border-subtle: #c3e9d8;
+    --bs-success-text-emphasis: #0a6a4c;
 
-    --bs-info-bg-subtle: #eaf0fd;
-    --bs-info-border-subtle: #cbdcfa;
-    --bs-info-text-emphasis: #1447a8;
+    --bs-info-bg-subtle: #ebf1fd;
+    --bs-info-border-subtle: #cddcfa;
+    --bs-info-text-emphasis: #1a4bab;
 
     --bs-warning-bg-subtle: #fdf3e7;
     --bs-warning-border-subtle: #f6dfc0;
     --bs-warning-text-emphasis: #93450a;
 
-    --bs-danger-bg-subtle: #fdecea;
-    --bs-danger-border-subtle: #f8d2cf;
-    --bs-danger-text-emphasis: #912018;
+    --bs-danger-bg-subtle: #fdedeb;
+    --bs-danger-border-subtle: #f8d3ce;
+    --bs-danger-text-emphasis: #9a2516;
 
     /* System font stack: nothing to download, and it matches the host OS */
     --bs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
     "Noto Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+    --bs-body-font-size: 0.9375rem;
 
-    /* Rounder corners */
+    /* Soft, generous corners; buttons are full pills */
     --bs-border-radius: 0.625rem;
-    --bs-border-radius-sm: 0.4rem;
-    --bs-border-radius-lg: 0.875rem;
+    --bs-border-radius-sm: 0.5rem;
+    --bs-border-radius-lg: 1rem;
     --bs-border-radius-xl: 1.25rem;
 
-    /* Cool neutral ramp, replacing the warmer greys */
-    --bs-border-color: #e5e8ee;
-    --bs-border-color-translucent: rgba(20, 30, 50, 0.09);
-    --cv-canvas: #f5f6f9;
-    --cv-surface-muted: #f1f3f7;
-    --cv-hairline: #e9ecf2;
+    /* Neutral ramp: white surfaces on a barely-grey canvas, separated by hairlines */
+    --bs-border-color: #e4e4e8;
+    --bs-border-color-translucent: rgba(15, 15, 20, 0.08);
+    --cv-canvas: #f7f7f8;
+    --cv-surface-muted: #f4f4f6;
+    --cv-hairline: #ececf0;
+    --cv-surface: #fff;
+    --cv-surface-hover: #f7f7f9;
+    --cv-surface-active: #ebebef;
+    --cv-border-strong: #d6d6dc;
+    --cv-control-border: #dcdce2;
+    --cv-check-border: #c8c8d0;
+    --cv-text-muted: #6b6b76;
+    --cv-text-soft: #4a4a53;
+    --cv-text-strong: #3a3a42;
+    --cv-text-faint: #a0a0aa;
+    --cv-topbar-bg: rgba(255, 255, 255, 0.92);
 
-    /* Softer, layered shadows instead of one hard drop */
-    --bs-box-shadow-sm: 0 1px 2px rgba(20, 30, 50, 0.04), 0 1px 3px rgba(20, 30, 50, 0.06);
-    --bs-box-shadow: 0 4px 6px -2px rgba(20, 30, 50, 0.05), 0 12px 20px -8px rgba(20, 30, 50, 0.1);
-    --bs-box-shadow-lg: 0 12px 16px -6px rgba(20, 30, 50, 0.05), 0 24px 48px -12px rgba(20, 30, 50, 0.14);
+    /* Shadows only lift things that float: menus, modals, toasts */
+    --bs-box-shadow-sm: 0 1px 2px rgba(15, 15, 20, 0.05);
+    --bs-box-shadow: 0 6px 16px -4px rgba(15, 15, 20, 0.1), 0 2px 4px rgba(15, 15, 20, 0.04);
+    --bs-box-shadow-lg: 0 24px 48px -12px rgba(15, 15, 20, 0.22);
+
+    --bs-focus-ring-color: rgba(51, 80, 122, 0.25);
+
+    /* App shell */
+    --cv-sidebar-width: 15rem;
+    --cv-topbar-height: 4rem;
 }
 
-/* Link colors - darker than labels */
+
+/* Dark theme. Bootstrap's own [data-bs-theme=dark] block loads before this file and
+   the :root above outweighs it, so every token set above is set again here. */
+[data-bs-theme=dark] {
+    color-scheme: dark;
+
+    --bs-primary: #4a6fa5;
+    --bs-primary-rgb: 74, 111, 165;
+    --cv-primary-hover: #5a80b8;
+    --cv-primary-active: #3f5f8e;
+
+    --cv-accent: #8fb0e0;
+    --cv-accent-rgb: 143, 176, 224;
+    --cv-accent-subtle: rgba(143, 176, 224, 0.14);
+
+    --bs-link-color: #8fb0e0;
+    --bs-link-color-rgb: 143, 176, 224;
+    --bs-link-hover-color: #b3cbee;
+    --bs-link-hover-color-rgb: 179, 203, 238;
+
+    --bs-body-bg: #1a1d23;
+    --bs-body-bg-rgb: 26, 29, 35;
+    --bs-body-color: #dfe3ea;
+    --bs-body-color-rgb: 223, 227, 234;
+    --bs-secondary-color: #98a1b0;
+    --bs-emphasis-color: #f4f6f9;
+    --bs-tertiary-bg: #20242b;
+    --bs-secondary-bg: #23272f;
+
+    --bs-secondary: #8a93a3;
+    --bs-secondary-rgb: 138, 147, 163;
+    --bs-success: #3fb68b;
+    --bs-success-rgb: 63, 182, 139;
+    --bs-info: #6b9bf0;
+    --bs-info-rgb: 107, 155, 240;
+    --bs-warning: #e0954a;
+    --bs-warning-rgb: 224, 149, 74;
+    --bs-danger: #ec6a5a;
+    --bs-danger-rgb: 236, 106, 90;
+
+    --bs-primary-bg-subtle: rgba(143, 176, 224, 0.14);
+    --bs-primary-border-subtle: rgba(143, 176, 224, 0.3);
+    --bs-primary-text-emphasis: #b3cbee;
+    --bs-secondary-bg-subtle: rgba(152, 161, 176, 0.14);
+    --bs-secondary-border-subtle: rgba(152, 161, 176, 0.28);
+    --bs-secondary-text-emphasis: #c5ccd6;
+    --bs-success-bg-subtle: rgba(63, 182, 139, 0.14);
+    --bs-success-border-subtle: rgba(63, 182, 139, 0.3);
+    --bs-success-text-emphasis: #7dd3b0;
+    --bs-info-bg-subtle: rgba(107, 155, 240, 0.14);
+    --bs-info-border-subtle: rgba(107, 155, 240, 0.3);
+    --bs-info-text-emphasis: #a5c3f6;
+    --bs-warning-bg-subtle: rgba(224, 149, 74, 0.14);
+    --bs-warning-border-subtle: rgba(224, 149, 74, 0.3);
+    --bs-warning-text-emphasis: #f0bd88;
+    --bs-danger-bg-subtle: rgba(236, 106, 90, 0.14);
+    --bs-danger-border-subtle: rgba(236, 106, 90, 0.3);
+    --bs-danger-text-emphasis: #f4a69c;
+
+    --bs-border-color: #2f3540;
+    --bs-border-color-translucent: rgba(255, 255, 255, 0.1);
+    --cv-canvas: #121418;
+    --cv-surface-muted: #23272f;
+    --cv-hairline: #2a2f38;
+    --cv-surface: #1a1d23;
+    --cv-surface-hover: #20242b;
+    --cv-surface-active: #2b303a;
+    --cv-border-strong: #3d4451;
+    --cv-control-border: #3a404c;
+    --cv-check-border: #4f5665;
+    --cv-text-muted: #98a1b0;
+    --cv-text-soft: #b6bdc9;
+    --cv-text-strong: #d5dae2;
+    --cv-text-faint: #6c7482;
+    --cv-topbar-bg: rgba(26, 29, 35, 0.92);
+
+    --bs-box-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --bs-box-shadow: 0 6px 16px -4px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.3);
+    --bs-box-shadow-lg: 0 24px 48px -12px rgba(0, 0, 0, 0.6);
+
+    --bs-focus-ring-color: rgba(143, 176, 224, 0.3);
+}
+
+/* The dark mark on the light theme, the white one on the dark theme */
+[data-bs-theme=dark] .logo-on-light,
+[data-bs-theme=light] .logo-on-dark,
+:root:not([data-bs-theme]) .logo-on-dark {
+    display: none !important;
+}
+
+/* Links are coloured, not underlined; the underline appears on hover inside the page */
 a {
     color: var(--bs-link-color);
+    text-decoration: none;
 }
 
 a:hover {
     color: var(--bs-link-hover-color);
 }
 
+.app-content a:not(.btn):not(.dropdown-item):not(.nav-link):not(.page-link):hover {
+    text-decoration: underline;
+}
+
 /* Labels use a different color */
 .form-label {
-    color: #495057 !important;
+    color: var(--cv-text-strong) !important;
+}
+
+/* Headings: heavier and slightly tightened */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--bs-emphasis-color);
 }
 
 .text-dark {
-    color: #343a40 !important;
+    color: var(--bs-emphasis-color) !important;
 }
 
 .btn-primary {
@@ -153,13 +284,17 @@ a:hover {
     --bs-btn-disabled-border-color: var(--bs-primary);
 }
 
+/* Secondary actions inside cards: a white pill, not a coloured outline */
 .btn-outline-primary {
-    --bs-btn-color: var(--bs-primary);
-    --bs-btn-border-color: var(--bs-primary);
-    --bs-btn-hover-bg: var(--bs-primary);
-    --bs-btn-hover-border-color: var(--bs-primary);
-    --bs-btn-active-bg: var(--cv-primary-active);
-    --bs-btn-active-border-color: var(--cv-primary-active);
+    --bs-btn-color: var(--bs-body-color);
+    --bs-btn-bg: var(--cv-surface);
+    --bs-btn-border-color: var(--bs-border-color);
+    --bs-btn-hover-color: var(--bs-emphasis-color);
+    --bs-btn-hover-bg: var(--cv-surface-muted);
+    --bs-btn-hover-border-color: var(--cv-border-strong);
+    --bs-btn-active-color: var(--bs-emphasis-color);
+    --bs-btn-active-bg: var(--cv-surface-active);
+    --bs-btn-active-border-color: var(--cv-border-strong);
 }
 
 .bg-primary {
@@ -168,7 +303,7 @@ a:hover {
 
 /* Dashboard card image gradient background */
 .card .card-img-top {
-    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+    background: var(--cv-surface-muted) !important;
 }
 
 /* Markdown announcement bodies: no stray gap under the last paragraph */
@@ -187,12 +322,16 @@ a:hover {
     background-color: var(--cv-canvas) !important;
 }
 
+.bg-white {
+    background-color: var(--cv-surface) !important;
+}
+
 .bg-body-secondary {
     background-color: var(--cv-surface-muted) !important;
 }
 
 .bg-body-tertiary {
-    background-color: #f8f9fb !important;
+    background-color: var(--cv-surface-hover) !important;
 }
 
 .main-layout {
@@ -200,11 +339,11 @@ a:hover {
 }
 
 .text-muted {
-    color: #667085 !important;
+    color: var(--cv-text-muted) !important;
 }
 
 .text-body-secondary {
-    color: #667085 !important;
+    color: var(--cv-text-muted) !important;
 }
 
 /* One secondary column per list table appears at md, so the record name stops
@@ -268,10 +407,43 @@ a:hover {
     min-width: 120px;
 }
 
-/* Better button styling */
+/* Buttons are pills; neutral ones are white with a hairline border */
 .btn {
-    font-weight: 500;
-    border-radius: var(--bs-border-radius);
+    --bs-btn-padding-x: 1.125rem;
+    --bs-btn-padding-y: 0.5rem;
+    --bs-btn-font-weight: 600;
+    --bs-btn-focus-box-shadow: 0 0 0 0.25rem var(--bs-focus-ring-color);
+    border-radius: var(--bs-border-radius-pill);
+}
+
+.btn-sm {
+    --bs-btn-padding-x: 0.875rem;
+    --bs-btn-padding-y: 0.3rem;
+}
+
+.btn-light {
+    --bs-btn-bg: var(--cv-surface);
+    --bs-btn-border-color: var(--bs-border-color);
+    --bs-btn-color: var(--bs-body-color);
+    --bs-btn-hover-bg: var(--cv-surface-muted);
+    --bs-btn-hover-border-color: var(--cv-border-strong);
+    --bs-btn-active-bg: var(--cv-surface-active);
+    --bs-btn-active-border-color: var(--cv-border-strong);
+}
+
+.btn-light.border {
+    border-color: var(--bs-border-color) !important;
+}
+
+.btn-outline-secondary {
+    --bs-btn-color: var(--bs-body-color);
+    --bs-btn-border-color: var(--bs-border-color);
+    --bs-btn-hover-color: var(--bs-body-color);
+    --bs-btn-hover-bg: var(--cv-surface-muted);
+    --bs-btn-hover-border-color: var(--cv-border-strong);
+    --bs-btn-active-color: var(--bs-body-color);
+    --bs-btn-active-bg: var(--cv-surface-active);
+    --bs-btn-active-border-color: var(--cv-border-strong);
 }
 
 /* Clean table design */
@@ -285,8 +457,8 @@ a:hover {
 .table > :not(caption) > * > * {
     border-bottom-width: 1px;
     border-bottom-color: var(--cv-hairline);
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
 }
 
 /* A row is exactly one line tall. Cells do not wrap, and the wide text cells - a
@@ -327,26 +499,24 @@ a:hover {
 }
 
 .table-striped > tbody > tr:nth-of-type(odd) > * {
-    background-color: #fafbfc;
+    background-color: var(--cv-surface-hover);
 }
 
 .table-hover > tbody > tr:hover > * {
-    background-color: #eff2f7;
+    background-color: var(--cv-surface-hover);
 }
 
-/* Table header: quiet, uppercase, no heavy rule underneath */
+/* Table header: quiet sentence-case labels on white, one hairline underneath */
 .table-light-header > thead {
-    background-color: var(--cv-surface-muted);
+    background-color: var(--cv-surface);
 }
 
 .table-light-header > thead > tr > th {
-    background-color: var(--cv-surface-muted);
-    color: #6b7688;
-    font-size: 0.75rem;
+    background-color: var(--cv-surface);
+    color: var(--cv-text-muted);
+    font-size: 0.8125rem;
     font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    border-bottom: 1px solid var(--cv-hairline);
+    border-bottom: 1px solid var(--bs-border-color);
     transition: background-color 0.15s ease-in-out;
 }
 
@@ -357,20 +527,30 @@ a:hover {
 }
 
 .table-light-header > thead > tr > th:has(a):hover {
-    background-color: #e7eaf1;
+    background-color: var(--cv-surface-muted);
 }
 
 .table-light-header > thead > tr > th a {
-    color: #495057;
+    color: var(--cv-text-muted);
 }
 
 .table-light-header > thead > tr > th a:hover {
-    color: #212529;
+    color: var(--bs-emphasis-color);
 }
 
 /* Card with table - zero padding on card-body */
 .card-table > .card-body {
     padding: 0;
+}
+
+/* With no filter row above it, the header row is the card's top edge; round its
+   corner cells so their white fill does not square off the card's corners */
+.card-table > .card-body > .table-responsive:first-child thead > tr:first-child > :first-child {
+    border-top-left-radius: var(--bs-card-inner-border-radius);
+}
+
+.card-table > .card-body > .table-responsive:first-child thead > tr:first-child > :last-child {
+    border-top-right-radius: var(--bs-card-inner-border-radius);
 }
 
 /* Filter/search section above table */
@@ -400,13 +580,14 @@ a:hover {
     font-size: 0.875rem;
     font-weight: 500;
     border-radius: var(--bs-border-radius-sm);
-    color: #52607a;
+    color: var(--cv-text-soft);
     background-color: transparent;
     border-color: transparent;
+    border-radius: var(--bs-border-radius-pill);
 }
 
 .pagination .page-item .page-link:hover {
-    color: var(--bs-primary);
+    color: var(--bs-emphasis-color);
     background-color: var(--cv-surface-muted);
     border-color: transparent;
 }
@@ -418,50 +599,13 @@ a:hover {
 }
 
 .pagination .page-item.disabled .page-link {
-    color: #aeb6c4;
+    color: var(--cv-text-faint);
     background-color: transparent;
     border-color: transparent;
 }
 
 .pagination .page-item .page-link i {
     font-size: 0.75rem;
-}
-
-@media (min-width: 992px) {
-    .navbar-nav .nav-item .nav-link.nav-menu-item {
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-        transition: background-color 0.2s ease;
-    }
-
-    .navbar-nav .nav-item .nav-link.nav-menu-item:hover {
-        background-color: rgba(255, 255, 255, 0.1);
-    }
-
-    /* The horizontal navbar appears at lg, but the even 120px item grid plus the
-       brand wordmark and the account dropdown only fit from xl. Below that the
-       items size to their label - otherwise the whole page scrolls sideways on a
-       1024px tablet in landscape. */
-    @media (min-width: 1200px) {
-        .navbar-nav .nav-item .nav-link.nav-menu-item {
-            min-width: 120px;
-        }
-    }
-
-    .navbar {
-        padding-top: 0;
-        padding-bottom: 0;
-    }
-
-    .navbar-brand {
-        padding-top: 0.75rem;
-        padding-bottom: 0.75rem;
-    }
 }
 
 /* Table header sorting hover effect */
@@ -495,43 +639,28 @@ a:hover {
 /* Borderless icon button, used for the row action and note menus. Transparent
    rather than a white fill so it follows the row tint on hover. */
 .btn-icon {
-    --bs-btn-color: #5c6779;
+    --bs-btn-color: var(--cv-text-soft);
     --bs-btn-bg: transparent;
     --bs-btn-border-color: transparent;
-    --bs-btn-hover-color: var(--bs-primary);
+    --bs-btn-hover-color: var(--bs-emphasis-color);
     --bs-btn-hover-bg: var(--cv-surface-muted);
     --bs-btn-hover-border-color: transparent;
-    --bs-btn-active-color: var(--bs-primary);
-    --bs-btn-active-bg: #e7eaf1;
+    --bs-btn-active-color: var(--bs-emphasis-color);
+    --bs-btn-active-bg: var(--cv-surface-active);
     --bs-btn-active-border-color: transparent;
-    --bs-btn-focus-shadow-rgb: var(--bs-primary-rgb);
-    border-radius: var(--bs-border-radius);
+    --bs-btn-padding-x: 0.5rem;
+    border-radius: var(--bs-border-radius-pill);
 }
 
-/* The toggler reads as a menu icon, not a boxed button. The icon has to be
-   repainted white because the bar is dark but the navbar is not in dark mode -
-   switching it would also darken the account dropdown inside it. */
-.navbar-toggler {
-    --bs-navbar-toggler-border-color: transparent;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+/* Pace loading bar in brand colors, across the whole width. The theme's transform makes
+   .pace its own stacking layer, so without a z-index the sticky top bar paints over it. */
+.pace {
+    z-index: 2000;
 }
 
-.navbar-toggler .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.9%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-}
-
-.navbar-toggler:focus {
-    box-shadow: none;
-}
-
-.navbar-toggler:focus-visible {
-    box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.3);
-}
-
-/* Pace loading bar in brand colors */
 .pace .pace-progress {
-    background: var(--bs-primary);
+    height: 3px;
+    background: var(--cv-accent);
 }
 
 /* Flex children must be allowed to shrink, otherwise long text and
@@ -543,12 +672,12 @@ a:hover {
 /* Search input groups: white addon, and a single focus ring around the
    whole group instead of a square one clipping over the addon/button */
 .input-group-text.border-end-0 {
-    background-color: #fff;
+    background-color: var(--cv-surface);
 }
 
 .input-group:focus-within {
     border-radius: var(--bs-border-radius);
-    box-shadow: 0 0 0 0.25rem rgba(var(--bs-primary-rgb), 0.25);
+    box-shadow: 0 0 0 0.25rem var(--bs-focus-ring-color);
 }
 
 .input-group:focus-within > .form-control:focus,
@@ -560,22 +689,7 @@ a:hover {
 .input-group:focus-within > .form-select,
 .input-group:focus-within > .input-group-text,
 .input-group:focus-within > .btn {
-    border-color: var(--bs-primary);
-}
-
-/* Header search box - roomier, and a light focus ring so it stays visible
-   against the dark navbar */
-#top-nav .input-group .form-control {
-    min-width: 180px;
-}
-
-#top-nav .input-group:focus-within {
-    box-shadow: 0 0 0 0.25rem rgba(255, 255, 255, 0.3);
-}
-
-#top-nav .input-group:focus-within > .form-control,
-#top-nav .input-group:focus-within > .input-group-text {
-    border-color: #fff;
+    border-color: var(--cv-accent);
 }
 
 /* Long URLs and email addresses must wrap instead of spilling out of a card */
@@ -587,18 +701,31 @@ a:hover {
  * Modern UI pass - surfaces, badges, controls
  * -------------------------------------------------------------------------- */
 
-/* Cards sit on a hairline ring so they read as surfaces, not floating boxes */
+/* Cards are flat white surfaces on a hairline border; only floating layers cast shadows */
+.card {
+    --bs-card-border-radius: var(--bs-border-radius-lg);
+    --bs-card-inner-border-radius: calc(var(--bs-border-radius-lg) - 1px);
+    --bs-card-cap-bg: transparent;
+    --bs-card-spacer-x: 1.25rem;
+}
+
+.card.border-0,
 .shadow-sm {
-    box-shadow: 0 0 0 1px rgba(20, 30, 50, 0.05),
-    0 1px 2px rgba(20, 30, 50, 0.04),
-    0 2px 6px rgba(20, 30, 50, 0.05) !important;
+    border: 1px solid var(--bs-border-color) !important;
+    box-shadow: none !important;
 }
 
 .card-header {
     border-bottom-color: var(--cv-hairline);
-    padding-top: 0.875rem;
-    padding-bottom: 0.875rem;
-    font-weight: 600;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    font-weight: 700;
+}
+
+.card-header h5,
+.card-header .h6,
+.card-header h6 {
+    font-weight: 700;
 }
 
 /* Badges: quiet tinted pills instead of saturated blocks */
@@ -649,24 +776,41 @@ a:hover {
 .badge.bg-light {
     background-color: var(--cv-surface-muted) !important;
     border-color: var(--cv-hairline);
-    color: #5c6779 !important;
+    color: var(--cv-text-soft) !important;
 }
 
-/* Form controls */
+/* Form controls: tall, soft and with a brand-coloured focus ring */
 .form-control,
 .form-select {
-    border-color: #dde2ea;
+    border-color: var(--cv-control-border);
+    border-radius: var(--bs-border-radius);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--cv-accent);
+    box-shadow: 0 0 0 0.25rem var(--bs-focus-ring-color);
 }
 
 /* Roomier single-line inputs, but leave textareas alone so `rows` still means rows */
 input.form-control,
 .form-select {
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
+    padding-top: 0.5625rem;
+    padding-bottom: 0.5625rem;
 }
 
 .form-control::placeholder {
-    color: #9aa3b2;
+    color: var(--cv-text-faint);
+}
+
+.form-check-input:checked {
+    background-color: var(--cv-accent);
+    border-color: var(--cv-accent);
+}
+
+.form-check-input:focus {
+    border-color: var(--cv-accent);
+    box-shadow: 0 0 0 0.25rem var(--bs-focus-ring-color);
 }
 
 .form-label {
@@ -676,23 +820,99 @@ input.form-control,
 }
 
 .form-check-input {
-    border-color: #cbd2dd;
+    border-color: var(--cv-check-border);
 }
 
 /* Dropdowns and modals */
 .dropdown-menu {
+    --bs-dropdown-bg: var(--cv-surface);
+    --bs-dropdown-link-color: var(--bs-body-color);
+    --bs-dropdown-link-hover-color: var(--bs-emphasis-color);
+    --bs-dropdown-link-hover-bg: var(--cv-surface-hover);
+    --bs-dropdown-header-color: var(--cv-text-muted);
+    min-width: 11rem;
     border-color: var(--cv-hairline);
     border-radius: var(--bs-border-radius-lg);
     box-shadow: var(--bs-box-shadow);
     padding: 0.375rem;
+    font-size: 0.875rem;
+}
+
+.dropdown-menu.show {
+    animation: cv-dropdown-in 0.12s ease-out;
+}
+
+@keyframes cv-dropdown-in {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dropdown-menu.show {
+        animation: none;
+    }
 }
 
 .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
     border-radius: var(--bs-border-radius-sm);
-    padding: 0.4rem 0.625rem;
+    padding: 0.5rem 0.75rem;
+    font-weight: 500;
+}
+
+.dropdown-item:focus-visible {
+    outline: 0;
+    background-color: var(--cv-surface-hover);
+    box-shadow: inset 0 0 0 2px var(--cv-accent);
+}
+
+.dropdown-item.active,
+.dropdown-item:active {
+    color: var(--cv-accent);
+    background-color: var(--cv-accent-subtle);
+}
+
+.dropdown-item i {
+    width: 1rem;
+    flex-shrink: 0;
+    text-align: center;
+    color: var(--cv-text-muted);
+}
+
+.dropdown-item.active i,
+.dropdown-item:hover i {
+    color: inherit;
+}
+
+/* Destructive actions turn red on a red tint, icon included */
+.dropdown-item.text-danger:hover,
+.dropdown-item.text-danger:focus,
+.dropdown-item.text-danger:active {
+    color: var(--bs-danger-text-emphasis) !important;
+    background-color: var(--bs-danger-bg-subtle);
+}
+
+.dropdown-item.text-danger i {
+    color: inherit;
+}
+
+.dropdown-item:disabled,
+.dropdown-item.disabled {
+    color: var(--cv-text-faint);
+}
+
+.dropdown-header {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.5rem 0.75rem 0.25rem;
 }
 
 .dropdown-divider {
+    margin: 0.375rem -0.375rem;
     border-top-color: var(--cv-hairline);
 }
 
@@ -712,8 +932,13 @@ input.form-control,
     border-color: var(--cv-hairline);
 }
 
+.list-group {
+    --bs-list-group-action-color: var(--bs-body-color);
+    --bs-list-group-action-hover-color: var(--bs-emphasis-color);
+}
+
 .list-group-item-action:hover {
-    background-color: #f7f9fc;
+    background-color: var(--cv-surface-hover);
 }
 
 /* Toasts */
@@ -725,13 +950,475 @@ input.form-control,
 /* Breadcrumb reads as a quiet trail, and scrolls rather than clipping when a
    deep trail does not fit on a phone */
 .breadcrumb {
-    --bs-breadcrumb-divider-color: #b3bbc9;
+    --bs-breadcrumb-divider-color: var(--cv-text-faint);
     font-weight: 500;
     scrollbar-width: none;
 }
 
 .breadcrumb::-webkit-scrollbar {
     display: none;
+}
+
+/* --------------------------------------------------------------------------
+ * App shell: sidebar, top bar, page header
+ *
+ * From lg up the sidebar is a fixed column and the page scrolls beside it.
+ * Below lg it is Bootstrap's offcanvas-lg drawer, opened from the top bar, so
+ * no layout script is needed at either size.
+ * -------------------------------------------------------------------------- */
+
+.main-layout {
+    min-height: 100vh;
+}
+
+.app-shell {
+    display: flex;
+    min-height: 100vh;
+}
+
+.app-main {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.app-sidebar {
+    --bs-offcanvas-width: 17rem;
+    background-color: var(--cv-surface);
+    /* The whole column scrolls, brand row included, so the scrollbar runs the full height */
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+@media (min-width: 992px) {
+    .app-sidebar {
+        position: sticky;
+        top: 0;
+        flex: 0 0 var(--cv-sidebar-width);
+        width: var(--cv-sidebar-width);
+        height: 100vh;
+        border-right: 1px solid var(--bs-border-color);
+    }
+}
+
+/* offcanvas-lg turns the drawer into a plain block from lg up, which would drop
+   the column layout below; keep it a flex column at every size */
+.app-sidebar,
+.app-sidebar.offcanvas-lg {
+    display: flex;
+    flex-direction: column;
+}
+
+.app-sidebar-brand {
+    display: flex;
+    align-items: center;
+    flex: 0 0 var(--cv-topbar-height);
+    padding: 0 1.25rem;
+}
+
+.app-sidebar .btn-close {
+    opacity: 0.7;
+}
+
+.app-sidebar-nav {
+    flex: 1 0 auto;
+    padding: 0.25rem 0.75rem 1.5rem;
+}
+
+.app-sidebar-heading {
+    padding: 1.25rem 0.75rem 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--cv-text-faint);
+}
+
+.app-sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-height: 2.5rem;
+    padding: 0.375rem 0.75rem;
+    margin-bottom: 0.125rem;
+    border-radius: var(--bs-border-radius);
+    color: var(--cv-text-strong);
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+.app-sidebar-link i {
+    font-size: 1.125rem;
+    color: var(--cv-text-muted);
+    transition: color 0.15s ease-in-out;
+}
+
+.app-sidebar-link:hover {
+    background-color: var(--cv-surface-muted);
+    color: var(--bs-emphasis-color);
+}
+
+.app-sidebar-link.active {
+    background-color: var(--cv-accent-subtle);
+    color: var(--bs-emphasis-color);
+    font-weight: 600;
+}
+
+.app-sidebar-link.active i {
+    color: var(--cv-accent);
+}
+
+/* Collapsed (desktop only): an icon rail; the labels come back as tooltips via title */
+@media (min-width: 992px) {
+    .app-sidebar {
+        transition: flex-basis 0.2s ease-in-out, width 0.2s ease-in-out;
+    }
+
+    .sidebar-collapsed .app-sidebar {
+        flex-basis: 4.5rem;
+        width: 4.5rem;
+    }
+
+    .sidebar-collapsed .app-sidebar-brand {
+        justify-content: center;
+        padding: 0;
+    }
+
+    .sidebar-collapsed .app-sidebar-brand span,
+    .sidebar-collapsed .app-sidebar-link span {
+        display: none;
+    }
+
+    .sidebar-collapsed .app-sidebar-brand img {
+        margin: 0 !important;
+    }
+
+    .sidebar-collapsed .app-sidebar-heading {
+        height: 1px;
+        padding: 0;
+        margin: 0.75rem 0.5rem;
+        overflow: hidden;
+        background-color: var(--cv-hairline);
+    }
+
+    .sidebar-collapsed .app-sidebar-nav {
+        padding-inline: 0.75rem;
+    }
+
+    .sidebar-collapsed .app-sidebar {
+        scrollbar-width: none;
+    }
+
+    .sidebar-collapsed .app-sidebar-link {
+        justify-content: center;
+        padding: 0.375rem 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .app-sidebar {
+        transition: none !important;
+    }
+}
+
+.app-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    height: var(--cv-topbar-height);
+    padding: 0 1rem;
+    background-color: var(--cv-topbar-bg);
+    backdrop-filter: saturate(180%) blur(8px);
+    border-bottom: 1px solid var(--bs-border-color);
+}
+
+@media (min-width: 992px) {
+    .app-topbar {
+        padding: 0 2rem;
+    }
+}
+
+/* Looks like a search field, opens the search dialog */
+.app-search-trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    width: 100%;
+    max-width: 26rem;
+    height: 2.5rem;
+    padding: 0 0.875rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius-pill);
+    background-color: var(--cv-surface-muted);
+    color: var(--cv-text-muted);
+    font-size: 0.9375rem;
+    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.app-search-trigger:hover {
+    background-color: var(--cv-surface);
+    border-color: var(--cv-border-strong);
+}
+
+@media (max-width: 575.98px) {
+    .app-search-trigger {
+        width: 2.5rem;
+        justify-content: center;
+        padding: 0;
+    }
+}
+
+.app-search-trigger kbd {
+    padding: 0.05rem 0.4rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 0.375rem;
+    background-color: var(--cv-surface);
+    color: var(--cv-text-muted);
+    font-size: 0.75rem;
+}
+
+.app-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 0;
+    border-radius: 50%;
+    background-color: var(--cv-accent-subtle);
+    color: var(--cv-accent);
+    font-size: 0.875rem;
+    font-weight: 700;
+    transition: box-shadow 0.15s ease-in-out;
+}
+
+/* The Add menu is a round plus, the same size as the avatar beside it */
+.app-add-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 1.125rem;
+}
+
+.app-avatar:hover,
+.app-avatar[aria-expanded="true"] {
+    box-shadow: 0 0 0 3px var(--bs-focus-ring-color);
+}
+
+.app-search-input .form-control {
+    font-size: 1.125rem;
+}
+
+/* Spotlight results under the search field */
+.app-spotlight {
+    max-height: 60vh;
+    overflow-y: auto;
+    margin-top: 0.5rem;
+    border-top: 1px solid var(--cv-hairline);
+}
+
+.app-spotlight .list-group-item {
+    border: 0;
+    border-radius: var(--bs-border-radius);
+}
+
+.app-spotlight-code {
+    flex-shrink: 0;
+    font-family: var(--bs-font-monospace);
+    font-size: 0.8125rem;
+    opacity: 0.65;
+}
+
+.app-spotlight-heading {
+    padding: 0.75rem 1rem 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--cv-text-muted);
+}
+
+/* From a tablet up the search dialog sits clear of the top bar, with a taller field */
+@media (min-width: 768px) {
+    #search-modal .modal-dialog {
+        margin-top: 15vh;
+    }
+
+    #search-modal .modal-body {
+        padding: 0.75rem !important;
+    }
+
+    .app-search-input .form-control {
+        padding-block: 0.875rem;
+        font-size: 1.375rem;
+    }
+
+    .app-search-input .input-group-text {
+        font-size: 1.375rem;
+    }
+}
+
+/* Page header: the breadcrumb trail as a quiet line above a large title */
+.app-page-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 1rem;
+    padding: 1.5rem 1rem 1.25rem;
+}
+
+.app-content {
+    flex: 1 0 auto;
+    padding: 0 1rem 2rem;
+}
+
+@media (min-width: 992px) {
+    .app-page-header {
+        padding: 2rem 2rem 1.5rem;
+    }
+
+    .app-content {
+        padding: 0 2rem 2.5rem;
+    }
+
+    /* A page whose content is a centred column (create forms, articles) lines its title and
+       breadcrumb up with that column: the inset matches the gutter maths of .col-lg-8 / -9 */
+    .app-main:has(.app-content > .row.justify-content-center > .col-lg-8) .app-page-header {
+        padding-inline: calc(2rem + (100% - 2.5rem) / 6);
+    }
+
+    .app-main:has(.app-content > .row.justify-content-center > .col-lg-9) .app-page-header {
+        padding-inline: calc(2rem + (100% - 2.5rem) / 8);
+    }
+}
+
+.app-record-code {
+    font-family: var(--bs-font-monospace);
+    font-size: 0.8125rem;
+    color: var(--cv-text-muted);
+    user-select: all;
+}
+
+.app-page-title {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+@media (max-width: 575.98px) {
+    .app-page-title {
+        font-size: 1.5rem;
+    }
+}
+
+/* The title already names the current page, so the trail stops at its parent,
+   and a trail that would only hold the home icon is left out */
+.app-page-header .breadcrumb {
+    margin-bottom: 0.375rem !important;
+}
+
+.app-page-header .breadcrumb-item.active {
+    display: none;
+}
+
+.app-page-header .breadcrumb:not(:has(> li:nth-child(3))) {
+    display: none;
+}
+
+/* Page actions are yielded by every page as plain nav-links; they render as pill
+   buttons here, and the "add" action becomes the primary one. */
+.page-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.page-actions form {
+    display: inline-flex;
+    margin: 0 !important;
+}
+
+.page-actions .nav-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.5rem;
+    margin: 0 !important;
+    padding: 0.4rem 1rem;
+    border: 1px solid var(--bs-border-color);
+    border-radius: var(--bs-border-radius-pill);
+    background-color: var(--cv-surface);
+    color: var(--bs-body-color);
+    font-weight: 600;
+    white-space: nowrap;
+    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+}
+
+.page-actions .nav-link:hover {
+    background-color: var(--cv-surface-muted);
+    border-color: var(--cv-border-strong);
+}
+
+.page-actions .nav-link i {
+    color: var(--cv-text-muted);
+}
+
+.page-actions .nav-link:has(.bi-plus-square) {
+    border-color: var(--bs-primary);
+    background-color: var(--bs-primary);
+    color: #fff;
+}
+
+.page-actions .nav-link:has(.bi-plus-square):hover {
+    background-color: var(--cv-primary-hover);
+}
+
+.page-actions .nav-link:has(.bi-plus-square) i {
+    color: #fff;
+}
+
+.page-actions .nav-link:has(.bi-trash):hover {
+    color: var(--bs-danger);
+}
+
+.page-actions .nav-link:has(.bi-trash):hover i {
+    color: var(--bs-danger);
+}
+
+.page-actions .bi-plus-square::before {
+    content: "\F64D"; /* bi-plus-lg reads cleaner inside a pill */
+}
+
+.app-footer {
+    padding: 0 1rem;
+}
+
+@media (min-width: 992px) {
+    .app-footer {
+        padding: 0 2rem;
+    }
+}
+
+.app-footer .container {
+    max-width: none;
+    padding: 0;
+}
+
+.app-footer .row {
+    margin: 0;
+}
+
+.app-footer .col {
+    padding: 0;
 }
 
 /* --------------------------------------------------------------------------
@@ -885,7 +1572,7 @@ input.form-control,
 }
 
 .sales-board-column.is-drop-target {
-    outline: 2px dashed var(--bs-primary);
+    outline: 2px dashed var(--cv-accent);
 }
 
 .sales-board .card[draggable='true'] {
@@ -924,7 +1611,7 @@ input.form-control,
 }
 
 .calendar-day.is-today .calendar-date {
-    color: var(--bs-primary);
+    color: var(--cv-accent);
     font-weight: 700;
 }
 
@@ -972,4 +1659,38 @@ input.form-control,
 form.is-submitting [type="submit"] {
     cursor: progress;
     opacity: 0.65;
+}
+
+/* Searchable select (clientverse.js): a .form-select button over a dropdown with a search box */
+.cv-select-button {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cv-select-button:disabled {
+    background-color: var(--bs-secondary-bg);
+}
+
+.cv-select-menu {
+    min-width: 12rem;
+}
+
+.cv-select-list {
+    max-height: 16rem;
+    overflow-y: auto;
+}
+
+.cv-select-list .dropdown-item {
+    white-space: normal;
+}
+
+/* Bootstrap Icons has no crown; drawn here so <i class="bi bi-crown"> works like any other icon */
+.bi-crown::before {
+    content: "";
+    width: 1em;
+    height: 1em;
+    background-color: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath d='M1 4.5l3.6 3.2L8 2l3.4 5.7L15 4.5 13.6 12H2.4zM2.4 13.2h11.2v1.3H2.4z'/%3e%3c/svg%3e") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath d='M1 4.5l3.6 3.2L8 2l3.4 5.7L15 4.5 13.6 12H2.4zM2.4 13.2h11.2v1.3H2.4z'/%3e%3c/svg%3e") center / contain no-repeat;
 }

@@ -14,7 +14,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Every setting, read once per request (or queued job) instead of once per setting() call.
+        $this->app->scoped('settings', fn () => \App\Models\Setting::query()->pluck('value', 'name')->all());
     }
 
     /**

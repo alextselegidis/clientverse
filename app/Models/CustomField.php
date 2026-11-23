@@ -34,7 +34,20 @@ class CustomField extends Model
      */
     public static function for(string $appliesTo): Collection
     {
-        return self::where('applies_to', $appliesTo)->orderBy('position')->orderBy('id')->get();
+        // Validation, labels and saving each ask within one request; scoped, so it resets per request.
+        $key = 'custom-fields.' . $appliesTo;
+
+        if (!app()->bound($key)) {
+            app()->scoped($key, fn () => self::where('applies_to', $appliesTo)->orderBy('position')->orderBy('id')->get());
+        }
+
+        return app($key);
+    }
+
+    protected static function booted(): void
+    {
+        static::saved(fn (self $field) => app()->forgetInstance('custom-fields.' . $field->applies_to));
+        static::deleted(fn (self $field) => app()->forgetInstance('custom-fields.' . $field->applies_to));
     }
 
     /**

@@ -65,15 +65,25 @@ You can build the files by running `bash build.sh`. This command will bundle eve
 
 ## Installation
 
-You will need to perform the following steps to install the application on your server:
+### From the browser
 
 * Make sure that your server has Apache/Nginx, PHP (8.2+) and MySQL installed.
-* Create a new database (or use an existing one).
-* Copy the "clientverse" source folder on your server.
-* Make sure that the "storage" directory is writable.
+* Create a new, empty database.
+* Upload the "clientverse" folder to your server and make it writable by the web server.
+* Open the Clientverse URL in the browser. The installer checks the server, asks for the database and
+  your admin account, and sets everything up.
+
+### From the command line
+
 * Rename the ".env.example" file to ".env" and update its contents based on your environment.
-* Run the `php artisan migrate:fresh` command from the terminal. 
-* Open the browser on the Clientverse URL and log in with admin@example.org and 12345678 as the password. 
+* Run `php artisan key:generate` and `php artisan migrate`.
+* Open the browser on the Clientverse URL and log in with admin@example.org and 12345678 as the password,
+  then change both under Account.
+
+### Updating
+
+Upload the new files over the old ones (keep your ".env" and "storage" folder). The first page load after
+the upload brings the database up to date.
 
 That's it! You can now use Clientverse at your will.
 

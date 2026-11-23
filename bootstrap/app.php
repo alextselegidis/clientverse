@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\ExtendRememberSession;
+use App\Http\Middleware\InstallOrUpdate;
 use App\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -20,9 +21,11 @@ return Application::configure(basePath: dirname(__DIR__))
         // The client portal has its own login page and home.
         $middleware->redirectGuestsTo(fn ($request) => $request->is('portal*') ? route('portal.login') : route('login'));
         $middleware->redirectUsersTo(fn ($request) => $request->is('portal*') ? route('portal') : route('dashboard'));
-        $middleware->web(append: [
+        // Before the session starts: an install with no database yet keeps its session in files.
+        $middleware->web(prepend: [InstallOrUpdate::class], append: [
             ExtendRememberSession::class,
         ]);
+        $middleware->api(prepend: [InstallOrUpdate::class]);
 
         // Namespace the CSRF cookie so installs sharing a domain do not clobber
         // each other's; see cookie_suffix() in helpers.php.

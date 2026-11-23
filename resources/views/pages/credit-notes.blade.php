@@ -12,12 +12,12 @@
 @extends('layouts.main-layout')
 
 @section('pageTitle')
-    {{ __('credit-notes') }}
+    {{ __('credit_notes') }}
 @endsection
 
 @section('breadcrumbs')
     @include('shared.breadcrumb', ['breadcrumbs' => [
-        ['label' => __('credit-notes')]
+        ['label' => __('credit_notes')]
     ]])
 @endsection
 

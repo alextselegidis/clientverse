@@ -11,6 +11,8 @@
 --}}
 @extends('layouts.main-layout')
 
+@section('recordCode', $project->code)
+
 @section('pageTitle')
     {{ $project->name }}
 @endsection
@@ -45,20 +47,20 @@
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm mb-4">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-4">
+                    {{-- The page header already shows the name; the card opens with who it belongs to and its labels --}}
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
                         <div>
-                            <h4 class="mb-1">{{ $project->name }}</h4>
                             @if($project->customer)
                                 <a href="{{ route('customers.show', $project->customer_id) }}" class="text-muted">
                                     <i class="bi bi-building me-1"></i>{{ $project->customer->name }}
                                 </a>
                             @endif
                         </div>
-                        <div>
+                        <div class="d-flex flex-wrap gap-1">
                             @php
                                 $statusColors = ['planned' => 'secondary', 'active' => 'primary', 'on_hold' => 'warning', 'completed' => 'success'];
                             @endphp
-                            <span class="badge bg-{{ $statusColors[$project->status] ?? 'secondary' }} fs-6">
+                            <span class="badge bg-{{ $statusColors[$project->status] ?? 'secondary' }}">
                                 {{ __($project->status) }}
                             </span>
                         </div>

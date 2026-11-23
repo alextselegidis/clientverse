@@ -42,7 +42,7 @@ class SalesController extends Controller
             $query->where('stage', $stage);
         }
 
-        $sort = $request->query('sort', 'created_at');
+        $sort = $request->query('sort', 'value');
         $direction = $request->query('direction', 'desc');
 
         sort_query($query, $sort, $direction);

@@ -99,22 +99,38 @@ public/manifest.json, public/sw.js PWA manifest and service worker
 - Design tokens live in the `:root` block of `public/styles/clientverse.css` — the palette,
   radii, shadows, the neutral ramp (`--cv-canvas`, `--cv-surface-muted`, `--cv-hairline`)
   and the font stack. Change a token there rather than hardcoding a colour in a template.
-- Palette: `--bs-primary` is `#33507a` (deep slate blue) and the semantic colours are
-  deliberately desaturated versions of the Bootswatch defaults — this is a tool for
-  professionals, so no consumer-app teal or orange. Every semantic colour also has its
-  `-rgb`, `-bg-subtle`, `-border-subtle` and `-text-emphasis` token set; keep the four in
-  step when changing one. The brand colour is also duplicated in
-  `shared/head.blade.php`, `public/manifest.json` and `public/offline.html`.
+- Palette: `--bs-primary` is slate blue `#33507a` (committing buttons, the Add menu) and
+  `--cv-accent` is the same blue (links, focus rings, the active sidebar item, checked
+  inputs) - kept as two tokens so the accent can diverge. Surfaces are white on the `--cv-canvas` grey with hairline borders; cards carry
+  no shadow, only menus, modals and toasts do. The semantic colours are deliberately
+  desaturated — this is a tool for professionals, so no consumer-app teal or orange. Every
+  semantic colour also has its `-rgb`, `-bg-subtle`, `-border-subtle` and `-text-emphasis`
+  token set; keep the four in step when changing one. `primary` badges use the
+  blue tints, since a solid blue pill reads as a button. The theme colour (white, matching the top
+  bar) is also duplicated in `shared/head.blade.php`, `public/manifest.json` and
+  `public/offline.html`.
+- **Light and dark theme.** Each user picks light, dark or "same as device" in the account
+  menu (`users.theme`, `AccountController::theme`). An inline script in `shared/head` sets
+  `data-bs-theme` on `<html>` before the first paint. Our `:root` block outweighs
+  Bootstrap's own `[data-bs-theme=dark]` one, so the `[data-bs-theme=dark]` block right after
+  `:root` repeats every token; add a token to `:root` and you add its dark value there too.
+  Never hardcode a colour (`#fff`, a grey) in a rule - use `--cv-surface`, `--cv-text-muted`
+  and the rest of the neutral tokens, or it stays light in dark mode. Logos come in pairs:
+  `.logo-on-light` (`logo.png`) and `.logo-on-dark` (`logo-light.svg`), one hidden by CSS.
 - Font is the system UI stack. Do not add a webfont — self-hosted installs should not
   reach out to a CDN.
-- Buttons: `btn-primary` for the committing action, `btn-light border` for neutral ones.
-  There is no `btn-dark` any more.
+- Buttons are pills: `btn-primary` (blue) for the committing action, `btn-light border`
+  (white, hairline) for neutral ones; `btn-outline-primary` renders the same as the
+  neutral one. There is no `btn-dark` any more.
+- Page actions (`@section('navActions')`) stay plain `nav-link`s in every page; the layout's
+  `.page-actions` styles them as pill buttons, and the one with `bi-plus-square` becomes the
+  primary button. Do not restyle them per page.
 - Row actions are an icon-only `⋯` (`bi-three-dots`) button with an `aria-label`, never a
   labelled dropdown.
 - Badges render as quiet tinted pills; write `badge bg-success` and the CSS maps it to the
   `*-bg-subtle` / `*-text-emphasis` pair. Do not hand-roll `bg-*-subtle text-*` combos.
 - Tables are hover-only (no `table-striped`) with `table-light-header` for the quiet
-  uppercase header row.
+  sentence-case header row on white.
 - **Row density.** Every row is one line tall at every width: `.table td`/`th` are
   `white-space: nowrap`, and the wide text cells - the ones holding a `.fw-medium`
   record name or a link - hold an inner block with `width: 0; min-width: 100%` plus
@@ -124,18 +140,49 @@ public/manifest.json, public/sw.js PWA manifest and service worker
   becomes the minimum instead). The percentage `min-width` is ignored while the browser
   sizes columns and then fills whatever column the cell gets. The name and link cells
   also carry a `width` preference (32% / 22%) purely so the leftover width lands on them
-  rather than on a date column that does not need it. Cell padding is `0.5rem` vertically,
-  going back to `0.75rem` below `lg` where a row is a tap target. Desktop rows land at
-  ~48px.
-- Global search is the navbar icon opening `#search-modal` (in `shared/header.blade.php`) —
-  a centred, header-free dialog holding just the input. The navbar is too tight for a
-  usable inline input.
+  rather than on a date column that does not need it. Cell padding is `0.625rem` vertically,
+  going to `0.75rem` below `lg` where a row is a tap target. Desktop rows land at ~44px.
+- Layout: `shared/sidebar.blade.php` is the navigation — a sticky 15rem column from `lg`,
+  Bootstrap's `offcanvas-lg` drawer below it (opened from the top bar's menu button), so it
+  needs no script. From `lg` the top bar's `data-sidebar-toggle` button collapses it to an
+  icon rail (`html.sidebar-collapsed`, kept in `localStorage` and applied by the same head
+  script); each link carries a `title` so the rail has tooltips. Menu entries are one data array at the top of that file, each gated by
+  its permission module. `shared/header.blade.php` is the sticky top bar: search, the Add
+  menu (create shortcuts, gated by edit permission) and the account menu. The page header
+  in `layouts/main-layout` shows the breadcrumb trail up to the parent and the page title
+  as a large heading; a trail that would only hold the home icon is hidden by CSS.
+- Every single-choice `select.form-select` becomes a searchable dropdown in `clientverse.js`
+  (the native select stays in the form, hidden, holding the value and firing `change`), so
+  write plain `<select class="form-select">` markup. `data-no-search` keeps one native. The
+  top bar's Add menu is a round plus icon.
+- Global search is the pill-shaped field in the top bar opening `#search-modal` — a
+  header-free dialog holding just the input. `/` or Ctrl/Cmd+K opens it from anywhere
+  outside a text field.
 - `SearchController` counts each section's full result set and lists only the first
   `PER_SECTION`; `shared/search-section` renders the heading, the real total, and a
   "view all" link into that resource's own `?q=` filtered list. Never report the number of
   rows fetched as the number of matches.
-- `images/logo-light.svg` is the white mark for the dark navbar; `images/logo.png` is the
-  original for light backgrounds.
+- Bump `version` in `config/app.php` with any CSS or JS change people must see: the
+  service worker and browsers cache `styles/clientverse.css?<version>` until it changes,
+  so new markup would otherwise run against the old stylesheet.
+
+## Installing and updating
+
+- **Browser installer.** On a fresh upload (no `.env`, and no `APP_KEY`/`DB_HOST` in the real
+  environment) `public/index.php` creates `.env` from `.env.example` with a new `APP_KEY` and
+  `APP_INSTALLED=false`. While that is false and `storage/app/installed` does not exist,
+  `InstallOrUpdate` sends every request to `/install` (`InstallController`), with the session
+  and cache on files since there is no database yet. The installer checks the server,
+  connects MySQL, refuses any database that already has a `migrations` table (otherwise it
+  would hand an existing install's admin to whoever fills the form), migrates under a file
+  lock, turns the migration-made default admin into the one entered, and writes the DB
+  settings and `APP_INSTALLED=true`. It shows a generic message for connection errors and logs
+  the driver's one. `.env.example` itself has no `APP_INSTALLED` line, so command-line
+  installs and every install from before the installer count as installed.
+- **Updates migrate themselves.** `storage/app/installed` holds the version whose migrations
+  last ran. When `config('app.version')` differs, the first request runs `migrate --force`
+  under a file lock and rewrites it. So uploading a new release is the whole update - which
+  makes the version bump mandatory for any release with a migration.
 
 ## Several installs on one domain
 
@@ -181,10 +228,10 @@ full width, and the paginator wraps.
 
 ## Frontend gotchas
 
-- The navbar expands at `lg`, but the even 120px nav-item grid only fits from `xl`, so
-  `min-width` on `.nav-menu-item` is scoped to `min-width: 1200px` and the items use
-  `px-lg-2 px-xl-4`. Without that the whole page scrolls sideways on a 1024px tablet in
-  landscape. Adding a navbar item means re-checking 992px.
+- `offcanvas-lg` makes the sidebar a plain block from `lg` up; `.app-sidebar` forces it
+  back to a flex column at every size so the brand row stays fixed and the menu scrolls.
+- CSS `:has()` cannot be nested, so a rule like `nav:has(.x:not(:has(li)))` is dropped
+  silently. Target the inner element instead.
 - `.table-responsive` scrolls horizontally below `992px` and is `overflow: visible` above,
   so row dropdowns can escape on desktop. Do not add inline `overflow` overrides — that
   breaks horizontal scrolling and pushes the whole page sideways on phones.

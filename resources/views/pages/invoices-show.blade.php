@@ -11,6 +11,8 @@
 --}}
 @extends('layouts.main-layout')
 
+@section('recordCode', $invoice->code)
+
 @section('pageTitle')
     {{ $invoice->number }}
 @endsection

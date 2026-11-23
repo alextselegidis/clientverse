@@ -140,6 +140,28 @@ tags:
     description: Tag management
   - name: Customer Notes
     description: Customer notes management
+  - name: Tasks
+    description: Tasks
+  - name: Tickets
+    description: Tickets
+  - name: Items
+    description: Items
+  - name: Expenses
+    description: Expenses
+  - name: Knowledge Base
+    description: Articles
+  - name: Invoices
+    description: Invoices (read only)
+  - name: Payments
+    description: Payments (read only)
+  - name: Estimates
+    description: Estimates (read only)
+  - name: Credit Notes
+    description: Credit notes (read only)
+  - name: Proposals
+    description: Proposals (read only)
+  - name: Subscriptions
+    description: Subscriptions (read only)
 
 components:
   securitySchemes:
@@ -380,6 +402,10 @@ components:
           enum: [lead, active, inactive]
         notes:
           type: string
+        custom_values:
+          type: object
+          description: Custom field values keyed by custom field id. Unknown ids are dropped; fields left out keep their value.
+          additionalProperties: true
         created_at:
           type: string
           format: date-time
@@ -421,6 +447,10 @@ components:
           type: boolean
         notes:
           type: string
+        custom_values:
+          type: object
+          description: Custom field values keyed by custom field id. Unknown ids are dropped; fields left out keep their value.
+          additionalProperties: true
         created_at:
           type: string
           format: date-time
@@ -460,6 +490,10 @@ components:
           format: date
         notes:
           type: string
+        custom_values:
+          type: object
+          description: Custom field values keyed by custom field id. Unknown ids are dropped; fields left out keep their value.
+          additionalProperties: true
         created_at:
           type: string
           format: date-time
@@ -498,8 +532,16 @@ components:
         expected_close_date:
           type: string
           format: date
+        assigned_to:
+          type: integer
+          nullable: true
+          description: Id of the user who owns the deal
         notes:
           type: string
+        custom_values:
+          type: object
+          description: Custom field values keyed by custom field id. Unknown ids are dropped; fields left out keep their value.
+          additionalProperties: true
         created_at:
           type: string
           format: date-time
@@ -552,6 +594,10 @@ components:
           format: date
         notes:
           type: string
+        custom_values:
+          type: object
+          description: Custom field values keyed by custom field id. Unknown ids are dropped; fields left out keep their value.
+          additionalProperties: true
         created_at:
           type: string
           format: date-time
@@ -581,6 +627,8 @@ components:
           format: date
         is_completed:
           type: boolean
+        notes:
+          type: string
         created_at:
           type: string
           format: date-time
@@ -605,8 +653,6 @@ components:
         color:
           type: string
           maxLength: 7
-        user_id:
-          type: integer
         created_at:
           type: string
           format: date-time
@@ -629,6 +675,7 @@ components:
         user_id:
           type: integer
           readOnly: true
+          description: Always the user the token belongs to
         content:
           type: string
         created_at:
@@ -658,6 +705,555 @@ components:
           type: string
         is_active:
           type: boolean
+        permissions:
+          type: object
+          nullable: true
+          description: Per-module view, edit and delete flags for non-admin users
+          additionalProperties: true
+        theme:
+          type: string
+          enum: [auto, light, dark]
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum: [todo, in_progress, done]
+        priority:
+          type: string
+          enum: [low, normal, high]
+        due_date:
+          type: string
+          format: date
+          nullable: true
+        project_id:
+          type: integer
+          nullable: true
+        customer_id:
+          type: integer
+          nullable: true
+        assigned_to:
+          type: integer
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - title
+        - status
+        - priority
+
+    Ticket:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        subject:
+          type: string
+          maxLength: 255
+        customer_id:
+          type: integer
+        contact_id:
+          type: integer
+          nullable: true
+        department_id:
+          type: integer
+          nullable: true
+        assigned_to:
+          type: integer
+          nullable: true
+        status:
+          type: string
+          enum: [open, answered, on_hold, closed]
+          description: Set on update only; a new ticket is open
+        priority:
+          type: string
+          enum: [low, normal, high]
+        body:
+          type: string
+          description: Create only - the first message, saved as the first reply by the token's user
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - subject
+        - customer_id
+        - priority
+        - body
+
+    Item:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        description:
+          type: string
+          maxLength: 255
+        unit_price:
+          type: number
+          format: decimal
+        tax_rate:
+          type: number
+          format: decimal
+          minimum: 0
+          maximum: 100
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - description
+        - unit_price
+        - tax_rate
+
+    Expense:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        expense_date:
+          type: string
+          format: date
+        category:
+          type: string
+          nullable: true
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 255
+        amount:
+          type: number
+          format: decimal
+          minimum: 0
+        currency:
+          type: string
+          minLength: 3
+          maxLength: 3
+        billable:
+          type: boolean
+          description: A billable expense needs a customer_id
+        customer_id:
+          type: integer
+          nullable: true
+        project_id:
+          type: integer
+          nullable: true
+        invoice_id:
+          type: integer
+          nullable: true
+          description: Set when the expense is billed from the web page
+          readOnly: true
+        notes:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - expense_date
+        - description
+        - amount
+        - currency
+
+    Article:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 255
+        slug:
+          type: string
+          description: Set once from the title on create
+          readOnly: true
+        category:
+          type: string
+          nullable: true
+          maxLength: 100
+        body:
+          type: string
+        is_public:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+        - title
+        - body
+
+    Invoice:
+      type: object
+      description: Read only - created and changed on the web pages.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        customer_id:
+          type: integer
+          readOnly: true
+        number:
+          type: string
+          readOnly: true
+        status:
+          type: string
+          enum: [draft, sent, cancelled]
+          description: Stored status; paid, partially paid and overdue follow from total, amount_paid and due_date
+          readOnly: true
+        issue_date:
+          type: string
+          format: date
+          readOnly: true
+        due_date:
+          type: string
+          format: date
+          readOnly: true
+        currency:
+          type: string
+          readOnly: true
+        total:
+          type: number
+          format: decimal
+          readOnly: true
+        amount_paid:
+          type: number
+          format: decimal
+          description: Payments plus issued credit notes
+          readOnly: true
+        recurring_interval:
+          type: string
+          enum: [week, month, quarter, year]
+          nullable: true
+          readOnly: true
+        next_recurring_date:
+          type: string
+          format: date
+          nullable: true
+          readOnly: true
+        notes:
+          type: string
+          nullable: true
+          readOnly: true
+        terms:
+          type: string
+          nullable: true
+          readOnly: true
+        items:
+          type: array
+          readOnly: true
+          description: Line items, with the include
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+
+    Payment:
+      type: object
+      description: Read only - created and changed on the web pages.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        invoice_id:
+          type: integer
+          readOnly: true
+        amount:
+          type: number
+          format: decimal
+          readOnly: true
+        paid_on:
+          type: string
+          format: date
+          readOnly: true
+        method:
+          type: string
+          nullable: true
+          readOnly: true
+        reference:
+          type: string
+          nullable: true
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+
+    Estimate:
+      type: object
+      description: Read only - created and changed on the web pages.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        customer_id:
+          type: integer
+          readOnly: true
+        invoice_id:
+          type: integer
+          nullable: true
+          description: The invoice it was converted into
+          readOnly: true
+        number:
+          type: string
+          readOnly: true
+        status:
+          type: string
+          enum: [draft, sent, accepted, declined]
+          readOnly: true
+        issue_date:
+          type: string
+          format: date
+          readOnly: true
+        expiry_date:
+          type: string
+          format: date
+          readOnly: true
+        currency:
+          type: string
+          readOnly: true
+        total:
+          type: number
+          format: decimal
+          readOnly: true
+        notes:
+          type: string
+          nullable: true
+          readOnly: true
+        terms:
+          type: string
+          nullable: true
+          readOnly: true
+        items:
+          type: array
+          readOnly: true
+          description: Line items, with the include
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+
+    CreditNote:
+      type: object
+      description: Read only - created and changed on the web pages.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        customer_id:
+          type: integer
+          readOnly: true
+        invoice_id:
+          type: integer
+          nullable: true
+          description: The invoice an issued note is applied to
+          readOnly: true
+        number:
+          type: string
+          readOnly: true
+        status:
+          type: string
+          enum: [draft, issued]
+          readOnly: true
+        issue_date:
+          type: string
+          format: date
+          readOnly: true
+        currency:
+          type: string
+          readOnly: true
+        total:
+          type: number
+          format: decimal
+          readOnly: true
+        notes:
+          type: string
+          nullable: true
+          readOnly: true
+        items:
+          type: array
+          readOnly: true
+          description: Line items, with the include
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+
+    Proposal:
+      type: object
+      description: Read only - created and changed on the web pages.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        customer_id:
+          type: integer
+          readOnly: true
+        sale_id:
+          type: integer
+          nullable: true
+          readOnly: true
+        estimate_id:
+          type: integer
+          nullable: true
+          readOnly: true
+        number:
+          type: string
+          readOnly: true
+        subject:
+          type: string
+          readOnly: true
+        content:
+          type: string
+          nullable: true
+          readOnly: true
+        status:
+          type: string
+          enum: [draft, sent, accepted, declined]
+          readOnly: true
+        issue_date:
+          type: string
+          format: date
+          readOnly: true
+        open_till:
+          type: string
+          format: date
+          readOnly: true
+        currency:
+          type: string
+          readOnly: true
+        total:
+          type: number
+          format: decimal
+          readOnly: true
+        notes:
+          type: string
+          nullable: true
+          readOnly: true
+        terms:
+          type: string
+          nullable: true
+          readOnly: true
+        items:
+          type: array
+          readOnly: true
+          description: Line items, with the include
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+
+    Subscription:
+      type: object
+      description: Read only - created and changed on the web pages.
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        customer_id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        description:
+          type: string
+          nullable: true
+          readOnly: true
+        currency:
+          type: string
+          readOnly: true
+        amount:
+          type: number
+          format: decimal
+          readOnly: true
+        tax_rate:
+          type: number
+          format: decimal
+          readOnly: true
+        interval:
+          type: string
+          enum: [week, month, year]
+          readOnly: true
+        status:
+          type: string
+          enum: [draft, pending, active, past_due, canceled]
+          readOnly: true
+        current_period_end:
+          type: string
+          format: date
+          nullable: true
+          readOnly: true
+        canceled_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
         created_at:
           type: string
           format: date-time
@@ -1865,10 +2461,6 @@ paths:
           in: query
           schema:
             type: string
-        - name: filter[user_id]
-          in: query
-          schema:
-            type: integer
       responses:
         '200':
           description: Successful response
@@ -2141,3 +2733,1392 @@ paths:
       responses:
         '200':
           description: Customer note deleted
+
+  # ============== TASKS ==============
+  /tasks:
+    get:
+      tags:
+        - Tasks
+      summary: List all tasks
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SortParam'
+        - $ref: '#/components/parameters/IncludeParam'
+        - name: filter[title]
+          in: query
+          schema:
+            type: string
+        - name: filter[status]
+          in: query
+          schema:
+            type: string
+        - name: filter[priority]
+          in: query
+          schema:
+            type: string
+        - name: filter[due_date]
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: filter[project_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[customer_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[assigned_to]
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Task'
+    post:
+      tags:
+        - Tasks
+      summary: Create a task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '201':
+          description: Task created
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /tasks/search:
+    post:
+      tags:
+        - Tasks
+      summary: Advanced search tasks
+      description: |
+        Search tasks with advanced filtering.
+        Searchable fields: title, description
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful response
+
+  /tasks/batch:
+    post:
+      tags:
+        - Tasks
+      summary: Batch create tasks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchCreateRequest'
+      responses:
+        '200':
+          description: Tasks created
+    patch:
+      tags:
+        - Tasks
+      summary: Batch update tasks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchUpdateRequest'
+      responses:
+        '200':
+          description: Tasks updated
+    delete:
+      tags:
+        - Tasks
+      summary: Batch delete tasks
+      parameters:
+        - name: resources
+          in: query
+          description: Comma-separated list of resource IDs to delete
+          required: true
+          schema:
+            type: string
+            example: "1,2,3"
+      responses:
+        '200':
+          description: Tasks deleted
+
+  /tasks/{id}:
+    get:
+      tags:
+        - Tasks
+      summary: Get a task
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Task'
+    patch:
+      tags:
+        - Tasks
+      summary: Update a task
+      description: Send only the fields to change.
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          description: Task updated
+        '422':
+          description: Validation failed
+    delete:
+      tags:
+        - Tasks
+      summary: Delete a task
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '200':
+          description: Task deleted
+
+  # ============== TICKETS ==============
+  /tickets:
+    get:
+      tags:
+        - Tickets
+      summary: List all tickets
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SortParam'
+        - $ref: '#/components/parameters/IncludeParam'
+        - name: filter[subject]
+          in: query
+          schema:
+            type: string
+        - name: filter[status]
+          in: query
+          schema:
+            type: string
+        - name: filter[priority]
+          in: query
+          schema:
+            type: string
+        - name: filter[customer_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[contact_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[department_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[assigned_to]
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Ticket'
+    post:
+      tags:
+        - Tickets
+      summary: Create a ticket
+      description: A new ticket needs `body`, its first message. An update changes only `status`, `priority`, `department_id` and `assigned_to`.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ticket'
+      responses:
+        '201':
+          description: Ticket created
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /tickets/search:
+    post:
+      tags:
+        - Tickets
+      summary: Advanced search tickets
+      description: |
+        Search tickets with advanced filtering.
+        Searchable fields: subject
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful response
+
+  /tickets/{id}:
+    get:
+      tags:
+        - Tickets
+      summary: Get a ticket
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Ticket'
+    patch:
+      tags:
+        - Tickets
+      summary: Update a ticket
+      description: Send only the fields to change.
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ticket'
+      responses:
+        '200':
+          description: Ticket updated
+        '422':
+          description: Validation failed
+    delete:
+      tags:
+        - Tickets
+      summary: Delete a ticket
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '200':
+          description: Ticket deleted
+
+  # ============== ITEMS ==============
+  /items:
+    get:
+      tags:
+        - Items
+      summary: List all items
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SortParam'
+        - name: filter[description]
+          in: query
+          schema:
+            type: string
+        - name: filter[unit_price]
+          in: query
+          schema:
+            type: number
+        - name: filter[tax_rate]
+          in: query
+          schema:
+            type: number
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Item'
+    post:
+      tags:
+        - Items
+      summary: Create an item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+      responses:
+        '201':
+          description: Item created
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /items/search:
+    post:
+      tags:
+        - Items
+      summary: Advanced search items
+      description: |
+        Search items with advanced filtering.
+        Searchable fields: description
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful response
+
+  /items/batch:
+    post:
+      tags:
+        - Items
+      summary: Batch create items
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchCreateRequest'
+      responses:
+        '200':
+          description: Items created
+    patch:
+      tags:
+        - Items
+      summary: Batch update items
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchUpdateRequest'
+      responses:
+        '200':
+          description: Items updated
+    delete:
+      tags:
+        - Items
+      summary: Batch delete items
+      parameters:
+        - name: resources
+          in: query
+          description: Comma-separated list of resource IDs to delete
+          required: true
+          schema:
+            type: string
+            example: "1,2,3"
+      responses:
+        '200':
+          description: Items deleted
+
+  /items/{id}:
+    get:
+      tags:
+        - Items
+      summary: Get an item
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Item'
+    patch:
+      tags:
+        - Items
+      summary: Update an item
+      description: Send only the fields to change.
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
+      responses:
+        '200':
+          description: Item updated
+        '422':
+          description: Validation failed
+    delete:
+      tags:
+        - Items
+      summary: Delete an item
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '200':
+          description: Item deleted
+
+  # ============== EXPENSES ==============
+  /expenses:
+    get:
+      tags:
+        - Expenses
+      summary: List all expenses
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SortParam'
+        - $ref: '#/components/parameters/IncludeParam'
+        - name: filter[expense_date]
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: filter[category]
+          in: query
+          schema:
+            type: string
+        - name: filter[currency]
+          in: query
+          schema:
+            type: string
+        - name: filter[billable]
+          in: query
+          schema:
+            type: boolean
+        - name: filter[customer_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[project_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[invoice_id]
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Expense'
+    post:
+      tags:
+        - Expenses
+      summary: Create an expense
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Expense'
+      responses:
+        '201':
+          description: Expense created
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /expenses/search:
+    post:
+      tags:
+        - Expenses
+      summary: Advanced search expenses
+      description: |
+        Search expenses with advanced filtering.
+        Searchable fields: description, category, notes
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful response
+
+  /expenses/batch:
+    post:
+      tags:
+        - Expenses
+      summary: Batch create expenses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchCreateRequest'
+      responses:
+        '200':
+          description: Expenses created
+    patch:
+      tags:
+        - Expenses
+      summary: Batch update expenses
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchUpdateRequest'
+      responses:
+        '200':
+          description: Expenses updated
+    delete:
+      tags:
+        - Expenses
+      summary: Batch delete expenses
+      parameters:
+        - name: resources
+          in: query
+          description: Comma-separated list of resource IDs to delete
+          required: true
+          schema:
+            type: string
+            example: "1,2,3"
+      responses:
+        '200':
+          description: Expenses deleted
+
+  /expenses/{id}:
+    get:
+      tags:
+        - Expenses
+      summary: Get an expense
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Expense'
+    patch:
+      tags:
+        - Expenses
+      summary: Update an expense
+      description: Send only the fields to change.
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Expense'
+      responses:
+        '200':
+          description: Expense updated
+        '422':
+          description: Validation failed
+    delete:
+      tags:
+        - Expenses
+      summary: Delete an expense
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '200':
+          description: Expense deleted
+
+  # ============== ARTICLES ==============
+  /articles:
+    get:
+      tags:
+        - Knowledge Base
+      summary: List all articles
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SortParam'
+        - name: filter[title]
+          in: query
+          schema:
+            type: string
+        - name: filter[category]
+          in: query
+          schema:
+            type: string
+        - name: filter[is_public]
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Article'
+    post:
+      tags:
+        - Knowledge Base
+      summary: Create an article
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Article'
+      responses:
+        '201':
+          description: Article created
+        '422':
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /articles/search:
+    post:
+      tags:
+        - Knowledge Base
+      summary: Advanced search articles
+      description: |
+        Search articles with advanced filtering.
+        Searchable fields: title, category, body
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful response
+
+  /articles/batch:
+    post:
+      tags:
+        - Knowledge Base
+      summary: Batch create articles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchCreateRequest'
+      responses:
+        '200':
+          description: Articles created
+    patch:
+      tags:
+        - Knowledge Base
+      summary: Batch update articles
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchUpdateRequest'
+      responses:
+        '200':
+          description: Articles updated
+    delete:
+      tags:
+        - Knowledge Base
+      summary: Batch delete articles
+      parameters:
+        - name: resources
+          in: query
+          description: Comma-separated list of resource IDs to delete
+          required: true
+          schema:
+            type: string
+            example: "1,2,3"
+      responses:
+        '200':
+          description: Articles deleted
+
+  /articles/{id}:
+    get:
+      tags:
+        - Knowledge Base
+      summary: Get an article
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Article'
+    patch:
+      tags:
+        - Knowledge Base
+      summary: Update an article
+      description: Send only the fields to change.
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Article'
+      responses:
+        '200':
+          description: Article updated
+        '422':
+          description: Validation failed
+    delete:
+      tags:
+        - Knowledge Base
+      summary: Delete an article
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+      responses:
+        '200':
+          description: Article deleted
+
+  # ============== INVOICES ==============
+  /invoices:
+    get:
+      tags:
+        - Invoices
+      summary: List all invoices
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SortParam'
+        - $ref: '#/components/parameters/IncludeParam'
+        - name: filter[number]
+          in: query
+          schema:
+            type: string
+        - name: filter[status]
+          in: query
+          schema:
+            type: string
+        - name: filter[customer_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[currency]
+          in: query
+          schema:
+            type: string
+        - name: filter[issue_date]
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: filter[due_date]
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: filter[recurring_interval]
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Invoice'
+
+  /invoices/search:
+    post:
+      tags:
+        - Invoices
+      summary: Advanced search invoices
+      description: |
+        Search invoices with advanced filtering.
+        Searchable fields: number, notes
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful response
+
+  /invoices/{id}:
+    get:
+      tags:
+        - Invoices
+      summary: Get an invoice
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Invoice'
+
+  # ============== PAYMENTS ==============
+  /payments:
+    get:
+      tags:
+        - Payments
+      summary: List all payments
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SortParam'
+        - $ref: '#/components/parameters/IncludeParam'
+        - name: filter[invoice_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[paid_on]
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: filter[method]
+          in: query
+          schema:
+            type: string
+        - name: filter[reference]
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Payment'
+
+  /payments/search:
+    post:
+      tags:
+        - Payments
+      summary: Advanced search payments
+      description: |
+        Search payments with advanced filtering.
+        Searchable fields: reference, method
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful response
+
+  /payments/{id}:
+    get:
+      tags:
+        - Payments
+      summary: Get a payment
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Payment'
+
+  # ============== ESTIMATES ==============
+  /estimates:
+    get:
+      tags:
+        - Estimates
+      summary: List all estimates
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SortParam'
+        - $ref: '#/components/parameters/IncludeParam'
+        - name: filter[number]
+          in: query
+          schema:
+            type: string
+        - name: filter[status]
+          in: query
+          schema:
+            type: string
+        - name: filter[customer_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[currency]
+          in: query
+          schema:
+            type: string
+        - name: filter[issue_date]
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: filter[expiry_date]
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: filter[invoice_id]
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Estimate'
+
+  /estimates/search:
+    post:
+      tags:
+        - Estimates
+      summary: Advanced search estimates
+      description: |
+        Search estimates with advanced filtering.
+        Searchable fields: number, notes
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful response
+
+  /estimates/{id}:
+    get:
+      tags:
+        - Estimates
+      summary: Get an estimate
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Estimate'
+
+  # ============== CREDIT NOTES ==============
+  /credit-notes:
+    get:
+      tags:
+        - Credit Notes
+      summary: List all credit notes
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SortParam'
+        - $ref: '#/components/parameters/IncludeParam'
+        - name: filter[number]
+          in: query
+          schema:
+            type: string
+        - name: filter[status]
+          in: query
+          schema:
+            type: string
+        - name: filter[customer_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[invoice_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[currency]
+          in: query
+          schema:
+            type: string
+        - name: filter[issue_date]
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CreditNote'
+
+  /credit-notes/search:
+    post:
+      tags:
+        - Credit Notes
+      summary: Advanced search credit notes
+      description: |
+        Search credit notes with advanced filtering.
+        Searchable fields: number, notes
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful response
+
+  /credit-notes/{id}:
+    get:
+      tags:
+        - Credit Notes
+      summary: Get a credit note
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CreditNote'
+
+  # ============== PROPOSALS ==============
+  /proposals:
+    get:
+      tags:
+        - Proposals
+      summary: List all proposals
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SortParam'
+        - $ref: '#/components/parameters/IncludeParam'
+        - name: filter[number]
+          in: query
+          schema:
+            type: string
+        - name: filter[subject]
+          in: query
+          schema:
+            type: string
+        - name: filter[status]
+          in: query
+          schema:
+            type: string
+        - name: filter[customer_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[sale_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[currency]
+          in: query
+          schema:
+            type: string
+        - name: filter[issue_date]
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: filter[open_till]
+          in: query
+          schema:
+            type: string
+            format: date
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Proposal'
+
+  /proposals/search:
+    post:
+      tags:
+        - Proposals
+      summary: Advanced search proposals
+      description: |
+        Search proposals with advanced filtering.
+        Searchable fields: number, subject
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful response
+
+  /proposals/{id}:
+    get:
+      tags:
+        - Proposals
+      summary: Get a proposal
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Proposal'
+
+  # ============== SUBSCRIPTIONS ==============
+  /subscriptions:
+    get:
+      tags:
+        - Subscriptions
+      summary: List all subscriptions
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/SortParam'
+        - $ref: '#/components/parameters/IncludeParam'
+        - name: filter[name]
+          in: query
+          schema:
+            type: string
+        - name: filter[status]
+          in: query
+          schema:
+            type: string
+        - name: filter[customer_id]
+          in: query
+          schema:
+            type: integer
+        - name: filter[currency]
+          in: query
+          schema:
+            type: string
+        - name: filter[interval]
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/PaginatedResponse'
+                  - type: object
+                    properties:
+                      data:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Subscription'
+
+  /subscriptions/search:
+    post:
+      tags:
+        - Subscriptions
+      summary: Advanced search subscriptions
+      description: |
+        Search subscriptions with advanced filtering.
+        Searchable fields: name, description
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/PerPageParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchRequest'
+      responses:
+        '200':
+          description: Successful response
+
+  /subscriptions/{id}:
+    get:
+      tags:
+        - Subscriptions
+      summary: Get a subscription
+      parameters:
+        - $ref: '#/components/parameters/IdPathParam'
+        - $ref: '#/components/parameters/IncludeParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Subscription'

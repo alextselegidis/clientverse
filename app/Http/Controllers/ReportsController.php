@@ -48,19 +48,22 @@ class ReportsController extends Controller
 
         krsort($monthly);
 
-        $outstanding = Invoice::with('customer')
+        // Not bound by the date range, so it is summed in SQL rather than loading every unpaid invoice.
+        $outstanding = Invoice::query()
+            ->selectRaw('customer_id, currency, SUM(total - amount_paid) AS outstanding, COUNT(*) AS invoice_count')
             ->where('status', 'sent')
             ->whereColumn('amount_paid', '<', 'total')
+            ->groupBy('customer_id', 'currency')
+            ->orderByDesc('outstanding')
+            ->limit(10)
+            ->with('customer')
             ->get()
-            ->groupBy(fn (Invoice $invoice) => $invoice->customer_id . '|' . $invoice->currency)
-            ->map(fn ($group) => [
-                'customer' => $group->first()->customer,
-                'currency' => $group->first()->currency,
-                'balance' => $group->sum(fn (Invoice $invoice) => $invoice->balance),
-                'count' => $group->count(),
-            ])
-            ->sortByDesc('balance')
-            ->take(10);
+            ->map(fn (Invoice $row) => [
+                'customer' => $row->customer,
+                'currency' => $row->currency,
+                'balance' => round((float) $row->outstanding, 2),
+                'count' => (int) $row->invoice_count,
+            ]);
 
         $time = TimeEntry::with('user')
             ->whereNotNull('ended_at')

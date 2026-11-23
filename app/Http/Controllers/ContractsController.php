@@ -51,7 +51,7 @@ class ContractsController extends Controller
             $query->where('type', $type);
         }
 
-        $sort = $request->query('sort', 'created_at');
+        $sort = $request->query('sort', 'start_date');
         $direction = $request->query('direction', 'desc');
         sort_query($query, $sort, $direction);
 

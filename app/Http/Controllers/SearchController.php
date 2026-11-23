@@ -14,8 +14,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Contract;
 use App\Models\Customer;
+use App\Models\Invoice;
 use App\Models\Project;
 use App\Models\Sale;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -34,6 +36,23 @@ class SearchController extends Controller
     {
         $q = trim((string) $request->query('q', ''));
         $sections = [];
+
+        // A record code (C0042) opens that record when it exists and the user may view its module.
+        if (preg_match('/^([a-z])(\d{4,})$/i', $q, $match)) {
+            $codes = [
+                Customer::CODE_PREFIX => [Customer::class, 'customers'],
+                Project::CODE_PREFIX => [Project::class, 'projects'],
+                Sale::CODE_PREFIX => [Sale::class, 'sales'],
+                Contract::CODE_PREFIX => [Contract::class, 'contracts'],
+                Invoice::CODE_PREFIX => [Invoice::class, 'invoices'],
+                Task::CODE_PREFIX => [Task::class, 'tasks'],
+            ];
+            [$model, $module] = $codes[strtoupper($match[1])] ?? [null, null];
+
+            if ($model && Auth::user()->hasPermission($module) && $model::whereKey((int) $match[2])->exists()) {
+                return redirect()->route($module . '.show', (int) $match[2]);
+            }
+        }
 
         if (mb_strlen($q) >= 2) {
             $sections['customers'] = $this->section(

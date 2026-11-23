@@ -47,14 +47,14 @@
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-4">
+                    {{-- The page header already shows the name; the card opens with who it belongs to and its labels --}}
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
                         <div>
-                            <h4 class="mb-1">{{ $contact->full_name }}</h4>
                             @if($contact->position)
                                 <span class="text-muted">{{ $contact->position }}</span>
                             @endif
                         </div>
-                        <div>
+                        <div class="d-flex flex-wrap gap-1">
                             @if($contact->is_primary)
                                 <span class="badge bg-success">{{ __('primary') }}</span>
                             @endif

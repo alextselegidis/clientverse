@@ -39,7 +39,7 @@ class ContactsController extends Controller
         $direction = $request->query('direction', 'asc');
         sort_query($query, $sort, $direction);
 
-        $contacts = $query->paginate(25);
+        $contacts = $query->paginate(25)->withQueryString();
 
         return view('pages.contacts', [
             'customer' => $customer,

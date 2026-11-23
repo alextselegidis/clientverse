@@ -17,14 +17,37 @@
 
 <title>@yield('pageTitle') | Clientverse</title>
 <meta name="description" content="Clientverse is a self-hosted CRM for managing customers, contacts, projects, sales and contracts in one place.">
-<meta name="theme-color" content="#33507a">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1a1d23" media="(prefers-color-scheme: dark)">
+
+{{-- Set the theme and the collapsed sidebar before the first paint, so neither flashes. --}}
+<script>
+    (function () {
+        var root = document.documentElement;
+        var theme = @json(auth()->user()?->theme ?? 'auto');
+
+        if (theme !== 'light' && theme !== 'dark') {
+            theme = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+
+        root.setAttribute('data-bs-theme', theme);
+        root.dataset.searchLabel = @json(__('search'));
+
+        try {
+            if (localStorage.getItem('cv-sidebar') === 'collapsed') {
+                root.classList.add('sidebar-collapsed');
+            }
+        } catch (e) {
+        }
+    })();
+</script>
 
 <link rel="icon" href="favicon.ico" type="image/x-icon"/>
 <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Clientverse">
 
 <link rel="stylesheet" href="vendor/bootstrap/bootstrap.min.css">

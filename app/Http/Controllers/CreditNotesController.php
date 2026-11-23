@@ -42,7 +42,7 @@ class CreditNotesController extends Controller
             $query->where('status', $status);
         }
 
-        sort_query($query, $request->query('sort', 'created_at'), $request->query('direction', 'desc'));
+        sort_query($query, $request->query('sort', 'issue_date'), $request->query('direction', 'desc'));
 
         return view('pages.credit-notes', [
             'creditNotes' => $query->paginate(25)->withQueryString(),
@@ -125,7 +125,7 @@ class CreditNotesController extends Controller
             // A credit moved to another customer or currency no longer fits its invoice.
             $invoice = $creditNote->invoice;
 
-            if ($invoice && ($invoice->customer_id !== $creditNote->customer_id || $invoice->currency !== $creditNote->currency)) {
+            if ($invoice && ((int) $invoice->customer_id !== (int) $creditNote->customer_id || $invoice->currency !== $creditNote->currency)) {
                 $creditNote->invoice()->dissociate()->save();
             }
         });

@@ -41,7 +41,7 @@ class EstimatesController extends Controller
             $query->where('status', $status);
         }
 
-        sort_query($query, $request->query('sort', 'created_at'), $request->query('direction', 'desc'));
+        sort_query($query, $request->query('sort', 'number'), $request->query('direction', 'desc'));
 
         return view('pages.estimates', [
             'estimates' => $query->paginate(25)->withQueryString(),

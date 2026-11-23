@@ -32,6 +32,8 @@ class CreditNote extends Model
     protected $casts = [
         'issue_date' => 'date',
         'total' => 'decimal:2',
+        'customer_id' => 'integer',
+        'invoice_id' => 'integer',
     ];
 
     protected static function booted(): void

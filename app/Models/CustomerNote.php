@@ -22,6 +22,16 @@ class CustomerNote extends Model
         'content',
     ];
 
+    protected static function booted(): void
+    {
+        // A signed-in author is always the one writing; the API must not name someone else.
+        static::saving(function (CustomerNote $note) {
+            if (auth()->check()) {
+                $note->user_id = $note->exists ? $note->getOriginal('user_id') : auth()->id();
+            }
+        });
+    }
+
     public function customer()
     {
         return $this->belongsTo(Customer::class);

@@ -12,6 +12,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasCode;
 use App\Models\Concerns\HasCustomFields;
 use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
@@ -19,9 +20,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Sale extends Model
 {
+    use HasCode;
     use HasCustomFields;
     use RecordsActivity;
     use SoftDeletes;
+
+    public const CODE_PREFIX = 'S';
 
     protected $fillable = [
         'customer_id',

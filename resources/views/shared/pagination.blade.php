@@ -93,7 +93,7 @@
         </nav>
     </div>
 @else
-    <div class="text-muted small mt-3 px-3">
+    <div class="text-muted small p-3">
         {{ __('showing') }} {{ $paginator->count() }} {{ __('entries') }}
     </div>
 @endif

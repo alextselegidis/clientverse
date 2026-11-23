@@ -60,7 +60,7 @@
                         ])
                         <div class="list-group">
                             @foreach($sections['customers']['items'] as $customer)
-                                <a href="{{ route('customers.show', $customer->id) }}" class="list-group-item list-group-item-action d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
+                                <a href="{{ route('customers.show', $customer->id) }}" data-code="{{ $customer->code }}" class="list-group-item list-group-item-action d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
                                     <div>
                                         <strong>{{ $customer->name }}</strong>
                                         @if($customer->company)
@@ -89,7 +89,7 @@
                         ])
                         <div class="list-group">
                             @foreach($sections['projects']['items'] as $project)
-                                <a href="{{ route('projects.show', $project->id) }}" class="list-group-item list-group-item-action d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
+                                <a href="{{ route('projects.show', $project->id) }}" data-code="{{ $project->code }}" class="list-group-item list-group-item-action d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
                                     <div>
                                         <strong>{{ $project->name }}</strong>
                                         @if($project->description)
@@ -118,7 +118,7 @@
                         ])
                         <div class="list-group">
                             @foreach($sections['sales']['items'] as $sale)
-                                <a href="{{ route('sales.show', $sale->id) }}" class="list-group-item list-group-item-action d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
+                                <a href="{{ route('sales.show', $sale->id) }}" data-code="{{ $sale->code }}" class="list-group-item list-group-item-action d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
                                     <div>
                                         <strong>{{ $sale->name }}</strong>
                                         @if($sale->value)
@@ -147,7 +147,7 @@
                         ])
                         <div class="list-group">
                             @foreach($sections['contracts']['items'] as $contract)
-                                <a href="{{ route('contracts.show', $contract->id) }}" class="list-group-item list-group-item-action d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
+                                <a href="{{ route('contracts.show', $contract->id) }}" data-code="{{ $contract->code }}" class="list-group-item list-group-item-action d-flex flex-column flex-sm-row justify-content-between align-items-start align-items-sm-center gap-2">
                                     <div>
                                         <strong>{{ $contract->title }}</strong>
                                         @if($contract->value)

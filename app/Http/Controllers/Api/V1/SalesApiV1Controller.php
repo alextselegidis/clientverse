@@ -23,7 +23,7 @@ class SalesApiV1Controller extends Controller
 
     public function filterableBy(): array
     {
-        return ['name', 'stage', 'probability', 'value', 'currency', 'customer_id', 'expected_close_date', 'created_at', 'updated_at'];
+        return ['name', 'stage', 'probability', 'value', 'currency', 'customer_id', 'assigned_to', 'expected_close_date', 'created_at', 'updated_at'];
     }
 
     public function sortableBy(): array

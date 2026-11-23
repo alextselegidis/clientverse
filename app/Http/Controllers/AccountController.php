@@ -64,6 +64,15 @@ class AccountController extends Controller
         return back()->with('success', __('record_saved_message'));
     }
 
+    public function theme(Request $request)
+    {
+        $validated = $request->validate(['theme' => ['required', Rule::in(['auto', 'light', 'dark'])]]);
+
+        $request->user()->forceFill($validated)->save();
+
+        return back();
+    }
+
     /**
      * Drop the user's other browser sessions after a password change.
      *

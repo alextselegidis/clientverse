@@ -11,6 +11,7 @@
  * ---------------------------------------------------------------------------- */
 
 use App\Models\Setting;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Schema;
 
 if (!function_exists('sort_link')) {
@@ -42,13 +43,24 @@ if (!function_exists('sort_query')) {
 
         $model = $query->getModel();
 
-        $sortable = array_diff(Schema::getColumnListing($model->getTable()), $model->getHidden());
+        // The column list comes from information_schema, the slowest query on most list pages; it only
+        // changes with a migration, and a migration comes with a new version.
+        $columns = Cache::rememberForever(
+            'columns:' . $model->getTable() . ':' . config('app.version'),
+            fn () => Schema::getColumnListing($model->getTable()),
+        );
+        $sortable = array_diff($columns, $model->getHidden());
 
         if (!in_array($sort, $sortable, true)) {
             return $query;
         }
 
-        return $query->orderBy($sort, strtolower((string) $direction) === 'asc' ? 'asc' : 'desc');
+        $direction = strtolower((string) $direction) === 'asc' ? 'asc' : 'desc';
+
+        // The list views mark the sorted column from request('sort'), so a controller's default sort shows too.
+        request()->merge(['sort' => $sort, 'direction' => $direction]);
+
+        return $query->orderBy($sort, $direction);
     }
 }
 
@@ -74,12 +86,12 @@ if (!function_exists('setting')) {
                 $setting->save();
             }
 
+            app()->forgetInstance('settings');
+
             return null;
         }
 
-        $setting = Setting::query()->where('name', $key)->first() ?? null;
-
-        return $setting->value ?? $default;
+        return app('settings')[$key] ?? $default;
     }
 }
 

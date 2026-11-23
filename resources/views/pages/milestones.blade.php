@@ -137,9 +137,7 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-        <div class="card-footer text-muted small">
-            {{ __('showing') }} {{ $milestones->firstItem() ?? 0 }} - {{ $milestones->lastItem() ?? 0 }} {{ __('of') }} {{ $milestones->total() }} {{ __('records') }}
+            @include('shared.pagination', ['paginator' => $milestones])
         </div>
     </div>
 @endsection

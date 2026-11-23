@@ -12,6 +12,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasCode;
 use App\Enums\ProjectStatusEnum;
 use App\Models\Concerns\HasCustomFields;
 use App\Models\Concerns\RecordsActivity;
@@ -20,9 +21,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Project extends Model
 {
+    use HasCode;
     use HasCustomFields;
     use RecordsActivity;
     use SoftDeletes;
+
+    public const CODE_PREFIX = 'P';
 
     protected $fillable = [
         'customer_id',

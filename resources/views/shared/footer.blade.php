@@ -16,7 +16,8 @@
             <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 px-0 mt-3 border-top small">
                 <div class="col-md-4 ps-0 d-flex align-items-center">
                     <a href="https://github.com/alextselegidis/clientverse" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1" target="_blank">
-                        <img src="images/logo.png" alt="logo" class="footer-logo" style="width: 16px; height: 16px;"/>
+                        <img src="images/logo.png" alt="logo" class="logo-on-light footer-logo" style="width: 16px; height: 16px;"/>
+                        <img src="images/logo-light.svg" alt="logo" class="logo-on-dark footer-logo" style="width: 16px; height: 16px;"/>
                     </a>
                     <span class="mb-3 mb-md-0 text-body-secondary">
                         <a href="https://github.com/alextselegidis/clientverse" class="text-decoration-none me-2" target="_blank">Clientverse</a>

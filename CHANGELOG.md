@@ -36,8 +36,17 @@
 - Support departments that tickets are filed under, picked by staff or by the contact in the portal
 - Activity log under Setup of who created, changed or deleted which record, kept for a year
 - Announcements for staff on the dashboard, for customers in the portal, or both, with an optional end date
+- New look: a sidebar menu that collapses to icons (a drawer on phones), a top bar with search, an Add menu and the
+  account menu, large page titles, pill buttons and flat cards; `/` or Ctrl/Cmd+K opens search
+- Light and dark theme, or follow the device, chosen per user in the account menu
+- Dropdowns can be searched: type to filter the options of any select
+- Browser installer at /install for uploads without a command line; updates run their database migrations on the
+  first request after new files are uploaded
 - Knowledge base with a public page for published articles
 - Surveys with choice, rating and text questions and a results page
+- API for tasks, tickets, items, expenses and knowledge base articles, plus read-only invoices, payments, estimates,
+  credit notes, proposals and subscriptions; customers, contacts, projects, deals and contracts expose custom field
+  values, all documented in `openapi.yml`
 
 ### Changed
 
@@ -47,6 +56,12 @@
 
 ### Fixed
 
+- Saving an applied credit note without changes no longer detaches it from its invoice
+- Changing an invoice's customer or currency drops credit notes that no longer match it
+- Page links on the contacts and milestones lists keep the search and sort
+- The Tags API now requires the customers permission, and API notes are always written as the signed-in user
+- Faster pages: settings, custom fields and sortable columns are read once instead of on every use, customer
+  notes load their authors in one query, and the outstanding-balance report sums in the database
 - Customer dropdowns failed on SQLite because their labels were built with MySQL-only `IF()`
 - Incorrect `http://` URLs when deployed behind a reverse proxy; proxies are now trusted via the `TRUSTED_PROXIES` env var (#19)
 - Row action dropdown items were 30px tall on a phone instead of the intended 40px

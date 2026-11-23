@@ -79,4 +79,31 @@ class CreditNotesControllerTest extends TestCase
         $this->assertNull($credit->invoice_id);
         $this->assertEquals(300.00, $invoice->fresh()->balance);
     }
+
+    public function test_saving_an_applied_credit_unchanged_keeps_it_applied_and_a_moved_invoice_drops_it(): void
+    {
+        $user = User::factory()->create();
+        $customer = Customer::create(['name' => 'Acme']);
+        $invoice = Invoice::create(['customer_id' => $customer->id, 'status' => 'sent', 'currency' => 'EUR']);
+        $invoice->syncItems([['description' => 'Work', 'quantity' => 1, 'unit_price' => 300]]);
+        $credit = CreditNote::create(['customer_id' => $customer->id, 'status' => 'issued', 'currency' => 'EUR']);
+        $credit->syncItems([['description' => 'Refund', 'quantity' => 1, 'unit_price' => 50]]);
+        $credit->invoice()->associate($invoice)->save();
+        $invoice->recalculate();
+
+        // The form posts the customer id as a string.
+        $this->actingAs($user)->put(route('credit-notes.update', $credit), [
+            'customer_id' => (string) $customer->id, 'status' => 'issued', 'currency' => 'EUR',
+            'items' => [['description' => 'Refund', 'quantity' => 1, 'unit_price' => 50]],
+        ])->assertSessionHasNoErrors();
+        $this->assertSame($invoice->id, $credit->fresh()->invoice_id);
+        $this->assertEquals(250.00, $invoice->fresh()->balance);
+
+        $this->actingAs($user)->put(route('invoices.update', $invoice), [
+            'customer_id' => $customer->id, 'status' => 'sent', 'currency' => 'USD',
+            'items' => [['description' => 'Work', 'quantity' => 1, 'unit_price' => 300]],
+        ])->assertSessionHasNoErrors();
+        $this->assertNull($credit->fresh()->invoice_id);
+        $this->assertEquals(300.00, $invoice->fresh()->balance);
+    }
 }

@@ -130,28 +130,28 @@
                     <div class="row row-cols-2 row-cols-sm-auto g-2">
                         @if(auth()->user()->hasPermission('customers'))
                         <div class="col d-grid">
-                            <a href="{{ route('customers.create') }}" class="btn btn-outline-primary">
+                            <a href="{{ route('customers.create') }}" class="btn btn-light border">
                                 <i class="bi bi-person-plus me-1"></i> {{ __('add') }} {{ __('customer') }}
                             </a>
                         </div>
                         @endif
                         @if(auth()->user()->hasPermission('projects'))
                         <div class="col d-grid">
-                            <a href="{{ route('projects.create') }}" class="btn btn-outline-success">
+                            <a href="{{ route('projects.create') }}" class="btn btn-light border">
                                 <i class="bi bi-folder-plus me-1"></i> {{ __('create') }} {{ __('project') }}
                             </a>
                         </div>
                         @endif
                         @if(auth()->user()->hasPermission('sales'))
                         <div class="col d-grid">
-                            <a href="{{ route('sales.create') }}" class="btn btn-outline-warning">
+                            <a href="{{ route('sales.create') }}" class="btn btn-light border">
                                 <i class="bi bi-plus-circle me-1"></i> {{ __('new') }} {{ __('sale') }}
                             </a>
                         </div>
                         @endif
                         @if(auth()->user()->hasPermission('contracts'))
                         <div class="col d-grid">
-                            <a href="{{ route('contracts.create') }}" class="btn btn-outline-info">
+                            <a href="{{ route('contracts.create') }}" class="btn btn-light border">
                                 <i class="bi bi-file-plus me-1"></i> {{ __('new') }} {{ __('contract') }}
                             </a>
                         </div>

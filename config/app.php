@@ -29,6 +29,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Installed
+    |--------------------------------------------------------------------------
+    |
+    | False until the browser installer has run. Installs set up before the
+    | installer existed have no APP_INSTALLED line and count as installed.
+    |
+    */
+
+    'installed' => (bool) env('APP_INSTALLED', true),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
     |

@@ -17,45 +17,40 @@
 
     @yield('styles')
 </head>
-<body class="main-layout d-flex flex-column min-vh-100 bg-light">
-<div class="flex-grow-1">
+<body class="main-layout">
+<div class="app-shell">
+
+    @include('shared.sidebar')
+
+    <div class="app-main">
 
     @include('shared.header')
 
     <!-- Page Heading -->
 
     @hasSection('pageTitle')
-        <header class="bg-body-secondary mb-3">
-            <div class="container">
-                <div class="row">
-
-                    <nav class="navbar navbar-expand-lg">
-                        <div class="container-fluid">
-                            <div class="d-flex flex-column w-100 w-lg-auto py-2 py-lg-3 overflow-hidden">
-                                @if(View::hasSection('breadcrumbs'))
-                                    @yield('breadcrumbs')
-                                @endif
-                            </div>
-                            @hasSection('navActions')
-                                <nav class="navbar-nav flex-row flex-wrap justify-content-end ms-auto column-gap-3">
-                                    @yield('navActions')
-                                </nav>
-                            @endif
-                        </div>
-                    </nav>
-
-                </div>
+        <div class="app-page-header">
+            <div class="flex-grow-1">
+                @if(View::hasSection('breadcrumbs'))
+                    @yield('breadcrumbs')
+                @endif
+                @hasSection('recordCode')
+                    {{-- The record's shareable code (C0042); pasting it into search opens the record. --}}
+                    <div class="app-record-code">@yield('recordCode')</div>
+                @endif
+                <h1 class="app-page-title">@yield('pageTitle')</h1>
             </div>
-        </header>
+            @hasSection('navActions')
+                <nav class="page-actions" aria-label="{{ __('actions') }}">
+                    @yield('navActions')
+                </nav>
+            @endif
+        </div>
     @endif
 
     <!-- Page Content -->
-    <main class="container mb-4">
-        <div class="row">
-            <div class="col">
-                @yield('content')
-            </div>
-        </div>
+    <main class="app-content">
+        @yield('content')
     </main>
 
     <!-- Toast Container (Bottom Right using Bootstrap classes) -->
@@ -91,14 +86,15 @@
 
     </div>
 
+    <footer class="app-footer">
+        @include('shared.footer')
+    </footer>
+
+    </div>
 </div>
 
-<footer class="mt-auto">
-    @include('shared.footer')
-</footer>
-
 <script src="vendor/bootstrap/bootstrap.bundle.min.js"></script>
-<script src="vendor/pace-js/pace.min.js"></script>
+{{-- TEMP: pace off <script src="vendor/pace-js/pace.min.js"></script> --}}
 <script src="scripts/clientverse.js?{{config('app.version')}}"></script>
 @include('shared.service-worker')
 

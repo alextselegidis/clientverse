@@ -11,6 +11,8 @@
 --}}
 @extends('layouts.main-layout')
 
+@section('recordCode', $customer->code)
+
 @section('pageTitle')
     {{ $customer->name }}
 @endsection

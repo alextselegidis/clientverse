@@ -12,6 +12,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasCode;
 use App\Models\Concerns\HasDocumentNumber;
 use App\Models\Concerns\HasLineItems;
 use App\Models\Concerns\RecordsActivity;
@@ -22,10 +23,13 @@ use Illuminate\Support\Facades\URL;
 
 class Invoice extends Model
 {
+    use HasCode;
     use HasDocumentNumber;
     use HasLineItems;
     use RecordsActivity;
     use SoftDeletes;
+
+    public const CODE_PREFIX = 'I';
 
     public const NUMBER_PREFIX = 'INV';
 

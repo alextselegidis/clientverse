@@ -52,8 +52,8 @@ class CustomersController extends Controller
             $query->where('type', $type);
         }
 
-        $sort = $request->query('sort', 'created_at');
-        $direction = $request->query('direction', 'desc');
+        $sort = $request->query('sort', 'name');
+        $direction = $request->query('direction', 'asc');
 
         sort_query($query, $sort, $direction);
 
@@ -97,7 +97,7 @@ class CustomersController extends Controller
     public function show(Request $request, Customer $customer)
     {
         return view('pages.customers-show', [
-            'customer' => $customer->load(['contacts', 'projects', 'contracts', 'sales', 'tags', 'files']),
+            'customer' => $customer->load(['contacts', 'projects', 'contracts', 'sales', 'tags', 'files', 'customerNotes.user']),
             'uploadLimits' => File::getUploadLimits(),
         ]);
     }

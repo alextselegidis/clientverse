@@ -37,7 +37,7 @@ class SubscriptionsController extends Controller
             $query->where('status', $status);
         }
 
-        sort_query($query, $request->query('sort', 'created_at'), $request->query('direction', 'desc'));
+        sort_query($query, $request->query('sort', 'name'), $request->query('direction', 'asc'));
 
         return view('pages.subscriptions', [
             'subscriptions' => $query->paginate(25)->withQueryString(),

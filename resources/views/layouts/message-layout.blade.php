@@ -24,7 +24,8 @@
     <div class="bg-white w-100 text-center rounded-0 rounded-lg-3 shadow-lg-sm py-lg-4" style="max-width: 500px;">
 
          <div class="text-center mt-5 mb-3">
-             <img src="images/logo.png" alt="logo" class="public-logo-image mb-3" style="width: 128px"/>
+             <img src="images/logo.png" alt="logo" class="logo-on-light public-logo-image mb-3" style="width: 128px"/>
+             <img src="images/logo-light.svg" alt="logo" class="logo-on-dark public-logo-image mb-3" style="width: 128px"/>
          </div>
 
         @include('shared.errors', ['class' => 'mx-2 mx-lg-5 text-center'])
@@ -43,7 +44,7 @@
 </div>
 
 <script src="vendor/bootstrap/bootstrap.bundle.min.js"></script>
-<script src="vendor/pace-js/pace.min.js"></script>
+{{-- TEMP: pace off <script src="vendor/pace-js/pace.min.js"></script> --}}
 <script src="scripts/clientverse.js?{{config('app.version')}}"></script>
 @include('shared.service-worker')
 

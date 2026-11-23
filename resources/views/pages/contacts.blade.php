@@ -167,9 +167,7 @@
                     </tbody>
                 </table>
             </div>
-        </div>
-        <div class="card-footer text-muted small">
-            {{ __('showing') }} {{ $contacts->firstItem() ?? 0 }} - {{ $contacts->lastItem() ?? 0 }} {{ __('of') }} {{ $contacts->total() }} {{ __('records') }}
+            @include('shared.pagination', ['paginator' => $contacts])
         </div>
     </div>
 @endsection

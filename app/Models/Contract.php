@@ -12,6 +12,7 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasCode;
 use App\Models\Concerns\HasCustomFields;
 use App\Models\Concerns\RecordsActivity;
 use Illuminate\Database\Eloquent\Model;
@@ -20,9 +21,12 @@ use Illuminate\Support\Facades\URL;
 
 class Contract extends Model
 {
+    use HasCode;
     use HasCustomFields;
     use RecordsActivity;
     use SoftDeletes;
+
+    public const CODE_PREFIX = 'K';
 
     /**
      * The fields a signature covers; they cannot change once the contract is signed.

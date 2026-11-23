@@ -11,6 +11,8 @@
 --}}
 @extends('layouts.main-layout')
 
+@section('recordCode', $contract->code)
+
 @section('pageTitle')
     {{ $contract->title }}
 @endsection
@@ -52,23 +54,23 @@
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-4">
+                    {{-- The page header already shows the name; the card opens with who it belongs to and its labels --}}
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
                         <div>
-                            <h4 class="mb-1">{{ $contract->title }}</h4>
                             @if($contract->customer)
                                 <a href="{{ route('customers.show', $contract->customer_id) }}" class="text-muted">
                                     <i class="bi bi-building me-1"></i>{{ $contract->customer->name }}
                                 </a>
                             @endif
                         </div>
-                        <div class="text-end">
+                        <div class="d-flex flex-wrap gap-1">
                             @php
                                 $statusColors = ['draft' => 'secondary', 'active' => 'success', 'expired' => 'warning', 'cancelled' => 'danger'];
                             @endphp
-                            <span class="badge bg-{{ $statusColors[$contract->status] ?? 'secondary' }} fs-6">
+                            <span class="badge bg-{{ $statusColors[$contract->status] ?? 'secondary' }}">
                                 {{ __($contract->status) }}
                             </span>
-                            <span class="badge bg-{{ $contract->type == 'recurring' ? 'info' : 'secondary' }} fs-6 ms-1">
+                            <span class="badge bg-{{ $contract->type == 'recurring' ? 'info' : 'secondary' }}">
                                 {{ __($contract->type) }}
                             </span>
                         </div>

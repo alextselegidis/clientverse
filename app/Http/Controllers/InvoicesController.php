@@ -12,6 +12,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CreditNote;
 use App\Models\Customer;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
@@ -39,7 +40,7 @@ class InvoicesController extends Controller
         $status = $request->query('status');
         $query->whereDisplayStatus($status);
 
-        sort_query($query, $request->query('sort', 'created_at'), $request->query('direction', 'desc'));
+        sort_query($query, $request->query('sort', 'number'), $request->query('direction', 'desc'));
 
         return view('pages.invoices', [
             'invoices' => $query->paginate(25)->withQueryString(),
@@ -114,6 +115,17 @@ class InvoicesController extends Controller
         DB::transaction(function () use ($invoice, $data) {
             $invoice->update($data);
             $invoice->syncItems($data['items'] ?? []);
+
+            // Credits from another customer or currency stop counting once the invoice moves away from them.
+            $mismatched = CreditNote::where('invoice_id', $invoice->id)
+                ->where(fn ($query) => $query->where('customer_id', '!=', $invoice->customer_id)
+                    ->orWhere('currency', '!=', $invoice->currency))
+                ->get();
+
+            if ($mismatched->isNotEmpty()) {
+                $mismatched->each(fn (CreditNote $creditNote) => $creditNote->invoice()->dissociate()->save());
+                $invoice->recalculate();
+            }
         });
 
         return redirect(route('invoices.edit', $invoice->id))->with('success', __('record_saved_message'));

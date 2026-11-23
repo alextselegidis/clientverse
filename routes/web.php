@@ -10,6 +10,7 @@
  * @link        https://clientverse.org
  * ---------------------------------------------------------------------------- */
 
+use App\Http\Controllers\InstallController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ActivityController;
@@ -63,6 +64,10 @@ use App\Http\Middleware\RedirectIfAuthenticated;
 use Illuminate\Support\Facades\Route;
 
 // Guest
+// The browser installer; InstallOrUpdate answers 404 here once the app is installed.
+Route::get('/install', [InstallController::class, 'index'])->name('install');
+Route::post('/install', [InstallController::class, 'store'])->middleware('throttle:10,1')->name('install.store');
+
 Route::middleware(RedirectIfAuthenticated::class)->group(function () {
     // WelcomeController
     Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
@@ -138,6 +143,7 @@ Route::middleware('auth')->group(function () {
     // AccountController
     Route::get('/account', [AccountController::class, 'index'])->name('account');
     Route::put('/account', [AccountController::class, 'update'])->name('account.update');
+    Route::put('/account/theme', [AccountController::class, 'theme'])->name('account.theme');
     Route::post('/account/tokens', [AccountController::class, 'createToken'])->name('account.tokens.create');
     Route::delete('/account/tokens/{token}', [AccountController::class, 'deleteToken'])->name('account.tokens.delete');
 

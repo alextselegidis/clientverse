@@ -17,7 +17,7 @@
 
 @section('breadcrumbs')
     @include('shared.breadcrumb', ['breadcrumbs' => [
-        ['label' => __('credit-notes'), 'url' => route('credit-notes')],
+        ['label' => __('credit_notes'), 'url' => route('credit-notes')],
         ['label' => $creditNote->exists ? $creditNote->number : __('create')]
     ]])
 @endsection

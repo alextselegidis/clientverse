@@ -28,7 +28,11 @@ class CalendarController extends Controller
 {
     public function index(Request $request)
     {
-        $request->validate(['month' => 'nullable|date_format:Y-m']);
+        $request->validate([
+            'month' => 'nullable|date_format:Y-m',
+            'type' => 'nullable|in:tasks,milestones,invoices,contracts,sales',
+            'q' => 'nullable|string|max:255',
+        ]);
 
         $month = Carbon::createFromFormat('Y-m-d', ($request->query('month') ?? today()->format('Y-m')) . '-01')->startOfDay();
         $range = [$month->toDateString(), $month->copy()->endOfMonth()->toDateString()];
@@ -38,7 +42,7 @@ class CalendarController extends Controller
         if ($user->hasPermission('tasks')) {
             Task::where('status', '!=', 'done')->whereBetween('due_date', $range)->get()
                 ->each(fn (Task $task) => $events->push([
-                    'date' => $task->due_date, 'label' => $task->title, 'icon' => 'check2-square',
+                    'date' => $task->due_date, 'label' => $task->title, 'icon' => 'check2-square', 'type' => 'tasks',
                     'url' => route('tasks.show', $task->id),
                 ]));
         }
@@ -46,7 +50,7 @@ class CalendarController extends Controller
         if ($user->hasPermission('projects')) {
             Milestone::whereBetween('due_date', $range)->get()
                 ->each(fn (Milestone $milestone) => $events->push([
-                    'date' => $milestone->due_date, 'label' => $milestone->name, 'icon' => 'flag',
+                    'date' => $milestone->due_date, 'label' => $milestone->name, 'icon' => 'flag', 'type' => 'milestones',
                     'url' => route('projects.milestones.show', [$milestone->project_id, $milestone->id]),
                 ]));
         }
@@ -54,7 +58,7 @@ class CalendarController extends Controller
         if ($user->hasPermission('invoices')) {
             Invoice::where('status', 'sent')->whereColumn('amount_paid', '<', 'total')->whereBetween('due_date', $range)->get()
                 ->each(fn (Invoice $invoice) => $events->push([
-                    'date' => $invoice->due_date, 'label' => $invoice->number, 'icon' => 'receipt',
+                    'date' => $invoice->due_date, 'label' => $invoice->number, 'icon' => 'receipt', 'type' => 'invoices',
                     'url' => route('invoices.show', $invoice->id),
                 ]));
         }
@@ -62,7 +66,7 @@ class CalendarController extends Controller
         if ($user->hasPermission('contracts')) {
             Contract::whereBetween('end_date', $range)->get()
                 ->each(fn (Contract $contract) => $events->push([
-                    'date' => $contract->end_date, 'label' => $contract->title, 'icon' => 'file-earmark-text',
+                    'date' => $contract->end_date, 'label' => $contract->title, 'icon' => 'file-earmark-text', 'type' => 'contracts',
                     'url' => route('contracts.show', $contract->id),
                 ]));
         }
@@ -70,13 +74,22 @@ class CalendarController extends Controller
         if ($user->hasPermission('sales')) {
             Sale::whereNotIn('stage', ['won', 'lost'])->whereBetween('expected_close_date', $range)->get()
                 ->each(fn (Sale $sale) => $events->push([
-                    'date' => $sale->expected_close_date, 'label' => $sale->name, 'icon' => 'graph-up',
+                    'date' => $sale->expected_close_date, 'label' => $sale->name, 'icon' => 'graph-up', 'type' => 'sales',
                     'url' => route('sales.show', $sale->id),
                 ]));
         }
 
+        // ponytail: filters one month in memory; push type and q into the queries if a month gets large.
+        $type = $request->query('type');
+        $q = trim((string) $request->query('q'));
+        $events = $events
+            ->when($type, fn ($events) => $events->where('type', $type))
+            ->when($q !== '', fn ($events) => $events->filter(fn ($event) => mb_stripos($event['label'], $q) !== false));
+
         return view('pages.calendar', [
             'month' => $month,
+            'type' => $type,
+            'q' => $q,
             'events' => $events->groupBy(fn ($event) => $event['date']->toDateString()),
         ]);
     }
