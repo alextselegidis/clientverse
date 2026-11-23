@@ -50,11 +50,16 @@ Artisan::command('invoices:recur', function () {
 })->purpose('Create the invoices that recurring invoices are due to produce');
 
 Artisan::command('reminders:send', function () {
-    // Staff hear about recurring contracts 30 and 7 days before they end, whatever the customer
-    // reminder setting says. Matching the exact day keeps it to two emails without a sent flag.
-    $staff = User::where('is_active', true)->get()->filter(fn (User $user) => $user->hasPermission('contracts'));
+    // Staff hear about recurring contracts on each of the Setup > Billing days before they end (30 and 7
+    // unless changed), whatever the customer reminder setting says. Matching the exact day keeps it to one
+    // email per day listed, without a sent flag.
+    $staffDays = collect(explode(',', setting('staff_renewal_days') ?: '30, 7'))
+        ->map(fn ($days) => (int) trim($days))->filter()->unique();
+    $staff = setting('staff_renewal_reminders', '1') === '0' ? collect()
+        : User::where('is_active', true)->get()->filter(fn (User $user) => $user->hasPermission('contracts'));
     Contract::with('customer')->where('status', 'active')->where('type', 'recurring')
-        ->where(fn ($query) => $query->whereDate('end_date', today()->addDays(30))->orWhereDate('end_date', today()->addDays(7)))
+        ->where(fn ($query) => $staffDays->each(fn ($days) => $query->orWhereDate('end_date', today()->addDays($days))))
+        ->when($staff->isEmpty(), fn ($query) => $query->whereKey([]))
         ->lazyById()->each(function (Contract $contract) use ($staff) {
             try {
                 Notification::send($staff, new ContractRenewalDue($contract));
@@ -107,9 +112,9 @@ Artisan::command('reminders:send', function () {
             'link' => $proposal->publicUrl(),
         ]));
 
-    // Active contracts, once, a week before they end.
+    // Active contracts, once, the Setup > Billing number of days (a week unless changed) before they end.
     Contract::with('customer')->where('status', 'active')->whereNull('reminded_at')
-        ->whereBetween('end_date', $soon(7))
+        ->whereBetween('end_date', $soon((int) (setting('contract_reminder_days') ?: 7)))
         ->lazyById()->each(fn (Contract $contract) => $remind($contract, 'contract_expiring', [
             'title' => $contract->title,
             'date' => $contract->end_date->format('M d, Y'),

@@ -36,19 +36,26 @@
 
 @section('content')
     <div class="card border-0 shadow-sm">
-        <div class="table-filters">
-            <form action="{{ route('calendar') }}" method="GET" class="row g-3">
+        {{-- One toolbar: month navigation on the left, search and type filter on the right --}}
+        <div class="table-filters d-flex flex-wrap align-items-center gap-3">
+            <div class="d-flex align-items-center gap-2">
+                <a href="{{ route('calendar', array_filter(['month' => $month->copy()->subMonth()->format('Y-m'), 'type' => $type, 'q' => $q])) }}" class="btn btn-sm btn-light border"
+                   aria-label="{{ __('previous_month') }}"><i class="bi bi-chevron-left"></i></a>
+                <a href="{{ route('calendar', array_filter(['month' => $month->copy()->addMonth()->format('Y-m'), 'type' => $type, 'q' => $q])) }}" class="btn btn-sm btn-light border"
+                   aria-label="{{ __('next_month') }}"><i class="bi bi-chevron-right"></i></a>
+                <h5 class="mb-0 ms-2 text-nowrap">{{ $month->translatedFormat('F Y') }}</h5>
+            </div>
+
+            <form action="{{ route('calendar') }}" method="GET" class="d-flex flex-wrap gap-2 ms-md-auto">
                 <input type="hidden" name="month" value="{{ $month->format('Y-m') }}">
-                <div class="col-md-4">
-                    <div class="input-group">
-                        <span class="input-group-text border-end-0">
-                            <i class="bi bi-search text-muted"></i>
-                        </span>
-                        <input type="text" name="q" class="form-control border-start-0" value="{{ $q }}"
-                               placeholder="{{ __('search') }}...">
-                    </div>
+                <div class="input-group" style="width: 16rem;">
+                    <span class="input-group-text border-end-0">
+                        <i class="bi bi-search text-muted"></i>
+                    </span>
+                    <input type="text" name="q" class="form-control border-start-0" value="{{ $q }}"
+                           placeholder="{{ __('search') }}...">
                 </div>
-                <div class="col-md-3">
+                <div style="width: 12rem;">
                     <select name="type" class="form-select" onchange="this.form.submit()">
                         <option value="">{{ __('type') }}: {{ __('all') }}</option>
                         @foreach($types as $key => $entry)
@@ -57,14 +64,6 @@
                     </select>
                 </div>
             </form>
-        </div>
-
-        <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
-            <a href="{{ route('calendar', array_filter(['month' => $month->copy()->subMonth()->format('Y-m'), 'type' => $type, 'q' => $q])) }}" class="btn btn-sm btn-light border"
-               aria-label="{{ __('previous_month') }}"><i class="bi bi-chevron-left"></i></a>
-            <h5 class="mb-0">{{ $month->translatedFormat('F Y') }}</h5>
-            <a href="{{ route('calendar', array_filter(['month' => $month->copy()->addMonth()->format('Y-m'), 'type' => $type, 'q' => $q])) }}" class="btn btn-sm btn-light border"
-               aria-label="{{ __('next_month') }}"><i class="bi bi-chevron-right"></i></a>
         </div>
 
         {{-- A grid of weeks from lg up; below lg only days with events, as a list. --}}

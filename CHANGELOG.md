@@ -50,7 +50,8 @@
   values, all documented in `openapi.yml`
 
 - Contracts list filters those ending within 30 days or already ended, and staff with access to contracts get an
-  email 30 and 7 days before a recurring contract ends (#17)
+  email 30 and 7 days before a recurring contract ends (#17); both reminder timings are set under Setup > Company &
+  Emails
 
 ### Fixed
 

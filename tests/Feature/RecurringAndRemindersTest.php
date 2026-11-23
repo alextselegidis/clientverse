@@ -124,4 +124,28 @@ class RecurringAndRemindersTest extends TestCase
             ->assertSee('Soon')->assertDontSee('Later')->assertDontSee('Past');
         $this->get(route('contracts', ['ends' => 'ended']))->assertSee('Past')->assertDontSee('Soon');
     }
+
+    public function test_the_reminder_days_come_from_setup(): void
+    {
+        Notification::fake();
+        $this->travelTo('2026-03-01');
+        $admin = User::factory()->create(['role' => 'admin']);
+        $customer = Customer::create(['name' => 'Acme', 'email' => 'billing@acme.test']);
+        Contract::create([
+            'customer_id' => $customer->id, 'title' => 'Hosting', 'type' => 'recurring', 'status' => 'active', 'end_date' => '2026-03-04',
+        ]);
+
+        $this->actingAs($admin)->put(route('setup.billing.update'), [
+            'send_reminders' => '1', 'contract_reminder_days' => '14', 'staff_renewal_reminders' => '1', 'staff_renewal_days' => '14, 3',
+        ])->assertSessionHasNoErrors();
+        $this->artisan('reminders:send')->assertSuccessful();
+        Notification::assertSentTo($admin, ContractRenewalDue::class);
+        Notification::assertSentOnDemandTimes(DocumentEmail::class, 1);
+
+        $this->put(route('setup.billing.update'), ['staff_renewal_reminders' => '0', 'staff_renewal_days' => '14'])
+            ->assertSessionHasNoErrors();
+        Notification::fake();
+        $this->artisan('reminders:send')->assertSuccessful();
+        Notification::assertNothingSentTo($admin);
+    }
 }

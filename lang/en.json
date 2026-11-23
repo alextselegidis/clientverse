@@ -562,7 +562,7 @@
     "created_from": "Created from",
     "reminders": "Reminders",
     "send_reminders": "Email customers automatic reminders",
-    "send_reminders_hint": "Weekly while an invoice is overdue, three days before an estimate or proposal expires, and a week before an active contract ends. Needs the scheduler running.",
+    "send_reminders_hint": "Weekly while an invoice is overdue, three days before an estimate or proposal expires, and before an active contract ends. Needs the scheduler running.",
     "invoice_overdue": "Overdue invoice reminder",
     "estimate_expiring": "Expiring estimate reminder",
     "proposal_expiring": "Expiring proposal reminder",
@@ -666,5 +666,9 @@
     "contract_renewal_body": "The recurring contract \":title\" with :customer ends on :date. Renew it or let the customer know.",
     "open_contract": "Open contract",
     "ends": "Ends",
-    "ending_soon": "Within 30 days"
+    "ending_soon": "Within 30 days",
+    "contract_reminder_days": "Days before a contract ends to remind the customer",
+    "staff_renewal_reminders": "Email staff when a recurring contract is up for renewal",
+    "staff_renewal_days": "Days before it ends to email staff",
+    "staff_renewal_days_hint": "Comma-separated, e.g. 30, 7. Sent to everyone with access to contracts, whether or not customer reminders are on."
 }
