@@ -14,6 +14,7 @@ namespace Tests\Feature;
 
 use App\Models\Customer;
 use App\Models\Invoice;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
@@ -121,5 +122,15 @@ class PermissionsTest extends TestCase
         $this->assertSame(0, Invoice::count());
         $this->assertSame(0, \App\Models\Contract::count());
         $this->assertSame(0, \App\Models\Project::count());
+    }
+
+    public function test_search_finds_the_newer_record_types_the_user_may_view(): void
+    {
+        $user = User::factory()->create(['role' => 'user', 'permissions' => ['tasks.view']]);
+        Task::create(['title' => 'Zebra migration', 'status' => 'todo', 'priority' => 'normal']);
+        Invoice::create(['status' => 'draft', 'notes' => 'Zebra']);
+
+        $this->actingAs($user)->get(route('search', ['q' => 'Zebra']))->assertOk()
+            ->assertSee('Zebra migration')->assertDontSee(__('invoices'));
     }
 }

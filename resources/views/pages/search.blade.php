@@ -166,6 +166,28 @@
                     </div>
                 @endisset
 
+                {{-- The newer record types share one row layout --}}
+                @foreach($records as $key => $record)
+                    <div class="mb-4">
+                        @include('shared.search-section', [
+                            'icon' => $record['icon'],
+                            'label' => __($key === 'articles' ? 'knowledge_base' : $key),
+                            'section' => $record['section'],
+                        ])
+                        <div class="list-group">
+                            @foreach($record['section']['items'] as $row)
+                                <a href="{{ $row['url'] }}" @if($row['code']) data-code="{{ $row['code'] }}" @endif
+                                   class="list-group-item list-group-item-action">
+                                    <strong>{{ $row['title'] }}</strong>
+                                    @if($row['meta'])
+                                        <br><small class="text-muted">{{ $row['meta'] }}</small>
+                                    @endif
+                                </a>
+                            @endforeach
+                        </div>
+                    </div>
+                @endforeach
+
                 {{-- Users (Admin only) --}}
                 @isset($sections['users'])
                     <div class="mb-4">

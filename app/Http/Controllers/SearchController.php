@@ -12,12 +12,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
+use App\Models\Contact;
 use App\Models\Contract;
 use App\Models\Customer;
+use App\Models\Estimate;
 use App\Models\Invoice;
 use App\Models\Project;
+use App\Models\Proposal;
 use App\Models\Sale;
 use App\Models\Task;
+use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -106,6 +111,8 @@ class SearchController extends Controller
             }
         }
 
+        $records = mb_strlen($q) >= 2 ? $this->records($q) : [];
+
         // ponytail: restricted users still run the hidden queries; skip them up front if search gets slow.
         $sections = array_filter(
             $sections,
@@ -116,8 +123,56 @@ class SearchController extends Controller
         return view('pages.search', [
             'q' => $q,
             'sections' => array_filter($sections, fn (array $section) => $section['total'] > 0),
-            'totalResults' => array_sum(array_column($sections, 'total')),
+            'records' => array_filter($records, fn (array $record) => $record['section']['total'] > 0),
+            'totalResults' => array_sum(array_column($sections, 'total'))
+                + array_sum(array_map(fn (array $record) => $record['section']['total'], $records)),
         ]);
+    }
+
+    /**
+     * The newer record types, each shown as a title, a muted line and its code. Only
+     * the modules the user may view are queried.
+     */
+    private function records(string $q): array
+    {
+        $like = "%{$q}%";
+        $customer = fn ($model) => $model->customer?->name;
+        $definitions = [
+            'contacts' => ['customers', 'person-lines-fill', Contact::with('customer')->where(fn ($query) => $query
+                ->where('first_name', 'like', $like)->orWhere('last_name', 'like', $like)->orWhere('email', 'like', $like)),
+                fn (Contact $contact) => [route('customers.contacts.show', [$contact->customer_id, $contact->id]),
+                    $contact->full_name, $contact->email ?: $contact->customer?->name, null]],
+            'tasks' => ['tasks', 'check2-square', Task::with('customer')->where('title', 'like', $like),
+                fn (Task $task) => [route('tasks.show', $task->id), $task->title, $customer($task), $task->code]],
+            'tickets' => ['tickets', 'life-preserver', Ticket::with('customer')->where('subject', 'like', $like),
+                fn (Ticket $ticket) => [route('tickets.show', $ticket->id), $ticket->subject, $customer($ticket), null]],
+            'invoices' => ['invoices', 'receipt', Invoice::with('customer')->where(fn ($query) => $query
+                ->where('number', 'like', $like)->orWhereHas('customer', fn ($query) => $query->where('name', 'like', $like))),
+                fn (Invoice $invoice) => [route('invoices.show', $invoice->id), $invoice->number ?: __('draft'),
+                    trim($customer($invoice) . ' · ' . format_currency($invoice->total, $invoice->currency), ' ·'), $invoice->code]],
+            'estimates' => ['estimates', 'file-earmark-ruled', Estimate::with('customer')->where(fn ($query) => $query
+                ->where('number', 'like', $like)->orWhereHas('customer', fn ($query) => $query->where('name', 'like', $like))),
+                fn (Estimate $estimate) => [route('estimates.show', $estimate->id), $estimate->number ?: __('draft'),
+                    $customer($estimate), null]],
+            'proposals' => ['proposals', 'file-earmark-richtext', Proposal::with('customer')->where(fn ($query) => $query
+                ->where('subject', 'like', $like)->orWhere('number', 'like', $like)),
+                fn (Proposal $proposal) => [route('proposals.show', $proposal->id), $proposal->subject, $customer($proposal), null]],
+            'articles' => ['articles', 'journal-text', Article::where(fn ($query) => $query->where('title', 'like', $like)->orWhere('category', 'like', $like)),
+                fn (Article $article) => [route('articles.show', $article->id), $article->title, $article->category, null]],
+        ];
+        $records = [];
+
+        foreach ($definitions as $key => [$module, $icon, $query, $row]) {
+            if (!Auth::user()->hasPermission($module)) {
+                continue;
+            }
+
+            $section = $this->section($query, route($key === 'contacts' ? 'customers' : $key, ['q' => $q]));
+            $section['items'] = $section['items']->map(fn ($model) => array_combine(['url', 'title', 'meta', 'code'], $row($model)));
+            $records[$key] = ['icon' => $icon, 'section' => $section];
+        }
+
+        return $records;
     }
 
     /**

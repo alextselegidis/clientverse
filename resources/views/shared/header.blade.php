@@ -142,7 +142,52 @@
                            placeholder="{{ __('search_everything') }}" autocomplete="off">
                 </div>
                 {{-- Spotlight: sidebar pages and live record matches, filled by clientverse.js --}}
-                <div class="list-group list-group-flush app-spotlight" data-pages-label="{{ __('pages') }}" hidden></div>
+                <div class="list-group list-group-flush app-spotlight" data-pages-label="{{ __('pages') }}"
+                     data-actions-label="{{ __('actions') }}" hidden></div>
+                {{-- Pages the sidebar does not link to, and the Add menu's shortcuts, for the spotlight to match --}}
+                <div class="app-spotlight-pages" hidden>
+                    <a href="{{ route('account') }}"><i class="bi bi-person-circle"></i>{{ __('account') }}</a>
+                    @if($user->isAdmin())
+                        @foreach([
+                            ['localization', 'setup.localization', 'globe'],
+                            ['billing_settings', 'setup.billing', 'envelope'],
+                            ['users', 'setup.users', 'people'],
+                            ['custom_fields', 'setup.custom-fields', 'input-cursor-text'],
+                            ['departments', 'setup.departments', 'diagram-3'],
+                            ['announcements', 'setup.announcements', 'megaphone'],
+                            ['activity_log', 'setup.activity', 'clock-history'],
+                        ] as [$label, $route, $icon])
+                            <a href="{{ route($route) }}"><i class="bi bi-{{ $icon }}"></i>{{ __('setup') }}: {{ __($label) }}</a>
+                        @endforeach
+                    @endif
+                </div>
+                {{-- data-keywords lets "add customer" or "create customer" find "New Customer" too --}}
+                <div class="app-spotlight-actions" hidden>
+                    @foreach([
+                        ['customer', 'customers.create', 'customers'],
+                        ['project', 'projects.create', 'projects'],
+                        ['task', 'tasks.create', 'tasks'],
+                        ['sale', 'sales.create', 'sales'],
+                        ['proposal', 'proposals.create', 'proposals'],
+                        ['estimate', 'estimates.create', 'estimates'],
+                        ['contract', 'contracts.create', 'contracts'],
+                        ['invoice', 'invoices.create', 'invoices'],
+                        ['subscription', 'subscriptions.create', 'subscriptions'],
+                        ['credit_note', 'credit-notes.create', 'credit_notes'],
+                        ['expense', 'expenses.create', 'expenses'],
+                        ['item', 'items.create', 'items'],
+                        ['ticket', 'tickets.create', 'tickets'],
+                        ['article', 'articles.create', 'articles'],
+                        ['survey', 'surveys.create', 'surveys'],
+                        ['goal', 'goals.create', 'reports'],
+                    ] as [$label, $route, $module])
+                        @if($user->hasPermission($module, 'edit'))
+                            <a href="{{ route($route) }}" data-keywords="new add create">
+                                <i class="bi bi-plus-lg"></i>{{ __('new') }} {{ __($label) }}
+                            </a>
+                        @endif
+                    @endforeach
+                </div>
             </form>
         </div>
     </div>

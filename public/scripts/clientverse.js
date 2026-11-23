@@ -302,14 +302,27 @@ document.querySelectorAll('.app-spotlight').forEach(function (results) {
             results.append(heading, ...links);
         });
         results.hidden = !results.children.length;
+        // A matching page or action is what the typing was after, so Enter opens it ("add customer" + Enter).
+        if (pageLinks.some(([, links]) => links.length)) {
+            results.querySelector('a')?.classList.add('active');
+        }
+    }
+
+    // Links whose text (or data-keywords) holds every typed word, so "add cust" finds "New Customer".
+    function matching(selector, term) {
+        const words = term.toLowerCase().split(/\s+/);
+        return !term ? [] : [...document.querySelectorAll(selector)]
+            .filter((a) => words.every((word) => (a.textContent + ' ' + (a.dataset.keywords || '')).toLowerCase().includes(word)))
+            .map((a) => item(a.href, iconOf(a), a.textContent.trim().replace(/\s+/g, ' ')));
     }
 
     input.addEventListener('input', function () {
         const term = input.value.trim();
-        pageLinks = !term ? [] : [...document.querySelectorAll('#sidebar nav a[href]')]
-            .filter((a) => a.textContent.trim().toLowerCase().includes(term.toLowerCase()))
-            .map((a) => item(a.href, iconOf(a), a.textContent.trim()));
-        render([[results.dataset.pagesLabel, pageLinks]]);
+        pageLinks = [
+            [results.dataset.pagesLabel, matching('#sidebar nav a[href], .app-spotlight-pages a', term)],
+            [results.dataset.actionsLabel, matching('.app-spotlight-actions a', term)],
+        ];
+        render(pageLinks);
 
         clearTimeout(timer);
         const current = ++request;
@@ -340,7 +353,7 @@ document.querySelectorAll('.app-spotlight').forEach(function (results) {
                             .map((a) => item(a.getAttribute('href'), iconOf(heading), a.querySelector('strong').textContent.trim(), a.dataset.code));
                         return [label, links];
                     });
-                    render([[results.dataset.pagesLabel, pageLinks], ...sections]);
+                    render([...pageLinks, ...sections]);
                 })
                 .catch(() => {});
         }, 200);
@@ -350,7 +363,7 @@ document.querySelectorAll('.app-spotlight').forEach(function (results) {
         const links = [...results.querySelectorAll('a')];
         let index = links.findIndex((a) => a.classList.contains('active'));
 
-        // Enter opens a result only once the arrows picked one; otherwise the form submits to the search page.
+        // Enter opens the highlighted result; with none (records only, no arrows yet) the form submits to the search page.
         if (event.key === 'Enter' && index >= 0) {
             event.preventDefault();
             location.href = links[index].href;

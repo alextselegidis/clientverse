@@ -43,6 +43,8 @@
   first request after new files are uploaded
 - Knowledge base with a public page for published articles
 - Surveys with choice, rating and text questions and a results page
+- Search finds Setup pages, "New …" shortcuts, contacts, tasks, tickets, invoices, estimates, proposals and
+  knowledge base articles
 - API for tasks, tickets, items, expenses and knowledge base articles, plus read-only invoices, payments, estimates,
   credit notes, proposals and subscriptions; customers, contacts, projects, deals and contracts expose custom field
   values, all documented in `openapi.yml`
