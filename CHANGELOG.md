@@ -1,5 +1,17 @@
 # Release Notes
 
+## [Unreleased]
+
+### Added
+
+- Created and Modified columns on every list, sortable, shown from 1200px (1400px on the wider contracts list)
+
+### Fixed
+
+- Monthly sales on the dashboard and "won deals" goals count deals by the day they were won instead of their
+  expected close date, which left won deals without that date out entirely
+
+
 ## [1.1.0-alpha.1] - 2026-11-24
 
 ### Added

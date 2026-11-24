@@ -98,6 +98,7 @@
                                 @endif
                             </a>
                         </th>
+                        @include('shared.timestamp-headers')
                         <th class="pe-3 text-end" style="width: 100px;"></th>
                     </tr>
                     </thead>
@@ -126,6 +127,7 @@
                                 </span>
                             </td>
                             <td class="d-none d-lg-table-cell text-nowrap">{{ $project->due_date?->format('M d, Y') }}</td>
+                            @include('shared.timestamp-cells', ['record' => $project])
                             <td class="pe-3 text-end">
                                 <div class="dropdown" onclick="event.stopPropagation();">
                                     <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown"
@@ -162,7 +164,7 @@
                     @endforeach
                     @if($projects->isEmpty())
                         <tr>
-                            <td colspan="6" class="text-center text-muted py-5">
+                            <td colspan="8" class="text-center text-muted py-5">
                                 <i class="bi bi-inbox display-4 d-block mb-3"></i>
                                 {{ __('no_records_found') }}
                             </td>

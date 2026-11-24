@@ -36,9 +36,9 @@ class DashboardController extends Controller
         $recentSales = Sale::with('customer')->orderBy('updated_at', 'desc')->limit(5)->get();
 
         // Performance metrics
+        // Deals won this month, by the day they were won (not their expected close date).
         $monthlySales = Sale::where('stage', 'won')
-            ->whereMonth('expected_close_date', now()->month)
-            ->whereYear('expected_close_date', now()->year)
+            ->whereBetween('won_at', [now()->startOfMonth(), now()->endOfMonth()])
             ->totalsByCurrency();
 
         $completedProjects = Project::where('status', 'completed')->count();

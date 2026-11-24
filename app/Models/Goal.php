@@ -49,8 +49,7 @@ class Goal extends Model
             'collected' => Payment::whereBetween('paid_on', $range)
                 ->whereHas('invoice', fn ($query) => $query->where('currency', $this->currency))->sum('amount'),
             'new_customers' => Customer::whereBetween('created_at', [$this->start_date, $until])->count(),
-            // ponytail: deals have no "won on" date, so the expected close date stands in for it.
-            'won_deals' => Sale::where('stage', 'won')->whereBetween('expected_close_date', $range)->count(),
+            'won_deals' => Sale::where('stage', 'won')->whereBetween('won_at', [$this->start_date, $until])->count(),
         };
     }
 

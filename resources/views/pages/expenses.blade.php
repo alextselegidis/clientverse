@@ -89,6 +89,7 @@
                         <th class="text-nowrap text-end">
                             <a href="{{ $sortUrl('amount') }}" class="text-decoration-none">{{ __('amount') }}{!! $sortIcon('amount') !!}</a>
                         </th>
+                        @include('shared.timestamp-headers')
                         <th class="pe-3 text-end" style="width: 100px;"></th>
                     </tr>
                     </thead>
@@ -119,6 +120,7 @@
                                     <i class="bi bi-receipt text-muted ms-1" title="{{ __('billable') }}"></i>
                                 @endif
                             </td>
+                            @include('shared.timestamp-cells', ['record' => $expense])
                             <td class="pe-3 text-end">
                                 <div class="dropdown" onclick="event.stopPropagation();">
                                     <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown"
@@ -150,7 +152,7 @@
                     @endforeach
                     @if($expenses->isEmpty())
                         <tr>
-                            <td colspan="7" class="text-center text-muted py-5">
+                            <td colspan="9" class="text-center text-muted py-5">
                                 <i class="bi bi-inbox display-4 d-block mb-3"></i>
                                 {{ __('no_records_found') }}
                             </td>

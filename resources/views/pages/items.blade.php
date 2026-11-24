@@ -67,6 +67,7 @@
                             <a href="{{ $sortUrl('unit_price') }}" class="text-decoration-none">{{ __('unit_price') }}{!! $sortIcon('unit_price') !!}</a>
                         </th>
                         <th class="d-none d-md-table-cell text-nowrap">{{ __('tax') }}</th>
+                        @include('shared.timestamp-headers')
                         <th class="pe-3 text-end" style="width: 100px;"></th>
                     </tr>
                     </thead>
@@ -83,6 +84,7 @@
                             <td class="d-none d-md-table-cell">
                                 {{ rtrim(rtrim($item->tax_rate, '0'), '.') }}%
                             </td>
+                            @include('shared.timestamp-cells', ['record' => $item])
                             <td class="pe-3 text-end">
                                 <div class="dropdown">
                                     <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown"
@@ -113,7 +115,7 @@
                     @endforeach
                     @if($items->isEmpty())
                         <tr>
-                            <td colspan="4" class="text-center text-muted py-5">
+                            <td colspan="6" class="text-center text-muted py-5">
                                 <i class="bi bi-inbox display-4 d-block mb-3"></i>
                                 {{ __('no_records_found') }}
                             </td>

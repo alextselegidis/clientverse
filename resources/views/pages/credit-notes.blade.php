@@ -89,6 +89,7 @@
                             <a href="{{ $sortUrl('issue_date') }}" class="text-decoration-none">{{ __('issue_date') }}{!! $sortIcon('issue_date') !!}</a>
                         </th>
                         <th>{{ __('status') }}</th>
+                        @include('shared.timestamp-headers')
                         <th class="pe-3 text-end" style="width: 100px;"></th>
                     </tr>
                     </thead>
@@ -120,6 +121,7 @@
                                     {{ __($creditNote->status) }}
                                 </span>
                             </td>
+                            @include('shared.timestamp-cells', ['record' => $creditNote])
                             <td class="pe-3 text-end">
                                 <div class="dropdown" onclick="event.stopPropagation();">
                                     <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown"
@@ -151,7 +153,7 @@
                     @endforeach
                     @if($creditNotes->isEmpty())
                         <tr>
-                            <td colspan="7" class="text-center text-muted py-5">
+                            <td colspan="9" class="text-center text-muted py-5">
                                 <i class="bi bi-inbox display-4 d-block mb-3"></i>
                                 {{ __('no_records_found') }}
                             </td>

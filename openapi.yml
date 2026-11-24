@@ -529,6 +529,12 @@ components:
         stage:
           type: string
           enum: [lead, qualified, proposal_sent, won, lost]
+        won_at:
+          type: string
+          format: date-time
+          nullable: true
+          readOnly: true
+          description: Set when the deal moves to won, cleared if it is reopened
         expected_close_date:
           type: string
           format: date

@@ -43,7 +43,18 @@ class Sale extends Model
         'value' => 'decimal:2',
         'probability' => 'integer',
         'expected_close_date' => 'date',
+        'won_at' => 'datetime',
     ];
+
+    protected static function booted(): void
+    {
+        // Stamp the moment a deal is won and clear it if it is reopened; dashboards count sales by it.
+        static::saving(function (Sale $sale) {
+            if ($sale->isDirty('stage') || !$sale->exists) {
+                $sale->won_at = $sale->stage === 'won' ? ($sale->getOriginal('stage') === 'won' ? $sale->won_at : now()) : null;
+            }
+        });
+    }
 
     public function customer()
     {

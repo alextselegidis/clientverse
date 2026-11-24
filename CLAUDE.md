@@ -212,7 +212,9 @@ Every screen is checked at 390px and 768px. Two rules carry most of it:
   d-md-table-cell` and appears on a tablet - the most identifying or actionable one
   (email, customer, value, due date) - because a 768px table showing two columns wastes
   half its width. Everything else is `d-none d-lg-table-cell`. Add a column and you
-  decide which of the three tiers it belongs on. `.table-responsive` is still there as
+  decide which of the three tiers it belongs on. The Created and Modified columns are a fourth
+  tier from `xl` (`shared/timestamp-headers` + `shared/timestamp-cells`, `$tier = 'xxl'` on a
+  list that is already wide). `.table-responsive` is still there as
   the safety net.
 - **Touch targets.** One media query near the end of `public/styles/clientverse.css`
   brings sort links, `btn-sm`, breadcrumb links, dropdown items, page links and

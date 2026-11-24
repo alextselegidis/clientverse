@@ -67,6 +67,7 @@
                             <a href="{{ $sortUrl('category') }}" class="text-decoration-none">{{ __('category') }}{!! $sortIcon('category') !!}</a>
                         </th>
                         <th>{{ __('visibility') }}</th>
+                        @include('shared.timestamp-headers')
                         <th class="pe-3 text-end" style="width: 100px;"></th>
                     </tr>
                     </thead>
@@ -82,6 +83,7 @@
                             <td>
                                 <span class="badge bg-{{ $article->is_public ? 'success' : 'secondary' }}">{{ $article->is_public ? __('public') : __('internal_only') }}</span>
                             </td>
+                            @include('shared.timestamp-cells', ['record' => $article])
                             <td class="pe-3 text-end">
                                 <div class="dropdown">
                                     <button class="btn btn-sm btn-icon" type="button" data-bs-toggle="dropdown"
@@ -112,7 +114,7 @@
                     @endforeach
                     @if($articles->isEmpty())
                         <tr>
-                            <td colspan="4" class="text-center text-muted py-5">
+                            <td colspan="6" class="text-center text-muted py-5">
                                 <i class="bi bi-inbox display-4 d-block mb-3"></i>
                                 {{ __('no_records_found') }}
                             </td>

@@ -80,6 +80,7 @@
                         <th>
                             <a href="{{ $sortUrl('status') }}" class="text-decoration-none">{{ __('status') }}{!! $sortIcon('status') !!}</a>
                         </th>
+                        @include('shared.timestamp-headers')
                     </tr>
                     </thead>
                     <tbody>
@@ -106,11 +107,12 @@
                                     {{ \App\Models\Subscription::statuses()[$subscription->status] }}
                                 </span>
                             </td>
+                            @include('shared.timestamp-cells', ['record' => $subscription])
                         </tr>
                     @endforeach
                     @if($subscriptions->isEmpty())
                         <tr>
-                            <td colspan="5" class="text-center text-muted py-5">
+                            <td colspan="7" class="text-center text-muted py-5">
                                 <i class="bi bi-inbox display-4 d-block mb-3"></i>
                                 {{ __('no_records_found') }}
                             </td>

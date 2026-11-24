@@ -670,5 +670,6 @@
     "contract_reminder_days": "Days before a contract ends to remind the customer",
     "staff_renewal_reminders": "Email staff when a recurring contract is up for renewal",
     "staff_renewal_days": "Days before it ends to email staff",
-    "staff_renewal_days_hint": "Comma-separated, e.g. 30, 7. Sent to everyone with access to contracts, whether or not customer reminders are on."
+    "staff_renewal_days_hint": "Comma-separated, e.g. 30, 7. Sent to everyone with access to contracts, whether or not customer reminders are on.",
+    "modified": "Modified"
 }
