@@ -26,7 +26,7 @@ These are deliberate product decisions, not gaps to fill:
 
 - PHP 8.2+, Laravel 12, MySQL 8
 - Laravel Sanctum for API tokens, `tailflow/laravel-orion` for the REST API resources
-- Bootstrap 5.3 (Bootswatch **Flatly** build), Bootstrap Icons, pace-js — all vendored
+- Bootstrap 5.3 (Bootswatch **Flatly** build), Bootstrap Icons — both vendored
   under `public/vendor/`, none installed at runtime
 - Assets are served straight from `public/`, cache-busted with `?{{config('app.version')}}`
 

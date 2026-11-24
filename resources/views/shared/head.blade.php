@@ -52,7 +52,6 @@
 
 <link rel="stylesheet" href="vendor/bootstrap/bootstrap.min.css">
 <link rel="stylesheet" href="vendor/bootstrap-icons/bootstrap-icons.min.css">
-<link rel="stylesheet" href="vendor/pace-js/pace-theme-flat-top.tmpl.css">
 <link rel="stylesheet" href="styles/clientverse.css?{{config('app.version')}}">
 
 {{-- Load a page while the pointer rests on its link, so the click feels instant. Laravel ignores

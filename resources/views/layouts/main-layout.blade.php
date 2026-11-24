@@ -94,7 +94,6 @@
 </div>
 
 <script src="vendor/bootstrap/bootstrap.bundle.min.js"></script>
-{{-- TEMP: pace off <script src="vendor/pace-js/pace.min.js"></script> --}}
 <script src="scripts/clientverse.js?{{config('app.version')}}"></script>
 @include('shared.service-worker')
 

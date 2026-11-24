@@ -65,6 +65,10 @@
   notes load their authors in one query, and the outstanding-balance report sums in the database
 - Customer dropdowns failed on SQLite because their labels were built with MySQL-only `IF()`
 
+### Removed
+
+- The page-load progress bar and its pace-js dependency
+
 
 ## [1.0.1] - 2026-11-02
 

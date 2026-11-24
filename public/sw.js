@@ -20,8 +20,6 @@ const ASSETS = [
     'vendor/bootstrap/bootstrap.bundle.min.js',
     'vendor/bootstrap-icons/bootstrap-icons.min.css',
     'vendor/bootstrap-icons/fonts/bootstrap-icons.woff2',
-    'vendor/pace-js/pace-theme-flat-top.tmpl.css',
-    'vendor/pace-js/pace.min.js',
     'styles/clientverse.css?' + VERSION,
     'scripts/clientverse.js?' + VERSION,
     'images/logo.png',

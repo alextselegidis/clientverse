@@ -652,17 +652,6 @@ h1, h2, h3, h4, h5, h6,
     border-radius: var(--bs-border-radius-pill);
 }
 
-/* Pace loading bar in brand colors, across the whole width. The theme's transform makes
-   .pace its own stacking layer, so without a z-index the sticky top bar paints over it. */
-.pace {
-    z-index: 2000;
-}
-
-.pace .pace-progress {
-    height: 3px;
-    background: var(--cv-accent);
-}
-
 /* Flex children must be allowed to shrink, otherwise long text and
    .table-responsive scroll containers push the whole page sideways */
 .flex-grow-1 {
