@@ -1,6 +1,6 @@
 # Release Notes
 
-## [Unreleased]
+## [1.1.0-alpha.1] - 2026-11-24
 
 ### Added
 

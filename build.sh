@@ -24,6 +24,8 @@ composer install
 
 find storage/app -type f ! -name '.gitignore' -exec rm -f {} \;
 find storage/logs -type f ! -name '.gitignore' -exec rm -f {} \;
+# Sessions and cached data from the dev install must never ship in the zip
+find storage/framework/sessions storage/framework/cache storage/framework/views -type f ! -name '.gitignore' -exec rm -f {} \;
 
 # Clear Cache
 
@@ -35,9 +37,9 @@ php artisan clear-compiled
 
 # Remove Various
 
-rm clientverse-0.0.0.zip
+rm -f clientverse-0.0.0.zip
 
-rm public/hot
+rm -f public/hot
 
 find . -name ".DS_Store" -delete
 
