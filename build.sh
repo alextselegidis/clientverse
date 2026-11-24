@@ -63,4 +63,5 @@ zip -r clientverse-0.0.0.zip . \
     -x 'postcss.config.js' \
     -x 'vite.config.js' \
     -x 'SPECS.md' \
+    -x '.phpunit.result.cache' \
     -x '*.zip'
