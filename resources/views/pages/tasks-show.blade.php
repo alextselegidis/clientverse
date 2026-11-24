@@ -145,12 +145,12 @@
                     <form action="{{ route('tasks.time-entries.store', $task->id) }}" method="POST" id="time-entry-form">
                         @csrf
                         <div class="row g-2">
-                            <div class="col-6">
+                            <div class="col-12">
                                 <label for="started_at" class="form-label">{{ __('start') }}</label>
                                 <input type="datetime-local" id="started_at" name="started_at" class="form-control" required
                                        value="{{ old('started_at') }}">
                             </div>
-                            <div class="col-6">
+                            <div class="col-12">
                                 <label for="ended_at" class="form-label">{{ __('end') }}</label>
                                 <input type="datetime-local" id="ended_at" name="ended_at" class="form-control" required
                                        value="{{ old('ended_at') }}">

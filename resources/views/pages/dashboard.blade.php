@@ -127,7 +127,7 @@
                     <h6 class="mb-0"><i class="bi bi-lightning me-2"></i>{{ __('quick_actions') }}</h6>
                 </div>
                 <div class="card-body">
-                    <div class="row row-cols-2 row-cols-sm-auto g-2">
+                    <div class="row row-cols-1 row-cols-sm-auto g-2">
                         @if(auth()->user()->hasPermission('customers'))
                         <div class="col d-grid">
                             <a href="{{ route('customers.create') }}" class="btn btn-light border">

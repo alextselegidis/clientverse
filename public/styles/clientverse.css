@@ -652,6 +652,52 @@ h1, h2, h3, h4, h5, h6,
     border-radius: var(--bs-border-radius-pill);
 }
 
+/* Row editors (invoice lines, survey questions) on a phone: each row stacks, its first cell on a
+   line of its own and the rest side by side under it (--stack-cols per row), each labelled from
+   data-label since the header row is hidden */
+@media (max-width: 767.98px) {
+    .stack-table thead {
+        display: none;
+    }
+
+    .stack-table tr {
+        display: grid;
+        grid-template-columns: repeat(var(--stack-cols, 3), minmax(0, 1fr));
+        gap: 0.5rem;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid var(--cv-hairline);
+    }
+
+    .stack-table td {
+        padding: 0 !important;
+        border: 0;
+    }
+
+    .stack-table td:first-child {
+        grid-column: 1 / -1;
+    }
+
+    .stack-table td[data-label]::before {
+        content: attr(data-label);
+        display: block;
+        margin-bottom: 0.25rem;
+        font-size: 0.75rem;
+        color: var(--cv-text-muted);
+    }
+}
+
+/* The Setup menu swipes sideways on a phone; its scrollbar would only add a grey bar */
+#setup-nav {
+    scrollbar-width: none;
+}
+
+@media (max-width: 991.98px) {
+    /* Fade the right edge so the cut-off items read as "swipe for more" */
+    #setup-nav {
+        mask-image: linear-gradient(to right, #000 85%, transparent);
+    }
+}
+
 /* Calendar search and type filter: one line, the full width on a phone, a fixed width beside the month above it */
 .calendar-filters {
     width: 100%;

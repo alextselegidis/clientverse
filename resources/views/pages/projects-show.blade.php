@@ -69,7 +69,7 @@
                     <div class="row g-3 mb-4">
                         <div class="col-md-4">
                             <small class="text-muted d-block">{{ __('visibility') }}</small>
-                            <span>{{ __($project->visibility ?? 'internal') }}</span>
+                            <span>{{ \App\Models\Project::visibilities()[$project->visibility ?? 'internal'] ?? $project->visibility }}</span>
                         </div>
                         <div class="col-md-4">
                             <small class="text-muted d-block">{{ __('start_date') }}</small>

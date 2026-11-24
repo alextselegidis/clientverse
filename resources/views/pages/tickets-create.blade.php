@@ -52,7 +52,7 @@
                                 <span class="form-text text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-6 mb-3">
                                 <label for="priority" class="form-label">{{ __('priority') }}</label>
                                 <select id="priority" name="priority" class="form-select">
                                     @foreach(\App\Models\Task::priorities() as $key => $label)
@@ -60,8 +60,8 @@
                                     @endforeach
                                 </select>
                             </div>
-                            @include('shared.department-select', ['class' => 'col-md-3 mb-3'])
-                            <div class="col-md-3 mb-3">
+                            @include('shared.department-select', ['class' => 'col-md-6 mb-3'])
+                            <div class="col-md-6 mb-3">
                                 <label for="assigned_to" class="form-label">{{ __('assigned_to') }}</label>
                                 <select id="assigned_to" name="assigned_to" class="form-select">
                                     <option value="">-</option>

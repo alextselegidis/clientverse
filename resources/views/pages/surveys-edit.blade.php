@@ -66,7 +66,7 @@
                     <h6 class="mb-1">{{ __('questions') }}</h6>
                     <p class="form-text mt-0">{{ __('questions_hint') }}</p>
                     <div class="table-responsive mb-2">
-                        <table class="table table-light-header align-middle mb-0">
+                        <table class="table table-light-header align-middle mb-0 stack-table" style="--stack-cols: 1;">
                             <thead>
                             <tr>
                                 <th style="min-width: 240px;">{{ __('question') }}</th>
