@@ -652,6 +652,17 @@ h1, h2, h3, h4, h5, h6,
     border-radius: var(--bs-border-radius-pill);
 }
 
+/* Calendar search and type filter: one line, the full width on a phone, a fixed width beside the month above it */
+.calendar-filters {
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .calendar-filters {
+        width: 28rem;
+    }
+}
+
 /* Flex children must be allowed to shrink, otherwise long text and
    .table-responsive scroll containers push the whole page sideways */
 .flex-grow-1 {

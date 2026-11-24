@@ -46,16 +46,16 @@
                 <h5 class="mb-0 ms-2 text-nowrap">{{ $month->translatedFormat('F Y') }}</h5>
             </div>
 
-            <form action="{{ route('calendar') }}" method="GET" class="d-flex flex-wrap gap-2 ms-md-auto w-100 w-md-auto">
+            <form action="{{ route('calendar') }}" method="GET" class="calendar-filters d-flex gap-2 ms-md-auto">
                 <input type="hidden" name="month" value="{{ $month->format('Y-m') }}">
-                <div class="input-group" style="flex: 1 1 16rem;">
+                <div class="input-group flex-grow-1">
                     <span class="input-group-text border-end-0">
                         <i class="bi bi-search text-muted"></i>
                     </span>
                     <input type="text" name="q" class="form-control border-start-0" value="{{ $q }}"
                            placeholder="{{ __('search') }}...">
                 </div>
-                <div style="flex: 1 1 12rem;">
+                <div class="flex-shrink-0" style="width: 9.5rem;">
                     <select name="type" class="form-select" onchange="this.form.submit()">
                         <option value="">{{ __('type') }}: {{ __('all') }}</option>
                         @foreach($types as $key => $entry)
